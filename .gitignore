@@ -1,0 +1,27 @@
+# VARIÁVEIS DE AMBIENTE 
+# Ignora o arquivo de configuração com senhas/chaves
+.env
+
+# AMBIENTE VIRTUAL 
+# Ignora a pasta do ambiente virtual
+.venv/
+venv/
+env/
+
+# PYTHON / FLASK 
+# Ignora arquivos compilados e caches do Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.flaskenv
+
+# DADOS E LOGS LOCAIS 
+# Deve ser usado para os dados brutos ou processados.
+# Mantenha comentado se quiser versionar dados de exemplo pequenos na pasta data/.
+
+# data/raw/*
+# data/processed/*
+# !data/raw/.gitkeep
+# !data/processed/.gitkeep

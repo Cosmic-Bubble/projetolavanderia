@@ -1,0 +1,13 @@
+Flask
+python-dotenv
+supabase
+
+pandas
+numpy
+scipy
+statsmodels
+scikit-learn
+
+matplotlib
+
+pytest
