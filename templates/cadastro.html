@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro | Projeto Lavanderia</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Estilos centralizados -->
+    <link rel="stylesheet" href="../static/css/style.css">
+
+    <!-- Fonte Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Ícones -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="pagina-cadastro bg-white">
+
+    <div class="min-h-screen flex flex-col lg:flex-row">
+
+        <!-- LADO ESQUERDO -->
+        <section class="w-full lg:w-2/5 bg-white
+                        flex flex-col justify-between
+                        px-5 sm:px-8 md:px-16 py-6 sm:py-12">
+
+            <!-- LOGOTIPO -->
+            <div class="flex items-center gap-3 sm:gap-4 min-w-0">
+
+                <img src="../static/logo_ninho-social.png" alt="Instituto Ninho Social"
+                    class="w-16 h-16 sm:w-24 sm:h-24 lg:w-28 lg:h-28 object-contain shrink-0"
+                    onerror="this.style.display='none'">
+
+                <!-- Barra separadora responsiva -->
+                <div class="h-10 sm:h-14 lg:h-16 w-[1px] bg-gray-400/40 shrink-0"></div>
+
+                <img src="../static/logo.png" alt="Projeto Lavanderia"
+                    class="w-16 h-16 sm:w-24 sm:h-24 lg:w-28 lg:h-28 object-contain shrink-0"
+                    onerror="this.style.display='none'">
+
+                <div class="text-lg sm:text-2xl lg:text-3xl tracking-wider sm:tracking-widest
+                        font-light leading-tight">
+                    <p class="text-lime-400">PROJETO</p>
+                    <p class="text-sky-500">LAVANDERIA</p>
+                </div>
+
+            </div>
+
+            <!-- TEXTO INSTITUCIONAL -->
+            <div class="my-8 sm:my-14 lg:my-0 max-w-md">
+                <h1 class="text-3xl sm:text-4xl font-bold
+                       text-black leading-tight mb-7">
+                    Por mais dignidade e<br>
+                    <span>roupa limpa</span>
+                </h1>
+
+                <p class="text-slate-500 text-sm mb-8">
+                <div class="space-y-5 mb-8">
+                    <!-- Item 1 -->
+                    <div class="flex items-baseline pl-4 border-l-4 border-purple-500">
+                        <span class="text-xl font-extrabold text-slate-900 mr-2">+100</span>
+                        <span class="text-sm text-slate-600">toneladas de roupas lavadas e cuidadas</span>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="flex items-baseline pl-4 border-l-4 border-purple-500">
+                        <span class="text-xl font-extrabold text-slate-900 mr-2">+1.000</span>
+                        <span class="text-sm text-slate-600">pessoas cadastradas e acompanhadas</span>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="flex items-baseline pl-4 border-l-4 border-purple-500">
+                        <span class="text-xl font-extrabold text-slate-900 mr-2">+9.000</span>
+                        <span class="text-sm text-slate-600">banhos quentes com kit de higiene</span>
+                    </div>
+                </div>
+                </p>
+            </div>
+
+            <!-- RODAPÉ -->
+            <div class="flex items-center gap-3
+                        text-gray-500 text-sm">
+                <span class="font-semibold">
+                    Mais do que números, cada atendimento representa acolhimento e transformação.
+                </span>
+
+            </div>
+
+        </section>
+
+        <!-- LADO DIREITO -->
+        <section class="w-full lg:w-[65%] bg-[#eeeeee]
+                    flex items-center justify-center
+                    px-4 sm:px-6 py-8 sm:py-12">
+
+            <!-- CARD DE CADASTRO -->
+            <div class="bg-white w-full min-w-0 max-w-[520px]
+                    rounded-2xl shadow-md
+                    border border-gray-200
+                    p-5 sm:p-8 md:p-10">
+
+                <h2 class="text-xl sm:text-2xl font-bold text-slate-800 mb-2">
+                    Criar conta de administrador
+                </h2>
+
+                <p class="text-sm text-slate-500 mb-7">
+                    Preencha os dados abaixo para solicitar
+                    credenciais de acesso
+                </p>
+
+                <form id="formCadastro">
+
+                    <!-- INFORMAÇÕES PESSOAIS -->
+                    <h3 class="text-blue-600 text-xs
+                           font-extrabold mb-4">
+                        1. INFORMAÇÕES PESSOAIS
+                    </h3>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+
+                        <div>
+                            <label for="nome" class="block text-sm font-bold
+                                      text-slate-800 mb-2">
+                                Nome
+                            </label>
+
+                            <input id="nome" name="nome" type="text" minlength="2" maxlength="50"
+                                placeholder="Ex.: Lucas" autocomplete="given-name" required class="w-full bg-slate-50
+                                      border border-slate-200
+                                      rounded-lg p-3
+                                      focus:outline-none
+                                      focus:ring-2
+                                      focus:ring-purple-400">
+                        </div>
+
+                        <div>
+                            <label for="sobrenome" class="block text-sm font-bold
+                                      text-slate-800 mb-2">
+                                Sobrenome
+                            </label>
+
+                            <input id="sobrenome" name="sobrenome" type="text" minlength="2" maxlength="80"
+                                placeholder="Ex.: Caldeira" autocomplete="family-name" required class="w-full bg-slate-50
+                                      border border-slate-200
+                                      rounded-lg p-3
+                                      focus:outline-none
+                                      focus:ring-2
+                                      focus:ring-purple-400">
+                        </div>
+
+                    </div>
+
+                    <!-- EMAIL -->
+                    <div class="mb-6">
+
+                        <label for="email" class="block text-sm font-bold
+                                  text-slate-800 mb-2">
+                            E-mail corporativo / pessoal
+                        </label>
+
+                        <div class="relative">
+
+                            <i data-lucide="mail" class="absolute left-3 top-3.5
+                                  w-5 h-5 text-slate-500"></i>
+
+                            <input id="email" name="email" type="email" maxlength="254" placeholder="nome@exemplo.com"
+                                autocomplete="email" required class="w-full bg-slate-50
+                                      border border-slate-200
+                                      rounded-lg py-3 pl-11 pr-3
+                                      focus:outline-none
+                                      focus:ring-2
+                                      focus:ring-purple-400">
+                        </div>
+
+                    </div>
+
+                    <!-- PERFIL E ATUAÇÃO -->
+                    <h3 class="text-blue-600 text-xs
+                           font-extrabold mb-4">
+                        2. PERFIL & ATUAÇÃO
+                    </h3>
+
+                    <!-- CARGO -->
+                    <div class="mb-4">
+
+                        <label for="cargo" class="block text-sm font-bold
+                                  text-slate-800 mb-2">
+                            Cargo / Função na ONG
+                        </label>
+
+                        <select id="cargo" name="cargo" required class="w-full bg-slate-50
+                                   border border-slate-200
+                                   rounded-lg p-3
+                                   focus:outline-none
+                                   focus:ring-2
+                                   focus:ring-purple-400">
+
+                            <option value="">Carregando cargos...</option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- FOTO DE PERFIL -->
+                    <div class="mb-7">
+
+                        <label for="foto" class="block text-sm font-bold
+                                  text-slate-800 mb-2">
+                            Foto de Perfil
+                        </label>
+
+                        <label for="foto" class="border-2 border-dashed
+                                  border-slate-200 rounded-lg
+                                  bg-slate-50 p-5
+                                  flex flex-col items-center
+                                  cursor-pointer
+                                  hover:bg-slate-100">
+
+                            <i data-lucide="camera" class="w-6 h-6 text-slate-500 mb-3"></i>
+
+                            <span class="text-blue-600
+                                     font-semibold text-sm">
+                                Clique para enviar
+                            </span>
+
+                            <span class="text-xs text-slate-500 mt-2">
+                                Suporta PNG, JPG ou JPEG de até 2 MB
+                            </span>
+
+                            <span id="nomeArquivo" class="text-xs text-slate-600 mt-2"></span>
+
+                        </label>
+
+                        <input id="foto" name="foto" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+                            class="hidden">
+
+                    </div>
+
+                    <!-- SEGURANÇA -->
+                    <h3 class="text-blue-600 text-xs
+                           font-extrabold mb-4">
+                        3. SEGURANÇA
+                    </h3>
+
+                    <!-- SENHA -->
+                    <div class="mb-4">
+
+                        <label for="senha" class="block text-sm font-bold
+                                  text-slate-800 mb-2">
+                            Senha de Acesso
+                        </label>
+
+                        <div class="relative">
+
+                            <i data-lucide="lock" class="absolute left-3 top-3.5
+                                  w-5 h-5 text-slate-500"></i>
+
+                            <input id="senha" name="senha" type="password" placeholder="Digite sua senha"
+                                autocomplete="new-password" minlength="8" maxlength="128" required class="w-full bg-slate-50
+                                      border border-slate-200
+                                      rounded-lg py-3 pl-11 pr-12
+                                      focus:outline-none
+                                      focus:ring-2
+                                      focus:ring-purple-400">
+
+                            <button type="button" id="mostrarSenha" aria-label="Mostrar senha" aria-pressed="false"
+                                class="absolute right-3 top-3.5
+                                       text-slate-500">
+
+                                <i data-lucide="eye" class="w-5 h-5"></i>
+
+                            </button>
+
+                        </div>
+
+                        <!-- INDICADOR DE SENHA -->
+                        <div class="flex gap-1 mt-3">
+                            <div id="barra1" class="h-1 flex-1 bg-slate-200 rounded"></div>
+                            <div id="barra2" class="h-1 flex-1 bg-slate-200 rounded"></div>
+                            <div id="barra3" class="h-1 flex-1 bg-slate-200 rounded"></div>
+                        </div>
+
+                        <p id="forcaSenha" class="text-xs text-slate-500 mt-2">
+                            Informe uma senha de pelo menos 8 caracteres.
+                        </p>
+
+                    </div>
+
+                    <!-- CONFIRMAR SENHA -->
+                    <div class="mb-7">
+
+                        <label for="confirmarSenha" class="block text-sm font-bold
+                                  text-slate-800 mb-2">
+                            Confirmar Nova Senha
+                        </label>
+
+                        <div class="relative">
+
+                            <i data-lucide="lock" class="absolute left-3 top-3.5
+                                  w-5 h-5 text-slate-500"></i>
+
+                            <input id="confirmarSenha" name="confirmarSenha" type="password" minlength="8"
+                                maxlength="128" placeholder="Confirme sua senha" autocomplete="new-password" required
+                                class="w-full bg-slate-50
+                                      border border-slate-200
+                                      rounded-lg py-3 pl-11 pr-3
+                                      focus:outline-none
+                                      focus:ring-2
+                                      focus:ring-purple-400">
+                        </div>
+                        <p id="erroSenha" class="hidden mt-2 text-sm text-red-600">
+                            As senhas não coincidem.
+                        </p>
+                    </div>
+
+                    <!-- BOTÃO CADASTRO -->
+                    <button type="submit" class="w-full btn-roxo text-white
+                               font-bold py-3 rounded-lg
+                               transition-colors">
+                        Criar Conta de Administrador
+                    </button>
+
+                    <p id="mensagem" role="status" aria-live="polite" class="text-sm text-center mt-4"></p>
+
+                </form>
+
+                <!-- LINK LOGIN -->
+                <p class="text-center text-sm
+                      text-slate-500 mt-7">
+                    Já possui uma conta?
+
+                    <a href="login.html" class="text-blue-600 font-bold hover:underline">
+                        Entrar
+                    </a>
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
+    <!-- Importação do módulo ES para carregar o Supabase corretamente -->
+    <script type="module" src="../static/js/cadastro.js"></script>
+</body>
+
+</html>

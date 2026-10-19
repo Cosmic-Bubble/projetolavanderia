@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Visão Geral | Projeto Lavanderia</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Estilos centralizados -->
+  <link rel="stylesheet" href="../static/css/style.css">
+
+  <!-- Fonte Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Ícones -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="pagina-painel bg-[#f8f9fa] text-slate-800">
+  <div class="min-h-screen flex">
+    <div id="menu-compartilhado"></div>
+    <main class="flex-1 min-w-0 w-full p-4 sm:p-6 lg:p-10">
+      <header
+        class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 pb-6 mb-6">
+        <div class="min-w-0">
+          <button id="abrir-menu" type="button" aria-label="Abrir menu" aria-controls="menu-lateral"
+            aria-expanded="false"
+            class="lg:hidden inline-flex items-center gap-2 mb-4 bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm"><i
+              data-lucide="menu" class="w-5 h-5"></i> Menu</button>
+          <h1 class="text-2xl font-bold text-slate-800">Visão Geral</h1>
+          <p class="text-sm text-slate-500 mt-2">Status atual e principais projeções de atendimento e capacidade para os
+            próximos meses.</p>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+          <span
+            class="bg-blue-100 text-blue-600 text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-2"><span
+              class="w-2 h-2 rounded-full bg-blue-500"></span>Sistemas OK</span>
+          <button type="button" aria-label="Notificações (demonstração)"
+            title="Notificações disponíveis após integração"
+            class="relative p-3 rounded-full border border-gray-200 bg-white"><i data-lucide="bell"
+              class="w-5 h-5"></i><span
+              class="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-red-500"></span></button>
+        </div>
+      </header>
+      <div class="rounded-xl border border-red-400 bg-red-100 text-red-900 p-4 flex gap-3 mb-5"><i
+          data-lucide="alert-triangle" class="w-5 h-5 shrink-0"></i>
+        <div>
+          <p class="font-bold text-sm">Estouro de Capacidade Previsto!</p>
+          <p class="text-xs mt-1">A demanda prevista para Junho ultrapassará a capacidade máxima instalada em 500 kg
+            (12% acima do limite).</p>
+        </div>
+      </div>
+      <section class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5" aria-label="Indicadores gerais">
+        <article class="painel-card p-5">
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Atendimentos sociais (mês)</p>
+          <p class="text-3xl font-extrabold mt-3 text-slate-900">1.240</p>
+          <p class="text-xs text-slate-500 mt-2">+8% famílias atendidas</p>
+        </article>
+        <article class="painel-card p-5">
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Faturamento de locação (previsto)
+          </p>
+          <p class="text-3xl font-extrabold mt-3 text-slate-900">R$ 28.400</p>
+          <p class="text-xs text-slate-500 mt-2">+15% este mês</p>
+        </article>
+        <article class="painel-card p-5">
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Uso da capacidade</p>
+          <p class="text-3xl font-extrabold mt-3 text-slate-900">88%</p>
+          <p class="text-xs text-slate-500 mt-2"> Algumas máquinas quase cheias</p>
+        </article>
+      </section>
+      <section class="grid grid-cols-1 xl:grid-cols-[1.6fr_1fr] gap-4">
+        <article class="painel-card p-5">
+          <h2 class="font-bold text-base mb-3">Previsão de Demanda Total vs. Capacidade das Máquinas</h2>
+          <div class="grafico-scroll"><svg viewBox="0 0 680 240" role="img"
+              aria-label="Demanda total em azul e limite de capacidade em laranja, de março a agosto"
+              class="grafico-painel">
+              <line x1="35" y1="82" x2="650" y2="82" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5 5" /><text
+                x="38" y="72" fill="#f59e0b" font-size="10">CAPACIDADE MÁXIMA: 5.000 KG</text>
+              <polyline points="35,150 155,140 275,146 395,68 515,82 635,95" fill="none" stroke="#1685e5"
+                stroke-width="3" />
+              <polyline points="395,68 515,82 635,95" fill="none" stroke="#f59e0b" stroke-width="2"
+                stroke-dasharray="5 4" />
+              <g fill="#1685e5">
+                <circle cx="35" cy="150" r="4" />
+                <circle cx="155" cy="140" r="4" />
+                <circle cx="275" cy="146" r="4" />
+                <circle cx="395" cy="68" r="4" />
+                <circle cx="515" cy="82" r="4" />
+                <circle cx="635" cy="95" r="4" />
+              </g>
+              <g fill="#64748b" font-size="12" text-anchor="middle"><text x="35" y="215">Mar</text><text x="155"
+                  y="215">Abr</text><text x="275" y="215">Mai</text><text x="395" y="215">Jun</text><text x="515"
+                  y="215">Jul</text><text x="635" y="215">Ago</text></g>
+            </svg></div>
+        </article>
+        <article class="painel-card p-5 text-center">
+          <h2 class="font-bold text-base text-left">Uso da Capacidade Atual</h2>
+          <div class="medidor" role="img" aria-label="88 por cento de uso da capacidade">
+            <div class="medidor-arco"></div>
+            <div class="medidor-numero">88%<span>Risco de Estouro</span></div>
+          </div>
+          <p class="text-xs text-slate-500 max-w-xs mx-auto">Recomenda-se remanejar parte das entregas não urgentes do
+            módulo comercial para evitar gargalos.</p>
+        </article>
+      </section>
+      <p class="text-xs text-slate-400 mt-6"></p>
+    </main>
+  </div>
+  <script type="module" src="../static/js/menu.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo Social | Projeto Lavanderia</title>
+
+        <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Estilos centralizados -->
+    <link rel="stylesheet" href="../static/css/style.css">
+
+    <!-- Fonte Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Ícones -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+</head>
+
+<body class="pagina-painel bg-[#f8f9fa] text-slate-800">
+    <div class="min-h-screen flex">
+        <div id="menu-compartilhado"></div>
+        <main class="flex-1 min-w-0 w-full p-4 sm:p-6 lg:p-10">
+            <header
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 pb-6 mb-6">
+                <div class="min-w-0">
+                    <button id="abrir-menu" type="button" aria-label="Abrir menu" aria-controls="menu-lateral"
+                        aria-expanded="false"
+                        class="lg:hidden inline-flex items-center gap-2 mb-4 bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm"><i
+                            data-lucide="menu" class="w-5 h-5"></i> Menu</button>
+                    <h1 class="text-2xl font-bold text-slate-800">Módulo Social</h1>
+                    <p class="text-sm text-slate-500 mt-2">Acompanhe o impacto comunitário gerado pela lavanderia por
+                        meio de banhos, lavagens sociais e kits.</p>
+                </div>
+                <div class="flex items-center gap-3 shrink-0">
+                    <span
+                        class="bg-blue-100 text-blue-600 text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-2"><span
+                            class="w-2 h-2 rounded-full bg-blue-500"></span>Sistemas OK</span>
+                    <button type="button" aria-label="Notificações (demonstração)"
+                        title="Notificações disponíveis após integração"
+                        class="relative p-3 rounded-full border border-gray-200 bg-white"><i data-lucide="bell"
+                            class="w-5 h-5"></i><span
+                            class="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-red-500"></span></button>
+                </div>
+            </header>
+            <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-5" aria-label="Indicadores sociais">
+                <article class="painel-card p-5">
+                    <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Visitas de acolhimento
+                    </p>
+                    <p class="text-3xl font-extrabold mt-3 text-slate-900">320</p>
+                    <p class="text-xs text-slate-500 mt-2">Estável · +5% vs. mês anterior</p>
+                </article>
+                <article class="painel-card p-5">
+                    <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Banhos realizados</p>
+                    <p class="text-3xl font-extrabold mt-3 text-slate-900">480</p>
+                    <p class="text-xs text-slate-500 mt-2">Alta variação · +12% vs. mês anterior</p>
+                </article>
+                <article class="painel-card p-5">
+                    <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Kits de higiene
+                        entregues</p>
+                    <p class="text-3xl font-extrabold mt-3 text-slate-900">310</p>
+                    <p class="text-xs text-slate-500 mt-2">Estável · 0% vs. mês anterior</p>
+                </article>
+                <article class="painel-card p-5">
+                    <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Lavagens avulsas
+                        (comunidade)</p>
+                    <p class="text-3xl font-extrabold mt-3 text-slate-900">850 kg</p>
+                    <p class="text-xs text-slate-500 mt-2">Alta variação · +8% vs. mês anterior</p>
+                </article>
+            </section>
+            <section class="painel-card p-5">
+                <h2 class="font-bold text-base mb-4">Comparativo: Previsto vs. Realizado no Mês Anterior</h2>
+                <div class="space-y-3">
+                    <div class="comparativo-linha">
+                        <h3 class="text-sm font-semibold text-slate-800">Lavagens Comunitárias (Avulsas)</h3>
+                        <div><small>PREVISTO</small><strong>800 kg</strong></div>
+                        <div><small>REALIZADO</small><strong>850 kg</strong></div>
+                        <div><small>DESVIO</small><strong class="text-green-600">+6,2%</strong></div>
+                    </div>
+                    <div class="comparativo-linha">
+                        <h3 class="text-sm font-semibold text-slate-800">Banhos e Higiene</h3>
+                        <div><small>PREVISTO</small><strong>500 banhos</strong></div>
+                        <div><small>REALIZADO</small><strong>480 banhos</strong></div>
+                        <div><small>DESVIO</small><strong class="text-red-600">-4,0%</strong></div>
+                    </div>
+                    <div class="comparativo-linha">
+                        <h3 class="text-sm font-semibold text-slate-800">Entrega de Cobertores Sociais</h3>
+                        <div><small>PREVISTO</small><strong>200 un</strong></div>
+                        <div><small>REALIZADO</small><strong>220 un</strong></div>
+                        <div><small>DESVIO</small><strong class="text-green-600">+10,0%</strong></div>
+                    </div>
+                </div>
+            </section>
+            <p class="text-xs text-slate-400 mt-6"></p>
+        </main>
+    </div>
+    <script type="module" src="../static/js/menu.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capacidade das Máquinas | Projeto Lavanderia</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Estilos centralizados -->
+    <link rel="stylesheet" href="../static/css/style.css">
+
+    <!-- Fonte Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Ícones -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="pagina-painel bg-[#f8f9fa] text-slate-800">
+    <div class="min-h-screen flex">
+        <div id="menu-compartilhado"></div>
+        <main class="flex-1 min-w-0 w-full p-4 sm:p-6 lg:p-10">
+            <header
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 pb-6 mb-6">
+                <div class="min-w-0">
+                    <button id="abrir-menu" type="button" aria-label="Abrir menu" aria-controls="menu-lateral"
+                        aria-expanded="false"
+                        class="lg:hidden inline-flex items-center gap-2 mb-4 bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm"><i
+                            data-lucide="menu" class="w-5 h-5"></i> Menu</button>
+                    <h1 class="text-2xl font-bold text-slate-800">Capacidade das Máquinas</h1>
+                    <p class="text-sm text-slate-500 mt-2">Análise conjunta da demanda Comercial (Contratos) e Social
+                        (ONG) frente à nossa capacidade máxima de lavagem.</p>
+                </div>
+                <div class="flex items-center gap-3 shrink-0">
+                    <span
+                        class="bg-blue-100 text-blue-600 text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-2"><span
+                            class="w-2 h-2 rounded-full bg-blue-500"></span>Sistemas OK</span>
+                    <button type="button" aria-label="Notificações (demonstração)"
+                        title="Notificações disponíveis após integração"
+                        class="relative p-3 rounded-full border border-gray-200 bg-white"><i data-lucide="bell"
+                            class="w-5 h-5"></i><span
+                            class="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-red-500"></span></button>
+                </div>
+            </header>
+            <section class="painel-card p-5 mb-5">
+                <h2 class="font-bold text-base mb-2">Demanda Total Prevista (Comercial + Social) vs. Limite de Máquinas
+                </h2>
+                <div class="grafico-barras" role="img"
+                    aria-label="Barras empilhadas de demanda comercial e social de março a agosto, com limite máximo de capacidade indicado por linha pontilhada">
+                    <div class="linha-limite"><span>LIMITE DA CAPACIDADE: 5.000 KG</span></div>
+                    <div class="barra-coluna">
+                        <div class="barra-empilhada">
+                            <div class="barra-comercial" style="height:45%"></div>
+                            <div class="barra-social" style="height:38%"></div>
+                        </div><span>Mar</span>
+                    </div>
+                    <div class="barra-coluna">
+                        <div class="barra-empilhada">
+                            <div class="barra-comercial" style="height:52%"></div>
+                            <div class="barra-social" style="height:41%"></div>
+                        </div><span>Abr</span>
+                    </div>
+                    <div class="barra-coluna">
+                        <div class="barra-empilhada">
+                            <div class="barra-comercial" style="height:47%"></div>
+                            <div class="barra-social" style="height:39%"></div>
+                        </div><span>Mai</span>
+                    </div>
+                    <div class="barra-coluna">
+                        <div class="barra-empilhada">
+                            <div class="barra-comercial" style="height:72%"></div>
+                            <div class="barra-social" style="height:52%"></div>
+                        </div><span>Jun</span>
+                    </div>
+                    <div class="barra-coluna">
+                        <div class="barra-empilhada">
+                            <div class="barra-comercial" style="height:66%"></div>
+                            <div class="barra-social" style="height:47%"></div>
+                        </div><span>Jul</span>
+                    </div>
+                    <div class="barra-coluna">
+                        <div class="barra-empilhada">
+                            <div class="barra-comercial" style="height:61%"></div>
+                            <div class="barra-social" style="height:43%"></div>
+                        </div><span>Ago</span>
+                    </div>
+                </div>
+                <div class="flex gap-5 text-xs text-slate-500 mt-3"><span><span class="legenda-cor bg-cyan-400"></span>
+                        Comercial</span><span><span class="legenda-cor bg-lime-400"></span> Social</span></div>
+            </section>
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <article class="painel-card p-5">
+                    <h2 class="font-bold text-base mb-4">Consumo Estimado de Recursos (Mês Atual)</h2>
+                    <dl class="space-y-4 text-sm">
+                        <div class="flex justify-between gap-3">
+                            <dt><span class="text-sky-500">♢</span> Água Estimada</dt>
+                            <dd class="font-bold text-sky-500">45.000 Litros</dd>
+                        </div>
+                        <div class="flex justify-between gap-3">
+                            <dt><span class="text-yellow-500">⚡</span> Energia Estimada</dt>
+                            <dd class="font-bold">1.200 kWh</dd>
+                        </div>
+                        <div class="flex justify-between gap-3">
+                            <dt><span class="text-lime-600">▣</span> Insumo (Sabão Ecológico)</dt>
+                            <dd class="font-bold">350 kg</dd>
+                        </div>
+                    </dl>
+                </article>
+                <article class="painel-card p-5">
+                    <h2 class="font-bold text-base mb-4">Demanda</h2>
+                    <p class="flex items-center gap-2 text-sm font-semibold"><i data-lucide="alert-triangle"
+                            class="w-5 h-5 text-orange-500"></i> Perceba o estouro de Junho/Julho</p>
+                    <p class="text-sm text-slate-500 mt-3 leading-relaxed">Durante os meses de junho e julho houve um
+                        aumento expressivo de demanda em relação ao limite da lavanderia (4.000 kg). É importante ter
+                        isso em mente para as próximas decisões.</p>
+                </article>
+            </section>
+            <p class="text-xs text-slate-400 mt-6"></p>
+        </main>
+    </div>
+    <script type="module" src="../static/js/menu.js"></script>
+</body>
+
+</html>

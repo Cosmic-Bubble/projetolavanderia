@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Módulo Comercial | Projeto Lavanderia</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Estilos centralizados -->
+  <link rel="stylesheet" href="../static/css/style.css">
+
+  <!-- Fonte Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Ícones -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="pagina-comercial bg-[#f8f9fa] text-slate-800">
+  <div class="min-h-screen flex">
+    <div id="menu-compartilhado"></div>
+    <main class="flex-1 min-w-0 w-full p-4 sm:p-6 lg:p-10">
+      <header
+        class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 pb-6 mb-6">
+        <div class="min-w-0">
+          <button id="abrir-menu" type="button" aria-label="Abrir menu" aria-controls="menu-lateral"
+            aria-expanded="false"
+            class="lg:hidden inline-flex items-center gap-2 mb-4 bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm"><i
+              data-lucide="menu" class="w-5 h-5"></i> Menu</button>
+          <h1 class="text-2xl font-bold text-slate-800">Módulo Comercial</h1>
+          <p class="text-sm text-slate-500 mt-2">Acompanhe os contratos de locação de toalhas e uniformes industriais
+            para custeio da ONG.</p>
+        </div>
+        <div class="flex items-center gap-3 shrink-0">
+          <span
+            class="bg-blue-100 text-blue-600 text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-2"><span
+              class="w-2 h-2 rounded-full bg-blue-500"></span>Sistemas OK</span>
+          <button type="button" aria-label="Notificações (demonstração)"
+            title="Notificações disponíveis após integração"
+            class="relative p-3 rounded-full border border-gray-200 bg-white"><i data-lucide="bell"
+              class="w-5 h-5"></i><span
+              class="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-red-500"></span></button>
+        </div>
+      </header>
+      <section aria-label="Período da previsão"
+        class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+        <div class="inline-flex self-start rounded-lg border border-gray-200 overflow-hidden bg-white" role="group"
+          aria-label="Selecionar período">
+          <button type="button" data-periodo="semestre" aria-pressed="true"
+            class="periodo-btn periodo-ativo px-4 py-2.5 text-xs font-semibold">Próximo Semestre</button>
+          <button type="button" data-periodo="ano" aria-pressed="false"
+            class="periodo-btn px-4 py-2.5 text-xs font-semibold">Próximo Ano</button>
+        </div>
+        <p
+          class="inline-flex items-center gap-2 self-start sm:self-auto bg-[#783c91] text-white rounded-lg px-3 py-2 text-xs font-semibold">
+          <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i>Alta sazonalidade prevista no inverno (+30% de
+          demanda em hotéis)
+        </p>
+      </section>
+      <section class="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 mb-5" aria-labelledby="titulo-grafico">
+        <h2 id="titulo-grafico" class="text-base sm:text-lg font-bold text-[#202927] mb-4">Histórico e Previsão de
+          Faturamento (R$) com Intervalo de Confiança</h2>
+        <p id="descricao-grafico" class="sr-only">Gráfico ilustrativo, com histórico de março a maio e previsão de junho
+          a agosto. Valores demonstrativos.</p>
+        <div class="grafico-scroll" role="img" aria-labelledby="titulo-grafico descricao-grafico">
+          <svg id="grafico-faturamento" viewBox="0 0 760 210" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+            <rect class="faixa-confianca" x="375" y="28" width="345" height="112" rx="5"></rect>
+            <text class="rotulo-confianca" x="389" y="47">INTERVALO DE SEGURANÇA (89%)</text>
+            <path id="linha-faturamento" class="linha-faturamento"
+              d="M 20 153 L 164 146 L 308 143 L 452 130 L 596 109 L 720 91"></path>
+            <g id="pontos-faturamento" class="pontos-faturamento">
+              <circle cx="20" cy="153" r="4"></circle>
+              <circle cx="164" cy="146" r="4"></circle>
+              <circle cx="308" cy="143" r="4"></circle>
+              <circle cx="452" cy="130" r="4"></circle>
+              <circle cx="596" cy="109" r="4"></circle>
+              <circle cx="720" cy="91" r="4"></circle>
+            </g>
+            <g id="rotulos-meses" class="rotulos-meses"><text x="20" y="196" text-anchor="middle">Mar</text><text
+                x="164" y="196" text-anchor="middle">Abr</text><text x="308" y="196"
+                text-anchor="middle">Mai</text><text x="452" y="196" text-anchor="middle">Jun (Prev)</text><text x="596"
+                y="196" text-anchor="middle">Jul (Prev)</text><text x="720" y="196" text-anchor="middle">Ago
+                (Prev)</text></g>
+          </svg>
+        </div>
+        <p class="text-xs text-slate-500 mt-3"></p>
+      </section>
+      <section class="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6" aria-labelledby="titulo-contratos">
+        <h2 id="titulo-contratos" class="text-base sm:text-lg font-bold text-[#202927] mb-4">Contratos de Clientes
+          Ativos e Volume Previsto (kg)</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full min-w-[610px] text-left text-sm tabela-contratos">
+            <thead>
+              <tr>
+                <th scope="col">Nome do Cliente / Hotel</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Volume Previsto (Mês)</th>
+                <th scope="col">Status do Contrato</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Hotel Plaza Imperial</th>
+                <td>Hotelaria</td>
+                <td>1.800 kg</td>
+                <td><span class="status-vigente">Vigente</span></td>
+              </tr>
+              <tr>
+                <th scope="row">Academia Body Fit</th>
+                <td>Esportivo</td>
+                <td>600 kg</td>
+                <td><span class="status-vigente">Vigente</span></td>
+              </tr>
+              <tr>
+                <th scope="row">Restaurante Sabores</th>
+                <td>Gastronomia</td>
+                <td>400 kg</td>
+                <td><span class="status-vencendo">Vencendo em 45d</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-xs text-slate-500 mt-3"></p>
+      </section>
+    </main>
+  </div>
+  <script type="module" src="../static/js/comercial.js"></script>
+  <script type="module" src="../static/js/menu.js"></script>
+</body>
+
+</html>

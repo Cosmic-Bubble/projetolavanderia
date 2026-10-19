@@ -1,0 +1,216 @@
+<!-- Menu compartilhado. CSS incluído aqui para funcionar quando inserido nas páginas via fetch/innerHTML. -->
+<style>
+  #menu-lateral,
+  #menu-lateral * {
+    box-sizing: border-box;
+  }
+
+  #menu-lateral {
+    width: 260px;
+    min-width: 260px;
+    height: 100vh;
+    background: #fff;
+    border-right: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #263247;
+    z-index: 40;
+    overflow-y: auto;
+    transition: transform .2s ease;
+  }
+
+  #menu-lateral p {
+    margin: 0;
+  }
+
+  #menu-lateral .menu-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 28px 22px 22px;
+  }
+
+  #menu-lateral .menu-logo img {
+    display: block;
+    width: 44px;
+    height: 44px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
+
+  #menu-lateral .menu-marca {
+    font-size: 10px;
+    letter-spacing: 1px;
+    line-height: 1.3;
+  }
+
+  #menu-lateral .menu-marca p:first-child {
+    color: #a3cf29;
+    font-weight: 600;
+  }
+
+  #menu-lateral .menu-marca p:last-child {
+    color: #24a5db;
+    font-weight: 600;
+  }
+
+  #menu-lateral .menu-links {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 5px;
+    padding: 18px 14px;
+  }
+
+  #menu-lateral .menu-links a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 13px;
+    border-radius: 8px;
+    color: #647084;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 1.45;
+    font-weight: 400;
+  }
+
+  #menu-lateral .menu-links a:hover,
+  #menu-lateral .menu-links a[aria-current="page"] {
+    background: #f3edf8;
+    color: #783c91;
+  }
+
+  #menu-lateral .menu-links a i,
+  #menu-lateral .menu-links a svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+  }
+
+  #menu-lateral .menu-usuario {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 17px 18px;
+    border-top: 1px solid #e5e7eb;
+  }
+
+  #menu-lateral .menu-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #f3e8ff;
+    color: #783c91;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  #menu-lateral .menu-avatar i,
+  #menu-lateral .menu-avatar svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  #menu-lateral .menu-usuario .menu-nome {
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  #menu-lateral .menu-usuario .menu-cargo {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 3px;
+  }
+
+  #fechar-menu {
+    display: none;
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    border: 0;
+    background: transparent;
+    padding: 8px;
+    cursor: pointer;
+    color: #475569;
+  }
+
+  #menu-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    background: rgba(0, 0, 0, .4);
+  }
+
+  #menu-overlay.hidden {
+    display: none !important;
+  }
+
+  @media (min-width:1024px) {
+    #menu-lateral {
+      position: sticky !important;
+      top: 0;
+      left: 0;
+      transform: none !important;
+    }
+
+    #menu-overlay {
+      display: none !important;
+    }
+  }
+
+  @media (max-width:1023px) {
+    #menu-lateral {
+      position: fixed !important;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      transform: translateX(-100%);
+    }
+
+    #menu-lateral:not([class~="-translate-x-full"]),
+    #menu-lateral.translate-x-0,
+    #menu-lateral.menu-aberto {
+      transform: translateX(0) !important;
+    }
+
+    #menu-lateral.-translate-x-full:not(.translate-x-0):not(.menu-aberto) {
+      transform: translateX(-100%) !important;
+    }
+
+    #fechar-menu {
+      display: block;
+    }
+  }
+</style>
+<div id="menu-overlay" class="fixed inset-0 z-30 hidden bg-black/40 lg:hidden" aria-hidden="true"></div>
+<aside id="menu-lateral" aria-label="Menu principal"
+  class="fixed inset-y-0 left-0 z-40 w-[260px] shrink-0 bg-white border-r border-gray-200 flex flex-col transform -translate-x-full transition-transform duration-200 lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen">
+  <button id="fechar-menu" type="button" aria-label="Fechar menu"><i data-lucide="x"></i></button>
+  <div class="menu-logo">
+    <img src="../static/logo.png" alt="Projeto Lavanderia">
+    <div class="menu-marca">
+      <p>PROJETO</p>
+      <p>LAVANDERIA</p>
+    </div>
+  </div>
+  <nav class="menu-links" aria-label="Navegação do painel">
+    <a href="dashboard.html"><i data-lucide="layout-dashboard"></i><span>Dashboard Geral</span></a>
+    <a href="comercial.html"><i data-lucide="shopping-cart"></i><span>Módulo Comercial</span></a>
+    <a href="social.html"><i data-lucide="heart"></i><span>Módulo Social</span></a>
+    <a href="capacidade.html"><i data-lucide="activity"></i><span>Consolidação de Capacidade</span></a>
+    <a href="alertas.html"><i data-lucide="bell"></i><span>Alertas e Avisos</span></a>
+    <a href="base.html"><i data-lucide="upload"></i><span>Importação</span></a>
+    <a href="configuracoes.html"><i data-lucide="settings"></i><span>Meu perfil</span></a>
+  </nav>
+  <div class="menu-usuario">
+    <div class="menu-avatar"><i data-lucide="user-round"></i></div>
+    <div>
+      <p class="menu-nome">Administrador</p>
+      <p class="menu-cargo">Gestão do Projeto</p>
+    </div>
+  </div>
+</aside>

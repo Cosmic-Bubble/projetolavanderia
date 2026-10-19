@@ -1,0 +1,110 @@
+/* ==========================================================================
+   Estilos Gerais e Tipografia
+   ========================================================================== */
+body.pagina-login {
+    font-family: Arial, sans-serif;
+}
+
+body.pagina-cadastro,
+body.pagina-redefinir,
+body.pagina-base,
+body.pagina-comercial,
+body.pagina-painel {
+    font-family: 'Inter', sans-serif;
+}
+
+.cor-roxa,
+.btn-roxo {
+    background-color: #783c91;
+}
+
+.cor-roxa:hover,
+.btn-roxo:hover {
+    background-color: #66327c;
+}
+
+/* ==========================================================================
+   Módulo Comercial
+   ========================================================================== */
+.pagina-comercial .periodo-btn { color: #586864; background: #fff; transition: background-color .2s, color .2s; }
+.pagina-comercial .periodo-btn:hover { background: #f5f5f7; }
+.pagina-comercial .periodo-btn.periodo-ativo { color: white; background: #783c91; }
+.pagina-comercial .grafico-scroll { width: 100%; overflow-x: auto; }
+.pagina-comercial #grafico-faturamento { display: block; width: 100%; min-width: 420px; height: auto; }
+.pagina-comercial .faixa-confianca { fill: #d8edbd; }
+.pagina-comercial .rotulo-confianca { font: 700 9px Inter, sans-serif; fill: #202927; }
+.pagina-comercial .linha-faturamento { fill: none; stroke: #94c93d; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.pagina-comercial .pontos-faturamento circle { fill: #83c331; stroke: white; stroke-width: 1.5; }
+.pagina-comercial .rotulos-meses { font: 11px Inter, sans-serif; fill: #586864; }
+.pagina-comercial .tabela-contratos { border-collapse: separate; border-spacing: 0; }
+.pagina-comercial .tabela-contratos thead { background: #f1f2f4; color: #586864; }
+.pagina-comercial .tabela-contratos thead th { padding: 13px 15px; font-size: 12px; font-weight: 500; }
+.pagina-comercial .tabela-contratos thead th:first-child { border-radius: 7px 0 0 7px; }
+.pagina-comercial .tabela-contratos thead th:last-child { border-radius: 0 7px 7px 0; }
+.pagina-comercial .tabela-contratos tbody th, .pagina-comercial .tabela-contratos tbody td { padding: 17px 15px; border-bottom: 1px solid #e5e7eb; }
+.pagina-comercial .tabela-contratos tbody th { font-weight: 600; color: #202927; }
+.pagina-comercial .status-vigente, .pagina-comercial .status-vencendo { display: inline-block; border-radius: 5px; padding: 5px 10px; font-size: 11px; font-weight: 600; color: white; white-space: nowrap; }
+.pagina-comercial .status-vigente { background: #783c91; }
+.pagina-comercial .status-vencendo { background: #e65b13; }
+@media (max-width: 639px) { .pagina-comercial .grafico-scroll { padding-bottom: 5px; } }
+
+/* ==========================================================================
+   Dashboard, Social, Capacidade e Alertas
+   ========================================================================== */
+.pagina-painel .painel-card {background:#fff;border:1px solid #e5e7eb;border-radius:14px;min-width:0;}
+.pagina-painel .grafico-scroll {overflow-x:auto;}
+.pagina-painel .grafico-painel {display:block;width:100%;min-width:420px;height:auto;}
+.pagina-painel .medidor {width:200px;height:130px;margin:28px auto 12px;position:relative;overflow:hidden;}
+.pagina-painel .medidor-arco {position:absolute;left:10px;top:5px;width:180px;height:180px;border-radius:50%;border:19px solid #e2e8f0;border-bottom-color:transparent;border-left-color:#783c91;border-top-color:#783c91;border-right-color:#783c91;transform:rotate(-16deg);}
+.pagina-painel .medidor-numero {position:absolute;top:72px;left:0;right:0;color:#783c91;font-weight:800;font-size:30px;line-height:1.05;}
+.pagina-painel .medidor-numero span {display:block;color:#64748b;font-size:11px;font-weight:500;margin-top:5px;}
+.pagina-painel .comparativo-linha {display:grid;grid-template-columns:minmax(140px,2fr) repeat(3,minmax(70px,1fr));align-items:center;gap:12px;padding:15px;border:1px solid #e5e7eb;border-radius:10px;}
+.pagina-painel .comparativo-linha small {display:block;color:#94a3b8;font-size:10px;margin-bottom:4px;}
+.pagina-painel .comparativo-linha strong {display:block;font-size:13px;}
+.pagina-painel .grafico-barras {height:255px;display:flex;align-items:end;justify-content:space-around;gap:12px;position:relative;padding:24px 8px 20px;}
+.pagina-painel .linha-limite {position:absolute;top:68px;left:0;right:0;border-top:2px dashed #fb923c;z-index:1;}
+.pagina-painel .linha-limite span {position:absolute;right:4px;top:-18px;color:#ea580c;font-size:9px;font-weight:700;}
+.pagina-painel .barra-coluna {height:100%;display:flex;flex-direction:column;justify-content:end;align-items:center;gap:8px;flex:1;min-width:0;font-size:11px;color:#64748b;}
+.pagina-painel .barra-empilhada {width:min(46px,70%);height:75%;display:flex;flex-direction:column;justify-content:end;}
+.pagina-painel .barra-comercial {background:#2ab7d5;min-height:10px;}
+.pagina-painel .barra-social {background:#c9df13;min-height:10px;}
+.pagina-painel .legenda-cor {display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;}
+.pagina-painel .alerta-linha {display:flex;align-items:center;gap:12px;padding:15px;border:1px solid #e5e7eb;border-radius:10px;}
+.pagina-painel .alerta-icone {width:38px;height:38px;flex-shrink:0;display:flex;align-items:center;justify-content:center;border-radius:8px;}
+.pagina-painel .alerta-red {background:#fef2f2;color:#ef4444;}
+.pagina-painel .alerta-orange {background:#fff7ed;color:#f97316;}
+.pagina-painel .alerta-blue {background:#eff6ff;color:#0ea5e9;}
+.pagina-painel .alerta-etiqueta {font-size:11px;font-weight:600;border-radius:6px;padding:5px 9px;white-space:nowrap;}
+.pagina-painel .etiqueta-red {background:#fef2f2;color:#dc2626;}
+.pagina-painel .etiqueta-orange {background:#fff7ed;color:#ea580c;}
+.pagina-painel .etiqueta-blue {background:#eff6ff;color:#0284c7;}
+@media(max-width:639px){
+    .pagina-painel .comparativo-linha{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+    .pagina-painel .comparativo-linha h3{grid-column:1/-1;}
+    .pagina-painel .alerta-linha{flex-wrap:wrap;}
+    .pagina-painel .alerta-etiqueta{margin-left:50px;}
+}
+
+/* ==========================================================================
+   Configurações
+   ========================================================================== */
+.pagina-config .config-card{background:#fff;border:1px solid #d8dee6;border-radius:14px;padding:clamp(18px,2.4vw,28px);box-shadow:0 2px 4px #0f172a20;min-width:0}
+.pagina-config .config-icone{display:inline-flex;align-items:center;justify-content:center;width:42px;height:42px;border-radius:50%;background:#f3e8ff;color:#783c91;flex-shrink:0}
+.pagina-config .config-label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:#1e293b}
+.pagina-config .config-input,.pagina-config .config-senha{display:block;width:100%;min-width:0;border:1px solid #dce3ec;border-radius:8px;background:#f8fafc;color:#1e293b;font-size:14px;min-height:44px}
+.pagina-config .config-input{padding:10px 12px}
+.pagina-config .config-input::placeholder,.pagina-config .config-senha input::placeholder{color:#94a3b8}
+.pagina-config .config-input:focus-visible,.pagina-config .config-senha:focus-within{outline:2px solid #783c91;outline-offset:1px}
+.pagina-config .config-file{padding:8px 10px;max-width:100%;font-size:12px}
+.pagina-config .config-file::file-selector-button{background:#e9edf3;border:0;border-radius:5px;padding:5px 8px;margin-right:8px;cursor:pointer}
+.pagina-config .config-senha{display:flex;align-items:center}
+.pagina-config .config-senha input{width:100%;min-width:0;background:transparent;border:0;outline:0;padding:10px 4px 10px 12px}
+.pagina-config .config-senha button{padding:9px;color:#94a3b8;flex-shrink:0}
+.pagina-config .config-btn{background:#783c91;color:white;border:0;border-radius:8px;padding:11px 16px;font-size:13px;font-weight:700;min-height:42px;transition:background .2s}
+.pagina-config .config-btn:hover{background:#66327c}
+.pagina-config .config-btn:focus-visible{outline:3px solid #b88bc9;outline-offset:2px}
+
+/* ==========================================================================
+   Layout Compartilhado
+   ========================================================================== */
+#menu-compartilhado { display: contents; }

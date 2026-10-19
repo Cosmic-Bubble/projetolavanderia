@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo | Projeto Lavanderia</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Estilos centralizados -->
+    <link rel="stylesheet" href="../static/css/style.css">
+
+    <!-- Fonte Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Ícones -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="pagina-base bg-[#f8f9fa] text-slate-800">
+
+    <div class="min-h-screen flex">
+
+        <!-- Fundo escurecido quando o menu móvel estiver aberto -->
+        <div id="menu-compartilhado"></div>
+        <main class="flex-1 min-w-0 w-full p-4 sm:p-6 lg:p-10">
+
+            <!-- CABEÇALHO -->
+            <header
+                class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 pb-6 mb-6">
+                <button type="button" id="abrir-menu"
+                    class="lg:hidden inline-flex items-center gap-2 self-start bg-white border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                    aria-label="Abrir menu" aria-controls="menu-lateral" aria-expanded="false"><i data-lucide="menu"
+                        class="w-5 h-5"></i> Menu</button>
+
+                <div>
+                    <h1 class="text-2xl font-bold text-slate-800">Importação</h1>
+                    <p class="text-sm text-slate-500 mt-2">
+                        Gerencie o funcionamento da inteligência de previsão e atualize as tabelas de atendimentos
+                        sociais.
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-3 sm:gap-5 flex-wrap">
+
+                    <span
+                        class="bg-blue-100 text-blue-600 text-xs font-semibold px-4 py-2 rounded-full flex items-center gap-2">
+                        <span class="w-2 h-2 rounded-full bg-blue-500"></span>
+                        Sistemas OK
+                    </span>
+
+                    <button type="button" aria-label="Notificações"
+                        class="relative p-3 rounded-full border border-gray-200 bg-white">
+                        <i data-lucide="bell" class="w-5 h-5"></i>
+                        <span class="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                    </button>
+
+                </div>
+
+            </header>
+
+            <!-- ÁREA QUE RECEBERÁ O CONTEÚDO DE CADA PÁGINA -->
+
+
+            <!-- ÁREA DE IMPORTAÇÃO -->
+            <section class="grid grid-cols-1 lg:grid-cols-2 gap-5 items-start">
+
+                <!-- CARD ESQUERDO -->
+                <div class="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6">
+
+                    <h2 class="text-lg font-bold text-[#202927] mb-4">
+                        Importar Nova Planilha de Atendimentos
+                    </h2>
+
+                    <!-- ÁREA DE UPLOAD -->
+                    <div id="drop-zone" role="button" tabindex="0" aria-label="Selecionar planilha Excel" class="border-2 border-dashed border-[#7d3c98]
+                    bg-[#f5f5f7] rounded-xl
+                    min-h-[158px] flex flex-col
+                    items-center justify-center
+                    text-center cursor-pointer
+                    hover:bg-purple-50 transition">
+
+                        <i data-lucide="cloud-upload" class="w-10 h-10 text-[#7d3c98] mb-4"></i>
+
+                        <p class="text-[#7d3c98] font-semibold text-sm">
+                            Arraste e solte o arquivo Excel (.xlsx)
+                        </p>
+
+                        <p class="text-xs text-gray-600 mt-1">
+                            ou clique aqui para buscar em seu computador
+                        </p>
+
+                        <input type="file" id="arquivo-excel" name="arquivo_excel" accept=".xlsx" class="hidden">
+                    </div>
+
+                    <!-- MENSAGEM DO ARQUIVO -->
+                    <div id="arquivo-selecionado" class="hidden mt-4 p-3 rounded-lg text-sm">
+                    </div>
+
+                    <!-- INSTRUÇÕES -->
+                    <div class="mt-5 text-sm text-[#586864] leading-relaxed">
+
+                        <p class="font-bold text-xs mb-3">
+                            INSTRUÇÕES SIMPLES:
+                        </p>
+
+                        <p class="mb-3">
+                            1. Exporte a planilha de registros do sistema
+                            atual da lavanderia (Atendimentos Sociais
+                            e Contratos Comerciais).
+                        </p>
+
+                        <p class="mb-3">
+                            2. Certifique-se de que os campos de Peso (kg)
+                            e Mês estejam preenchidos corretamente.
+                        </p>
+
+                        <p>
+                            3. Carregue o arquivo acima para atualizar
+                            o robô que faz os cálculos de previsão.
+                        </p>
+
+                    </div>
+                </div>
+
+                <!-- CARD DIREITO -->
+                <div class="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6">
+
+                    <h2 class="text-lg font-bold text-[#202927] mb-4">
+                        Histórico de Arquivos Importados
+                    </h2>
+
+                    <div class="space-y-3">
+
+                        <!-- ARQUIVO 1 -->
+                        <div class="border border-gray-200 rounded-xl p-4
+                        flex items-center justify-between gap-3">
+
+                            <div class="flex items-center gap-3 min-w-0">
+                                <i data-lucide="file-text" class="w-5 h-5 text-[#586864] shrink-0"></i>
+
+                                <div class="min-w-0">
+                                    <p class="text-sm font-semibold break-all">
+                                        Relatorio_Operacional.xlsx
+                                    </p>
+                                    <p class="text-xs text-gray-400">
+                                        Há 12 dias
+                                    </p>
+                                </div>
+                            </div>
+
+                            <span class="self-start sm:self-auto bg-gray-100 text-cyan-500
+                             text-xs px-3 py-1 rounded-md shrink-0">
+                                Processado
+                            </span>
+                        </div>
+
+                        <!-- ARQUIVO 2 -->
+                        <div class="border border-gray-200 rounded-xl p-4
+                        flex items-center justify-between gap-3">
+
+                            <div class="flex items-center gap-3 min-w-0">
+                                <i data-lucide="file-text" class="w-5 h-5 text-[#586864] shrink-0"></i>
+
+                                <div class="min-w-0">
+                                    <p class="text-sm font-semibold break-all">
+                                        Insumos_Mensais.xlsx
+                                    </p>
+                                    <p class="text-xs text-gray-400">
+                                        Há 25 dias
+                                    </p>
+                                </div>
+                            </div>
+
+                            <span class="self-start sm:self-auto bg-gray-100 text-cyan-500
+                             text-xs px-3 py-1 rounded-md shrink-0">
+                                Processado
+                            </span>
+                        </div>
+
+                        <!-- ARQUIVO 3 -->
+                        <div class="border border-gray-200 rounded-xl p-4
+                        flex items-center justify-between gap-3">
+
+                            <div class="flex items-center gap-3 min-w-0">
+                                <i data-lucide="file-text" class="w-5 h-5 text-[#586864] shrink-0"></i>
+
+                                <div class="min-w-0">
+                                    <p class="text-sm font-semibold break-all">
+                                        Custos_Operacionais.xlsx
+                                    </p>
+                                    <p class="text-xs text-gray-400">
+                                        Há 2 meses
+                                    </p>
+                                </div>
+                            </div>
+
+                            <span class="self-start sm:self-auto bg-gray-100 text-orange-500
+                             text-xs px-3 py-1 rounded-md shrink-0">
+                                Substituído
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- FECHAMENTO DA ESTRUTURA -->
+        </main>
+    </div>
+
+    <!-- JAVASCRIPT -->
+
+    <script type="module" src="../static/js/base.js"></script>
+    <script type="module" src="../static/js/menu.js"></script>
+</body>
+
+</html>
