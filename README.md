@@ -15,7 +15,7 @@ O projeto busca integrar conhecimentos de programação, análise de dados, esta
 ### Linguagem e aplicação
 
 - **Python** — desenvolvimento da aplicação, processamento dos dados e implementação dos métodos de análise e previsão.
-- **Flask** — desenvolvimento do backend e integração entre a aplicação e a interface.
+- **JavaScript** — interações e funcionalidades da aplicação no navegador.
 
 ### Análise e estatística
 
@@ -112,15 +112,13 @@ As configurações de conexão devem estar presentes no arquivo `.env`.
 
 ## Executar a aplicação
 
-Com o ambiente virtual ativado e as dependências instaladas, execute:
+## Executar a aplicação
 
-    python run.py
+A execução da aplicação dependerá da arquitetura adotada pela equipe.
 
-Após iniciar o servidor, acesse no navegador o endereço informado pelo Flask, normalmente:
+A interface desenvolvida em HTML, CSS e JavaScript deverá ser executada conforme o método definido para o projeto, como o Live Server no VS Code, caso seja utilizado.
 
-    http://127.0.0.1:5000
-
-A aplicação poderá ser encerrada utilizando `Ctrl + C` no terminal.
+Os scripts Python responsáveis pela análise de dados e geração de previsões deverão ser executados conforme a integração estabelecida com a interface.
 
 ## Testes
 
@@ -208,4 +206,4 @@ Funcionalidades adicionais poderão ser consideradas posteriormente, conforme o 
 
 ## Prazo
 
-**Entrega prevista do MVP: 13 de novembro de 2026.**
+**Entrega prevista do MVP: 16 de novembro de 2026.**
