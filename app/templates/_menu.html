@@ -191,20 +191,21 @@
   class="fixed inset-y-0 left-0 z-40 w-[260px] shrink-0 bg-white border-r border-gray-200 flex flex-col transform -translate-x-full transition-transform duration-200 lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen">
   <button id="fechar-menu" type="button" aria-label="Fechar menu"><i data-lucide="x"></i></button>
   <div class="menu-logo">
-    <img src="../static/logo.png" alt="Projeto Lavanderia">
+    <img src="{{ url_for('static', filename='assets/img/logo.png') }}" alt="Projeto Lavanderia">
     <div class="menu-marca">
       <p>PROJETO</p>
       <p>LAVANDERIA</p>
     </div>
   </div>
   <nav class="menu-links" aria-label="Navegação do painel">
-    <a href="dashboard.html"><i data-lucide="layout-dashboard"></i><span>Dashboard Geral</span></a>
-    <a href="comercial.html"><i data-lucide="shopping-cart"></i><span>Módulo Comercial</span></a>
-    <a href="social.html"><i data-lucide="heart"></i><span>Módulo Social</span></a>
-    <a href="capacidade.html"><i data-lucide="activity"></i><span>Consolidação de Capacidade</span></a>
-    <a href="alertas.html"><i data-lucide="bell"></i><span>Alertas e Avisos</span></a>
-    <a href="base.html"><i data-lucide="upload"></i><span>Importação</span></a>
-    <a href="configuracoes.html"><i data-lucide="settings"></i><span>Meu perfil</span></a>
+    <a href="{{ url_for('admin.dashboard') }}"><i data-lucide="layout-dashboard"></i><span>Dashboard Geral</span></a>
+    <a href="{{ url_for('admin.comercial') }}"><i data-lucide="shopping-cart"></i><span>Módulo Comercial</span></a>
+    <a href="{{ url_for('admin.social') }}"><i data-lucide="heart"></i><span>Módulo Social</span></a>
+    <a href="{{ url_for('admin.capacidade') }}"><i data-lucide="activity"></i><span>Consolidação de
+        Capacidade</span></a>
+    <a href="{{ url_for('admin.alertas') }}"><i data-lucide="bell"></i><span>Alertas e Avisos</span></a>
+    <a href="{{ url_for('admin.importacao') }}"><i data-lucide="upload"></i><span>Importação</span></a>
+    <a href="{{ url_for('admin.configuracoes') }}"><i data-lucide="settings"></i><span>Meu perfil</span></a>
   </nav>
   <div class="menu-usuario">
     <div class="menu-avatar"><i data-lucide="user-round"></i></div>

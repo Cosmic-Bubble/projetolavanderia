@@ -1,48 +1,54 @@
 # Projeto de Previsão de Demanda
 
-Projeto acadêmico desenvolvido para a disciplina de Empreendedorismo, com foco na aplicação de conceitos de matemática, estatística e programação na análise e previsão de demanda.
-
 ![Status](https://img.shields.io/badge/status-em%20andamento-2563EB?style=for-the-badge)
+![Prazo MVP](https://img.shields.io/badge/Entrega%20MVP-16%20de%20Novembro%202026-blue?style=for-the-badge)
+
+Projeto acadêmico desenvolvido para a disciplina de Empreendedorismo, com foco na aplicação de conceitos de matemática, estatística e programação na análise e previsão de demanda para uma iniciativa comunitária de lavanderia.
+
+---
 
 ## Objetivo
 
-Desenvolver uma aplicação web capaz de analisar dados históricos de demanda, identificar padrões e aplicar métodos estatísticos para gerar previsões que possam auxiliar na tomada de decisões.
+Desenvolver uma aplicação web capaz de analisar dados históricos de demanda, identificar padrões sazonais e tendências, e aplicar métodos estatísticos para gerar previsões que auxiliem na tomada de decisões estratégicas.
 
-O projeto busca integrar conhecimentos de programação, análise de dados, estatística e desenvolvimento de aplicações web.
+---
 
-## Tecnologias
+## Tecnologias Utilizadas
 
-### Linguagem e aplicação
+### Linguagem e Backend
+* **Python 3.11+** — Lógica da aplicação, processamento de dados e motores de previsão.
+* **Flask** — Framework web para o backend e rotas da aplicação.
 
-- **Python** — desenvolvimento da aplicação, processamento dos dados e implementação dos métodos de análise e previsão.
-- **JavaScript** — interações e funcionalidades da aplicação no navegador.
+### Análise de Dados e Estatística
+* **Pandas & NumPy** — Manipulação, tratamento e agregação de dados.
+* **SciPy & Statsmodels** — Cálculos estatísticos avançados e modelos de séries temporais.
+* **Scikit-learn** — Modelos preditivos e métricas de avaliação.
 
-### Análise e estatística
+### Banco de Dados & Armazenamento
+* **Supabase (PostgreSQL)** — Banco de dados relacional.
+* **Supabase Storage (Buckets)** — Armazenamento seletivo de planilhas de atendimento (`.csv`/`.xlsx`) e imagens de perfil.
 
-- **Pandas** — tratamento, organização e análise dos dados.
-- **NumPy** — operações numéricas e manipulação de dados.
-- **SciPy** — cálculos e métodos estatísticos.
-- **Statsmodels** — análise estatística e modelos de séries temporais.
-- **Scikit-learn** — modelos de previsão e métricas de avaliação.
+### Interface (Frontend)
+* **HTML5, CSS3 & JavaScript** — Estrutura, estilização responsiva e interatividade.
+* **Chart.js / Gráficos Interativos** — Renderização de gráficos modernos no navegador a partir de dados JSON fornecidos pelo backend.
 
-### Visualização
+### Ferramentas de Desenvolvimento
+* **Git & GitHub** — Controle de versão e colaboração em equipe.
+* **Pytest** — Automação de testes.
 
-- **Matplotlib** — criação de gráficos para representação dos dados e resultados das previsões.
+---
 
-### Banco de dados
+## Arquitetura e Escopo do MVP
 
-- **Supabase (PostgreSQL)** — armazenamento e consulta dos dados utilizados pela aplicação.
+O projeto adota a **Estratégia de Processamento no Back-end e Renderização Dinâmica no Front-end**:
+1. **Segurança e Eficiência:** Sem o uso de ORMs pesados. A comunicação com o banco é feita de forma direta e segura através do SDK oficial do Supabase em Python.
+2. **Separação de Responsabilidades:** O Python/Pandas executa todos os cálculos pesados (médias, somas, agrupamentos) e devolve estruturas limpas em **JSON**. O JavaScript do navegador encarrega-se exclusivamente de desenhar os gráficos visuais.
+3. **Escopo do MVP:** 
+   * Armazenamento e tratamento de dados de demanda.
+   * Aplicação de métodos estatísticos e geração de previsões.
+   * Interface web interativa para visualização dos resultados.
 
-### Interface
-
-- **HTML** — estrutura das páginas.
-- **CSS** — estilização da interface.
-- **JavaScript** — interações e funcionalidades no navegador.
-
-### Desenvolvimento
-
-- **Git** — controle de versão.
-- **GitHub** — hospedagem do repositório e colaboração entre os integrantes.
+---
 
 As tecnologias poderão ser ajustadas durante o desenvolvimento conforme as necessidades identificadas no projeto.
 
@@ -112,13 +118,15 @@ As configurações de conexão devem estar presentes no arquivo `.env`.
 
 ## Executar a aplicação
 
-## Executar a aplicação
+Com o ambiente virtual ativado e as dependências instaladas, execute:
 
-A execução da aplicação dependerá da arquitetura adotada pela equipe.
+    python run.py
 
-A interface desenvolvida em HTML, CSS e JavaScript deverá ser executada conforme o método definido para o projeto, como o Live Server no VS Code, caso seja utilizado.
+Após iniciar o servidor, acesse no navegador o endereço informado pelo Flask, normalmente:
 
-Os scripts Python responsáveis pela análise de dados e geração de previsões deverão ser executados conforme a integração estabelecida com a interface.
+    http://127.0.0.1:5000
+
+A aplicação poderá ser encerrada utilizando `Ctrl + C` no terminal.
 
 ## Testes
 
@@ -172,14 +180,6 @@ A partir dessa análise, serão selecionados métodos estatísticos e modelos de
 
 Os resultados serão avaliados por meio de métricas apropriadas e apresentados na aplicação por meio de indicadores e visualizações.
 
-## Banco de Dados
-
-O projeto utilizará o Supabase como solução de armazenamento, com PostgreSQL como sistema de gerenciamento de banco de dados.
-
-As credenciais de acesso serão armazenadas em variáveis de ambiente e não deverão ser incluídas no repositório.
-
-O arquivo `.env.example` será utilizado para documentar as variáveis necessárias para configuração do ambiente.
-
 ## Testes
 
 Serão realizados testes durante o desenvolvimento para verificar:
@@ -190,20 +190,56 @@ Serão realizados testes durante o desenvolvimento para verificar:
 - métricas de avaliação;
 - integração com o banco de dados;
 - funcionamento das principais funcionalidades da aplicação.
+---
 
-## Escopo do MVP
+## Estrutura de Pastas
 
-A primeira versão do projeto terá como foco:
+```
+projetolavanderia/
+├── app/                          # Aplicação Flask
+│   ├── __init__.py               # Cria o app Flask (create_app)
+│   ├── config.py                 # Lê as configurações do .env
+│   ├── routes/                   # Rotas / endpoints
+│   │   ├── auth.py               # Login, cadastro, proteção de rotas, redefinição de senha
+│   │   ├── ...           
+│   ├── templates/                # Templates Jinja2 (HTML)
+│   │   ├── dashboard/
+│   │   ├── ...
+│   ├── static/                   # Arquivos estáticos (CSS, JS, imagens)
+│   │   ├── css/style.css
+│   │   ├── js/
+│   │   │   ├── cadastro/cadastro.js
+│   │   │   ├── login/login.js
+│   │   │   ├── menu/menu.js
+│   │   │   └── ...
+│   │   └── assets/img/
+│   ├── services/                 # Lógica de negócio (análise, previsão)
+│   │   ├── supabase_client.py    # Centraliza a conexão com o Supabase
+│   ├── models/                   # Modelos de dados / previsões
+│   └── utils/                    # Helpers
+├── database/schema.sql           # Script de criação do banco
+├── run.py                        # Ponto de entrada: inicia Flask
+├── requirements.txt              # Dependências Python
+├── .env                          # Variáveis de ambiente (não versionado)
+├── .gitignore                    # Extensões não versionadas
+└── README.md                     # Este arquivo
+```
 
-- armazenamento dos dados de demanda;
-- tratamento e análise dos dados;
-- aplicação de métodos estatísticos;
-- geração de previsões;
-- avaliação dos resultados;
-- apresentação dos dados e previsões em uma interface web.
+## O que cada arquivo faz
 
-Funcionalidades adicionais poderão ser consideradas posteriormente, conforme o tempo disponível e as necessidades identificadas durante o desenvolvimento.
+- `run.py`: inicializa o app (`create_app`), registra todas as rotas e inicia o servidor (`port=5001`).
+- `app/__init__.py`: configura o Flask com pastas `templates` e `static` dentro de `app/`.
+- `app/routes/*.py`: cada arquivo define uma rota (URL) e retorna um template HTML.
+- `app/templates/*.html`: páginas da interface, incluindo `menu/menu.html` que é incluído (`{% include %}`) nas páginas internas.
+- `app/static/js/*.js`: JavaScript por módulo (ex: `cadastro.js` faz a validação de senha e envia para o Supabase).
+- `tests/`: testes automatizados com pytest.
 
-## Prazo
+## Bibliotecas necessárias (`requirements.txt`)
 
-**Entrega prevista do MVP: 16 de novembro de 2026.**
+- `flask` — backend web
+- `python-dotenv` — carrega `.env`
+- `supabase` — banco/postgres
+- `pandas`, `numpy`, `scipy`, `statsmodels`, `scikit-learn` — análise e previsão
+- `pytest` — testes
+- `Chart' — gráficos 
+- Outras: `lucide`, tailwind, (ícones, via CDN no HTML)

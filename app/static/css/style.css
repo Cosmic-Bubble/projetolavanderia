@@ -2,10 +2,15 @@
    Estilos Gerais e Tipografia
    ========================================================================== */
 body.pagina-login {
-    font-family: Arial, sans-serif;
+    font-family: 'Montserrat', system-ui, sans-serif;
+    color: var(--navy);
 }
 
-body.pagina-cadastro,
+body.pagina-cadastro {
+    font-family: 'Montserrat', system-ui, sans-serif;
+    color: var(--navy);
+}
+
 body.pagina-redefinir,
 body.pagina-base,
 body.pagina-comercial,
@@ -13,14 +18,170 @@ body.pagina-painel {
     font-family: 'Inter', sans-serif;
 }
 
-.cor-roxa,
-.btn-roxo {
-    background-color: #783c91;
+.cor-roxa {
+    background: linear-gradient(90deg, #a855c7 0%, #7c3fbf 100%);
+    border-radius: 14px;
+    box-shadow: 0 10px 20px -8px rgba(124, 63, 191, 0.55);
+    transition: transform .15s, box-shadow .2s, filter .2s;
 }
 
-.cor-roxa:hover,
+.cor-roxa:hover {
+    filter: brightness(1.06);
+    box-shadow: 0 14px 24px -8px rgba(124, 63, 191, 0.65);
+}
+
+.cor-roxa:active {
+    transform: translateY(1px);
+}
+
+.btn-roxo {
+    background: linear-gradient(90deg, #a855c7 0%, #7c3fbf 100%);
+    border-radius: 14px;
+    box-shadow: 0 10px 20px -8px rgba(124, 63, 191, 0.55);
+    transition: transform .15s, box-shadow .2s, filter .2s;
+}
+
 .btn-roxo:hover {
-    background-color: #66327c;
+    filter: brightness(1.06);
+    box-shadow: 0 14px 24px -8px rgba(124, 63, 191, 0.65);
+}
+
+.btn-roxo:active {
+    transform: translateY(1px);
+}
+
+/* ==========================================================================
+   Variáveis e Componentes específicos da Página de Cadastro / Login
+   ========================================================================== */
+:root {
+    --navy: #1e1b4b;
+    --muted: #6b6a9a;
+    --purple: #9333ea;
+    --purple-dark: #6d2fb5;
+    --lavender: #ede9fe;
+}
+
+/* Painéis */
+.painel-esquerdo {
+    background: linear-gradient(180deg, #fdfcff 0%, #f8f5ff 100%);
+}
+
+.painel-direito {
+    background: linear-gradient(135deg, #f5f3fb 0%, #eeeaf8 100%);
+}
+
+.forma {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* Card */
+.card-login {
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid #e9e6f5;
+    box-shadow: 0 20px 50px -20px rgba(109, 47, 181, 0.18);
+}
+
+.icone-topo {
+    background: var(--lavender);
+    border-radius: 14px;
+}
+
+/* Campos */
+.campo {
+    width: 100%;
+    background: #fff;
+    border: 1px solid #e5e3f0;
+    border-radius: 14px;
+    padding: 0.9rem 1rem 0.9rem 3rem;
+    font-size: 0.95rem;
+    color: var(--navy);
+    transition: border-color .2s, box-shadow .2s;
+}
+
+.campo-simples {
+    padding-left: 1rem;
+}
+
+.campo::placeholder {
+    color: #a3a2c4;
+}
+
+.campo:focus {
+    outline: none;
+    border-color: #c084fc;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.18);
+}
+
+.icone-campo {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 1.25rem;
+    height: 1.25rem;
+    color: #6b6a9a;
+}
+
+/* Upload de foto */
+.area-upload {
+    border: 2px dashed #d8d3ee;
+    border-radius: 14px;
+    background: #faf8ff;
+    transition: background .2s, border-color .2s;
+}
+
+.area-upload:hover {
+    background: #f3effd;
+    border-color: #c084fc;
+}
+
+/* Títulos de seção */
+.secao {
+    color: var(--purple);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    margin-bottom: 1rem;
+}
+
+/* Estatísticas */
+.estatistica .numero {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--navy);
+    line-height: 1.1;
+}
+
+.estatistica .traco {
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--purple);
+    margin: 6px 0 8px;
+}
+
+.estatistica .descricao {
+    font-size: 0.95rem;
+    color: var(--muted);
+}
+
+/* Divisor "ou" */
+.divisor {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #9b9ac0;
+    font-size: 0.8rem;
+}
+
+.divisor::before,
+.divisor::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #ece9f6;
 }
 
 /* ==========================================================================

@@ -9,7 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Estilos centralizados -->
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <!-- Fonte Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +22,8 @@
 
 <body class="pagina-painel pagina-config bg-[#eeeeee] text-slate-800">
     <div class="min-h-screen flex">
-        <div id="menu-compartilhado"></div>
+        <!-- Inclui o menu diretamente no carregamento da página pelo servidor -->
+        {% include '_menu.html' %}
         <main class="flex-1 min-w-0 w-full">
             <header
                 class="bg-white border-b border-slate-200 px-4 sm:px-6 lg:px-10 py-5 flex flex-wrap items-center justify-between gap-4">
@@ -32,14 +33,14 @@
                             data-lucide="menu" class="w-5 h-5"></i> Menu</button>
                     <h1 class="text-2xl font-extrabold">Meu perfil</h1>
                 </div>
-                <div class="flex items-center gap-3">
+                <div class="flex items-center gap-3"> 
                     <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center"
                         aria-hidden="true"><i data-lucide="user-round" class="text-purple-700"></i></div>
                     <div class="min-w-0">
                         <p class="text-sm font-bold" id="nome-cabecalho">Lucas Caldeira</p>
                         <p class="text-xs text-slate-500" id="cargo-cabecalho">Gestor(a) de Projetos</p>
-                    </div><a href="login.html" aria-label="Voltar para o login (demonstração; não encerra sessão)"
-                        title="Voltar ao login — saída real depende do Flask"
+                    </div><a href="{{ url_for('auth.logout') }}" aria-label="Voltar para o login"
+                        title="Voltar ao login"
                         class="p-2 text-red-600 hover:bg-red-50 rounded-lg"><i data-lucide="log-out"
                             class="w-5 h-5"></i></a>
                 </div>
@@ -121,8 +122,8 @@
             </div>
         </main>
     </div>
-    <script type="module" src="../static/js/configuracoes.js"></script>
-    <script type="module" src="../static/js/menu.js"></script>
+    <script type="module" src="{{ url_for('static', filename='js/configuracoes.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/menu.js') }}"></script>
 </body>
 
 </html>
