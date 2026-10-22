@@ -10,7 +10,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <!-- Estilos centralizados -->
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
     <!-- Fonte Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -24,9 +24,9 @@
 <body class="pagina-base bg-[#f8f9fa] text-slate-800">
 
     <div class="min-h-screen flex">
+        <!-- Inclui o menu diretamente no carregamento da página pelo servidor -->
+        {% include '_menu.html' %}
 
-        <!-- Fundo escurecido quando o menu móvel estiver aberto -->
-        <div id="menu-compartilhado"></div>
         <main class="flex-1 min-w-0 w-full p-4 sm:p-6 lg:p-10">
 
             <!-- CABEÇALHO -->
@@ -216,8 +216,8 @@
 
     <!-- JAVASCRIPT -->
 
-    <script type="module" src="../static/js/base.js"></script>
-    <script type="module" src="../static/js/menu.js"></script>
+    <script type="module" src="{{ url_for('static', filename='js/base.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/menu.js') }}"></script>
 </body>
 
 </html>

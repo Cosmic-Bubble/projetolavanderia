@@ -1,13 +1,18 @@
-Flask
-python-dotenv
-supabase
+# Framework Web
+flask>=3.0.0
 
-pandas
-numpy
-scipy
-statsmodels
-scikit-learn
+# Gestão de Variáveis de Ambiente
+python-dotenv>=1.0.0
 
-matplotlib
+# SDK Oficial do Supabase para Python
+supabase>=2.0.0
 
-pytest
+# Ciência de Dados, Estatística e Machine Learning
+pandas>=2.0.0
+numpy>=1.24.0
+scipy>=1.10.0
+statsmodels>=0.14.0
+scikit-learn>=1.3.0
+
+# Automação de Testes
+pytest>=7.0.0

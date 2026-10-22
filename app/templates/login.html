@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login | Projeto Lavanderia</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Estilos centralizados -->
+    <!-- Referências de estilo baseadas na página de login -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Fonte Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Ícones -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="pagina-login min-h-screen bg-white">
+
+    <div class="min-h-screen flex flex-col lg:flex-row">
+
+        <!-- LADO ESQUERDO -->
+        <section class="painel-esquerdo relative overflow-hidden w-full lg:w-[45%]
+                        flex flex-col justify-between
+                        px-6 sm:px-10 lg:px-[7%] py-8 sm:py-14">
+
+            <!-- Formas decorativas -->
+            <svg class="forma -top-10 -left-16 w-72 h-72" viewBox="0 0 300 300" aria-hidden="true">
+                <path d="M0 0 H260 C230 40 190 60 160 110 C120 170 60 190 0 170 Z" fill="#ede9fb" />
+            </svg>
+            <svg class="forma -bottom-10 -left-10 w-96 h-72" viewBox="0 0 400 300" aria-hidden="true">
+                <path d="M0 120 C80 130 140 190 200 250 C230 280 260 300 300 300 H0 Z" fill="#efeafc" />
+            </svg>
+
+            <!-- LOGOTIPO -->
+            <div class="relative z-10 flex items-center gap-4 min-w-0">
+
+                <img src="{{ url_for('static', filename='assets/img/logo_ninho-social.png') }}"
+                    alt="Instituto Ninho Social" class="w-16 h-16 sm:w-20 sm:h-20 object-contain shrink-0"
+                    onerror="this.style.display='none'">
+
+                <div class="h-14 sm:h-20 w-px bg-[#d9d5ea] shrink-0"></div>
+
+                <img src="{{ url_for('static', filename='assets/img/logo.png') }}" alt="Projeto Lavanderia"
+                    class="w-16 h-16 sm:w-20 sm:h-20 object-contain shrink-0" onerror="this.style.display='none'">
+
+
+                <div class="text-xl sm:text-2xl tracking-[0.12em] font-medium leading-tight">
+                    <p style="color:#6cc24a">PROJETO</p>
+                    <p style="color:#18b4e0">LAVANDERIA</p>
+                </div>
+
+            </div>
+
+            <!-- TEXTO INSTITUCIONAL -->
+            <div class="relative z-10 my-10 lg:my-0 max-w-xl">
+                <h1 class="text-3xl sm:text-4xl lg:text-[2.2rem] xl:text-[2.6rem] font-extrabold leading-tight mb-9"
+                    style="color:var(--navy)">
+                    Por mais dignidade&nbsp;e<br>roupa limpa
+                </h1>
+
+                <div class="space-y-7">
+                    <div class="estatistica">
+                        <p class="numero">+100</p>
+                        <div class="traco"></div>
+                        <p class="descricao">toneladas de roupas lavadas e cuidadas</p>
+                    </div>
+
+                    <div class="estatistica">
+                        <p class="numero">+1.000</p>
+                        <div class="traco"></div>
+                        <p class="descricao">pessoas cadastradas e acompanhadas</p>
+                    </div>
+
+                    <div class="estatistica">
+                        <p class="numero">+9.000</p>
+                        <div class="traco"></div>
+                        <p class="descricao">banhos quentes com kit de higiene</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RODAPÉ -->
+            <p class="relative z-10 max-w-md text-sm leading-relaxed" style="color:var(--muted)">
+                Mais do que números, cada atendimento representa acolhimento e transformação.
+            </p>
+
+        </section>
+
+        <!-- LADO DIREITO -->
+        <section class="painel-direito relative overflow-hidden w-full lg:w-[55%]
+                        flex items-center justify-center
+                        px-4 sm:px-6 py-10 sm:py-16">
+
+            <svg class="forma -bottom-10 -right-10 w-80 h-64" viewBox="0 0 320 260" aria-hidden="true">
+                <path d="M320 40 C260 70 220 130 170 190 C150 215 120 240 90 260 H320 Z" fill="#ebe6f8" />
+            </svg>
+
+            <!-- CARD DE LOGIN -->
+            <div class="card-login relative z-10 w-full min-w-0 max-w-[500px]
+                        rounded-3xl p-6 sm:p-9 md:p-10">
+
+                <!-- ÍCONE SUPERIOR -->
+                <div class="flex justify-center mb-4">
+                    <div class="icone-topo w-16 h-16 flex items-center justify-center">
+                        <i data-lucide="user" class="w-7 h-7" style="color:var(--navy)"></i>
+                    </div>
+                </div>
+
+                <!-- TÍTULO -->
+                <h2 class="text-2xl sm:text-[1.7rem] font-extrabold text-center mb-2" style="color:var(--navy)">
+                    Acesso Administrativo
+                </h2>
+
+                <p class="text-center text-sm mb-9" style="color:var(--muted)">
+                    Entre para acessar o sistema de previsão de demanda
+                </p>
+
+                <!-- FORMULÁRIO -->
+                <form method="POST" action="{{ url_for('auth.login') }}" id="formLogin">
+
+                    <!-- EMAIL -->
+                    <label for="email" class="block text-sm font-bold mb-2" style="color:var(--navy)">
+                        E-mail
+                    </label>
+
+                    <div class="relative mb-5">
+                        <i data-lucide="mail" class="icone-campo"></i>
+                        <input id="email" name="email" type="email" maxlength="254" placeholder="Digite seu e-mail"
+                            autocomplete="email" required class="campo">
+                    </div>
+
+                    <!-- SENHA -->
+                    <label for="senha" class="block text-sm font-bold mb-2" style="color:var(--navy)">
+                        Senha
+                    </label>
+
+                    <div class="relative mb-4">
+                        <i data-lucide="lock" class="icone-campo"></i>
+                        <input id="senha" name="senha" type="password" maxlength="128" placeholder="Digite sua senha"
+                            autocomplete="current-password" required class="campo !pr-12">
+
+                        <button type="button" id="mostrarSenha" aria-label="Mostrar senha" aria-pressed="false"
+                            class="absolute right-4 top-1/2 -translate-y-1/2" style="color:var(--muted)">
+                            <i data-lucide="eye" class="w-5 h-5"></i>
+                        </button>
+                    </div>
+
+                    <!-- ESQUECI A SENHA -->
+                    <div class="mb-6">
+                        <a id="recuperarSenha" class="text-sm font-bold hover:underline" style="color:var(--purple)">
+                            Esqueci minha senha
+                        </a>
+                    </div>
+
+                    <!-- BOTÃO ENTRAR -->
+                    <button type="submit"
+                        class="cor-roxa w-full text-white font-bold py-3.5 flex items-center justify-center gap-3">
+                        <i data-lucide="log-in" class="w-5 h-5"></i>
+                        Entrar no Painel
+                    </button>
+
+                    <p id="mensagem" role="status" class="text-center text-sm mt-4 text-red-600" aria-live="polite">{{ erro if erro else '' }}</p>
+
+                </form>
+
+                <!-- DIVISOR -->
+                <div class="divisor mt-6 mb-5">ou</div>
+
+                <!-- CADASTRO -->
+                <p class="text-center text-sm" style="color:var(--muted)">
+                    Ainda não possui uma conta?
+                    <a href="{{ url_for('auth.cadastro') }}" class="font-bold hover:underline"
+                        style="color:var(--purple)">
+                        Cadastre-se
+                    </a>
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <script type="module" src="{{ url_for('static', filename='js/login.js') }}"></script>
+</body>
+
+</html>

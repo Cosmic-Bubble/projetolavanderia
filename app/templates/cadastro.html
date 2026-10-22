@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro | Projeto Lavanderia</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Estilos centralizados -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Fonte Montserrat -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Ícones -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+
+<body class="pagina-cadastro min-h-screen bg-white">
+
+    <div class="min-h-screen flex flex-col lg:flex-row">
+
+        <!-- LADO ESQUERDO (fixo no desktop, pois o formulário é longo) -->
+        <section class="painel-esquerdo relative overflow-hidden w-full lg:w-[45%]
+                        lg:sticky lg:top-0 lg:h-screen
+                        flex flex-col justify-between
+                        px-6 sm:px-10 lg:px-[7%] py-8 sm:py-14">
+
+            <!-- Formas decorativas -->
+            <svg class="forma -top-10 -left-16 w-72 h-72" viewBox="0 0 300 300" aria-hidden="true">
+                <path d="M0 0 H260 C230 40 190 60 160 110 C120 170 60 190 0 170 Z" fill="#ede9fb" />
+            </svg>
+            <svg class="forma -bottom-10 -left-10 w-96 h-72" viewBox="0 0 400 300" aria-hidden="true">
+                <path d="M0 120 C80 130 140 190 200 250 C230 280 260 300 300 300 H0 Z" fill="#efeafc" />
+            </svg>
+
+            <!-- LOGOTIPO -->
+            <div class="relative z-10 flex items-center gap-4 min-w-0">
+
+                <img src="{{ url_for('static', filename='assets/img/logo_ninho-social.png') }}"
+                    alt="Instituto Ninho Social" class="w-16 h-16 sm:w-20 sm:h-20 object-contain shrink-0"
+                    onerror="this.style.display='none'">
+
+                <div class="h-14 sm:h-20 w-px bg-[#d9d5ea] shrink-0"></div>
+
+                <img src="{{ url_for('static', filename='assets/img/logo.png') }}" alt="Projeto Lavanderia"
+                    class="w-16 h-16 sm:w-20 sm:h-20 object-contain shrink-0" onerror="this.style.display='none'">
+
+
+                <div class="text-xl sm:text-2xl tracking-[0.12em] font-medium leading-tight">
+                    <p style="color:#6cc24a">PROJETO</p>
+                    <p style="color:#18b4e0">LAVANDERIA</p>
+                </div>
+
+            </div>
+
+            <!-- TEXTO INSTITUCIONAL -->
+            <div class="relative z-10 my-10 lg:my-0 max-w-xl">
+                <h1 class="text-3xl sm:text-4xl lg:text-[2.2rem] xl:text-[2.6rem] font-extrabold leading-tight mb-9"
+                    style="color:var(--navy)">
+                    Por mais dignidade&nbsp;e<br>roupa limpa
+                </h1>
+
+                <div class="space-y-7">
+                    <div class="estatistica">
+                        <p class="numero">+100</p>
+                        <div class="traco"></div>
+                        <p class="descricao">toneladas de roupas lavadas e cuidadas</p>
+                    </div>
+
+                    <div class="estatistica">
+                        <p class="numero">+1.000</p>
+                        <div class="traco"></div>
+                        <p class="descricao">pessoas cadastradas e acompanhadas</p>
+                    </div>
+
+                    <div class="estatistica">
+                        <p class="numero">+9.000</p>
+                        <div class="traco"></div>
+                        <p class="descricao">banhos quentes com kit de higiene</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RODAPÉ -->
+            <p class="relative z-10 max-w-md text-sm leading-relaxed" style="color:var(--muted)">
+                Mais do que números, cada atendimento representa acolhimento e transformação.
+            </p>
+
+        </section>
+
+        <!-- LADO DIREITO -->
+        <section class="painel-direito relative overflow-hidden w-full lg:w-[55%]
+                        flex items-center justify-center
+                        px-4 sm:px-6 py-10 sm:py-16">
+
+            <svg class="forma -bottom-10 -right-10 w-80 h-64" viewBox="0 0 320 260" aria-hidden="true">
+                <path d="M320 40 C260 70 220 130 170 190 C150 215 120 240 90 260 H320 Z" fill="#ebe6f8" />
+            </svg>
+
+            <!-- CARD DE CADASTRO -->
+            <div class="card-login relative z-10 w-full min-w-0 max-w-[560px]
+                        rounded-3xl p-6 sm:p-9 md:p-10">
+
+                <!-- ÍCONE SUPERIOR -->
+                <div class="flex justify-center mb-4">
+                    <div class="icone-topo w-16 h-16 flex items-center justify-center">
+                        <i data-lucide="user-plus" class="w-7 h-7" style="color:var(--navy)"></i>
+                    </div>
+                </div>
+
+                <h2 class="text-2xl sm:text-[1.7rem] font-extrabold text-center mb-2" style="color:var(--navy)">
+                    Criar conta de administrador
+                </h2>
+
+                <p class="text-center text-sm mb-9" style="color:var(--muted)">
+                    Preencha os dados abaixo para solicitar credenciais de acesso
+                </p>
+
+                <form id="formCadastro">
+
+                    <!-- INFORMAÇÕES PESSOAIS -->
+                    <h3 class="secao">1. INFORMAÇÕES PESSOAIS</h3>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+
+                        <div>
+                            <label for="nome" class="block text-sm font-bold mb-2" style="color:var(--navy)">
+                                Nome
+                            </label>
+
+                            <input id="nome" name="nome" type="text" minlength="2" maxlength="50"
+                                placeholder="Ex.: Lucas" autocomplete="given-name" required class="campo campo-simples">
+                        </div>
+
+                        <div>
+                            <label for="sobrenome" class="block text-sm font-bold mb-2" style="color:var(--navy)">
+                                Sobrenome
+                            </label>
+
+                            <input id="sobrenome" name="sobrenome" type="text" minlength="2" maxlength="80"
+                                placeholder="Ex.: Caldeira" autocomplete="family-name" required
+                                class="campo campo-simples">
+                        </div>
+
+                    </div>
+
+                    <!-- EMAIL -->
+                    <div class="mb-8">
+
+                        <label for="email" class="block text-sm font-bold mb-2" style="color:var(--navy)">
+                            E-mail corporativo / pessoal
+                        </label>
+
+                        <div class="relative">
+                            <i data-lucide="mail" class="icone-campo"></i>
+
+                            <input id="email" name="email" type="email" maxlength="254" placeholder="nome@exemplo.com"
+                                autocomplete="email" required class="campo">
+                        </div>
+
+                    </div>
+
+                    <!-- PERFIL E ATUAÇÃO -->
+                    <h3 class="secao">2. PERFIL &amp; ATUAÇÃO</h3>
+
+                    <!-- CARGO -->
+                    <div class="mb-5">
+                        <label for="cargo" class="block text-sm font-bold mb-2" style="color:var(--navy)">
+                            Cargo / Função na ONG
+                        </label>
+
+                        <select id="cargo" name="cargo" required class="w-full bg-slate-50
+                            border border-slate-200
+                            rounded-lg p-3
+                            focus:outline-none
+                            focus:ring-2
+                            focus:ring-purple-400">
+
+                            <option value="">Selecione um cargo</option>
+                            {% for c in cargos %}
+                            <option value="{{ c.id }}">{{ c.nome_cargo }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- FOTO DE PERFIL -->
+                    <div class="mb-8">
+
+                        <span class="block text-sm font-bold mb-2" style="color:var(--navy)">
+                            Foto de Perfil
+                        </span>
+
+                        <label for="foto" class="area-upload p-5 flex flex-col items-center cursor-pointer">
+
+                            <div class="icone-topo w-11 h-11 flex items-center justify-center mb-3">
+                                <i data-lucide="camera" class="w-5 h-5" style="color:var(--navy)"></i>
+                            </div>
+
+                            <span class="font-bold text-sm" style="color:var(--purple)">
+                                Clique para enviar
+                            </span>
+
+                            <span class="text-xs mt-2" style="color:var(--muted)">
+                                Suporta PNG, JPG ou JPEG de até 2 MB
+                            </span>
+
+                            <span id="nomeArquivo" class="text-xs mt-2" style="color:var(--navy)"></span>
+
+                        </label>
+
+                        <input id="foto" name="foto" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+                            class="hidden">
+
+                    </div>
+
+                    <!-- SEGURANÇA -->
+                    <h3 class="secao">3. SEGURANÇA</h3>
+
+                    <!-- SENHA -->
+                    <div class="mb-5">
+
+                        <label for="senha" class="block text-sm font-bold mb-2" style="color:var(--navy)">
+                            Senha de Acesso
+                        </label>
+
+                        <div class="relative">
+                            <i data-lucide="lock" class="icone-campo"></i>
+
+                            <input id="senha" name="senha" type="password" placeholder="Digite sua senha"
+                                autocomplete="new-password" minlength="8" maxlength="128" required class="campo !pr-12">
+
+                            <button type="button" id="mostrarSenha" aria-label="Mostrar senha" aria-pressed="false"
+                                class="absolute right-4 top-1/2 -translate-y-1/2" style="color:var(--muted)">
+                                <i data-lucide="eye" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+
+                        <!-- INDICADOR DE SENHA -->
+                        <div class="flex gap-1.5 mt-3">
+                            <div id="barra1" class="h-1.5 flex-1 bg-slate-200 rounded-full"></div>
+                            <div id="barra2" class="h-1.5 flex-1 bg-slate-200 rounded-full"></div>
+                            <div id="barra3" class="h-1.5 flex-1 bg-slate-200 rounded-full"></div>
+                        </div>
+
+                        <p id="forcaSenha" class="text-xs mt-2" style="color:var(--muted)">
+                            Informe uma senha de pelo menos 8 caracteres.
+                        </p>
+
+                    </div>
+
+                    <!-- CONFIRMAR SENHA -->
+                    <div class="mb-7">
+
+                        <label for="confirmarSenha" class="block text-sm font-bold mb-2" style="color:var(--navy)">
+                            Confirmar Nova Senha
+                        </label>
+
+                        <div class="relative">
+                            <i data-lucide="lock" class="icone-campo"></i>
+
+                            <input id="confirmarSenha" name="confirmarSenha" type="password" minlength="8"
+                                maxlength="128" placeholder="Confirme sua senha" autocomplete="new-password" required
+                                class="campo">
+                        </div>
+                        <p id="erroSenha" class="hidden mt-2 text-sm text-red-600">
+                            As senhas não coincidem.
+                        </p>
+                    </div>
+
+                    <!-- BOTÃO CADASTRO -->
+                    <button type="submit"
+                        class="btn-roxo w-full text-white font-bold py-3.5 flex items-center justify-center gap-3">
+                        <i data-lucide="user-plus" class="w-5 h-5"></i>
+                        Criar Conta de Administrador
+                    </button>
+
+                    <p id="mensagem" role="status" aria-live="polite" class="text-sm text-center mt-4"></p>
+
+                </form>
+
+                <!-- DIVISOR -->
+                <div class="divisor mt-6 mb-5">ou</div>
+
+                <!-- LINK LOGIN -->
+                <p class="text-center text-sm" style="color:var(--muted)">
+                    Já possui uma conta?
+                    <a href="{{ url_for('auth.login') }}" class="font-bold hover:underline" style="color:var(--purple)">
+                        Entrar
+                    </a>
+                </p>
+
+            </div>
+
+        </section>
+
+    </div>
+
+
+    <script type="module" src="{{ url_for('static', filename='js/cadastro.js') }}"></script>
+</body>
+
+</html>

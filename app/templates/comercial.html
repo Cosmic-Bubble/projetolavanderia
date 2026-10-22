@@ -9,7 +9,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- Estilos centralizados -->
-  <link rel="stylesheet" href="../static/css/style.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 
   <!-- Fonte Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +22,9 @@
 
 <body class="pagina-comercial bg-[#f8f9fa] text-slate-800">
   <div class="min-h-screen flex">
-    <div id="menu-compartilhado"></div>
+    <!-- Inclui o menu diretamente no carregamento da página pelo servidor -->
+    {% include '_menu.html' %}
+
     <main class="flex-1 min-w-0 w-full p-4 sm:p-6 lg:p-10">
       <header
         class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-200 pb-6 mb-6">
@@ -128,8 +130,8 @@
       </section>
     </main>
   </div>
-  <script type="module" src="../static/js/comercial.js"></script>
-  <script type="module" src="../static/js/menu.js"></script>
+  <script type="module" src="{{ url_for('static', filename='js/comercial.js') }}"></script>
+  <script type="module" src="{{ url_for('static', filename='js/menu.js') }}"></script>
 </body>
 
 </html>
