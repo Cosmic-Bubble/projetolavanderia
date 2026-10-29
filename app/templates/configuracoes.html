@@ -56,10 +56,13 @@
                     <form id="form-perfil" class="space-y-4">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div><label class="config-label" for="perfil-nome">Nome</label><input class="config-input"
-                                    id="perfil-nome" name="nome" autocomplete="given-name" minlength="2" maxlength="50"
+                                    id="perfil-nome" name="nome" autocomplete="given-name" minlength="2" maxlength="50" pattern="[A-Za-zÀ-ÖØ-öø-ÿ]+([ '\-][A-Za-zÀ-ÖØ-öø-ÿ]+)*"
+                                    title="Use apenas letras, espaços, hífens ou apóstrofos."
                                     placeholder="Ex.: Lucas" required></div>
                             <div><label class="config-label" for="perfil-sobrenome">Sobrenome</label><input
                                     class="config-input" id="perfil-sobrenome" name="sobrenome"
+                                    pattern="[A-Za-zÀ-ÖØ-öø-ÿ]+([ '\-][A-Za-zÀ-ÖØ-öø-ÿ]+)*"
+                                    title="Use apenas letras, espaços, hífens ou apóstrofos."
                                     autocomplete="family-name" minlength="2" maxlength="80" placeholder="Ex.: Caldeira"
                                     required></div>
                         </div>
