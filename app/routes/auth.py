@@ -189,11 +189,14 @@ def redefinir_senha():
 
     # Método GET
     code = request.args.get('code')
-    print("CODE RECEBIDO NA URL:", code) # DEBUG
-    
+    print("CODE RECEBIDO NA URL:", code)  # DEBUG
+
     if code:
         try:
-            auth_response = supabase.auth.exchange_code_for_session(code)
+            # O SDK espera um dict com a chave 'auth_code'
+            auth_response = supabase.auth.exchange_code_for_session({
+                "auth_code": code
+            })
             session['access_token'] = auth_response.session.access_token
             session['refresh_token'] = auth_response.session.refresh_token
             print("Sessão guardada com sucesso na session do Flask!")

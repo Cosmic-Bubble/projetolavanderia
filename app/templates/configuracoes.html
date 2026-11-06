@@ -34,17 +34,18 @@
                     <h1 class="text-2xl font-extrabold">Meu perfil</h1>
                 </div>
                 <div class="flex items-center gap-3"> 
-                    <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center"
+                    <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center overflow-hidden"
                         aria-hidden="true"><i data-lucide="user-round" class="text-purple-700"></i></div>
                     <div class="min-w-0">
-                        <p class="text-sm font-bold" id="nome-cabecalho">Lucas Caldeira</p>
-                        <p class="text-xs text-slate-500" id="cargo-cabecalho">Gestor(a) de Projetos</p>
-                    </div><a href="{{ url_for('auth.logout') }}" aria-label="Voltar para o login"
-                        title="Voltar ao login"
-                        class="p-2 text-red-600 hover:bg-red-50 rounded-lg"><i data-lucide="log-out"
+                        <p class="text-sm font-bold" id="nome-cabecalho">Carregando...</p>
+                        <p class="text-xs text-slate-500" id="cargo-cabecalho">...</p>
+                    </div><a href="{{ url_for('auth.logout') }}" aria-label="Sair do sistema"
+                        title="Sair do sistema"
+                        class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"><i data-lucide="log-out"
                             class="w-5 h-5"></i></a>
                 </div>
             </header>
+            
             <div class="p-4 sm:p-6 lg:p-10 space-y-6 lg:space-y-10 max-w-[1280px] mx-auto">
                 <section class="config-card" aria-labelledby="titulo-perfil">
                     <div class="flex items-center gap-4 mb-3"><span class="config-icone"><i data-lucide="user-round"
@@ -66,23 +67,30 @@
                                     autocomplete="family-name" minlength="2" maxlength="80" placeholder="Ex.: Caldeira"
                                     required></div>
                         </div>
+                        
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div><label class="config-label" for="perfil-cargo">Cargo</label><input class="config-input"
-                                    id="perfil-cargo" name="cargo" maxlength="80"
-                                    placeholder="Ex.: Gestor(a) de projetos" required></div>
-                            <div><label class="config-label" for="perfil-foto">Foto <span
-                                        class="font-normal text-slate-500">(opcional)</span></label><input
-                                    class="config-input config-file" id="perfil-foto" name="foto" type="file"
-                                    accept=".png,.jpg,.jpeg,image/png,image/jpeg">
+                            <!-- CAMPO DO CARGO (Apenas leitura) -->
+                            <div>
+                                <label class="config-label">Cargo <span class="font-normal text-slate-500">(não editável)</span></label>
+                                <div class="config-input bg-slate-50 text-slate-600 flex items-center cursor-not-allowed" id="perfil-cargo-display">
+                                    Carregando...
+                                </div>
+                            </div>
+                            
+                            <!-- CAMPO DA FOTO (De volta ao normal!) -->
+                            <div>
+                                <label class="config-label" for="perfil-foto">Foto <span class="font-normal text-slate-500">(opcional)</span></label>
+                                <input class="config-input config-file" id="perfil-foto" name="foto" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg">
                                 <p class="text-xs text-slate-500 mt-1">PNG ou JPEG, até 2 MB.</p>
                             </div>
                         </div>
-                        <div class="flex flex-wrap items-center gap-3"><button type="submit"
+                        <div class="flex flex-wrap items-center gap-3 mt-4"><button type="submit"
                                 class="config-btn">Atualizar perfil</button>
                             <p id="perfil-feedback" role="status" aria-live="polite" class="text-sm text-slate-600"></p>
                         </div>
                     </form>
                 </section>
+                
                 <section class="config-card" aria-labelledby="titulo-seguranca">
                     <div class="flex items-center gap-4 mb-5"><span class="config-icone"><i data-lucide="shield-check"
                                 class="w-5 h-5"></i></span>
@@ -113,20 +121,19 @@
                                             data-lucide="eye" class="w-5 h-5"></i></button></div>
                             </div>
                         </div>
-                        <div class="flex flex-wrap items-center gap-3"><button type="submit"
+                        <div class="flex flex-wrap items-center gap-3 mt-4"><button type="submit"
                                 class="config-btn inline-flex items-center gap-2"><i data-lucide="lock-keyhole"
                                     class="w-4 h-4"></i> Alterar senha</button>
                             <p id="senha-feedback" role="status" aria-live="polite" class="text-sm text-slate-600"></p>
                         </div>
                     </form>
                 </section>
-                <p class="text-xs text-slate-500">Protótipo demonstrativo: alterações de perfil e senha não são salvas.
-                    A autenticação e a persistência dos dados serão implementadas no backend Flask.</p>
+                
+                <p class="text-xs text-slate-500 text-center">Suas alterações de perfil e senha são salvas com segurança e refletidas em todo o sistema.</p>
             </div>
         </main>
     </div>
     <script type="module" src="{{ url_for('static', filename='js/configuracoes.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/menu.js') }}"></script>
 </body>
-
 </html>
