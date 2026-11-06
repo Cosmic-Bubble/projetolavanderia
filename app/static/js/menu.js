@@ -1,7 +1,10 @@
 // Inicializa os ícones do Lucide
-lucide.createIcons();
+if (window.lucide) lucide.createIcons();
 
 document.addEventListener("DOMContentLoaded", () => {
+  // 1. CHAMA A BUSCA DA FOTO PRIMEIRO (para não ser bloqueada pelo return abaixo)
+  carregarPerfilMenu();
+
   const menu = document.getElementById('menu-lateral');
   const overlay = document.getElementById('menu-overlay');
   const abrir = document.getElementById('abrir-menu');
@@ -43,3 +46,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (window.lucide) lucide.createIcons();
 });
+
+// --- Função que busca os dados do perfil ---
+async function carregarPerfilMenu() {
+  try {
+    const resposta = await fetch('/api/meu-perfil');
+    if (!resposta.ok) return;
+
+    const dados = await resposta.json();
+
+    // 1. Atualiza o Nome
+    const nomeEl = document.getElementById('menu-nome');
+    if (nomeEl && dados.nome) {
+      nomeEl.textContent = dados.nome + ' ' + (dados.sobrenome || '');
+    }
+
+    // 2. Atualiza o Cargo (FALTAVA ISSO AQUI)
+    const cargoEl = document.getElementById('menu-cargo');
+    if (cargoEl && dados.cargo) {
+      cargoEl.textContent = dados.cargo;
+    }
+
+    // 3. Atualiza a Foto
+    const avatarEl = document.getElementById('menu-avatar');
+    if (avatarEl && dados.foto_url) {
+      avatarEl.innerHTML = `<img src="${dados.foto_url}" alt="Foto de perfil" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
+    }
+  } catch (erro) {
+    console.error("Erro ao carregar perfil do menu:", erro);
+  }
+}

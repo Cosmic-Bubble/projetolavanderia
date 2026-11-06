@@ -135,7 +135,7 @@
                                 Nome
                             </label>
 
-                            <input id="nome" name="nome" type="text" minlength="2" maxlength="50"
+                            <input id="nome" name="nome" type="text" minlength="2" maxlength="50" pattern="[A-Za-zÀ-ÖØ-öø-ÿ]+([ '\-][A-Za-zÀ-ÖØ-öø-ÿ]+)*"
                                 placeholder="Ex.: Lucas" autocomplete="given-name" required class="campo campo-simples">
                         </div>
 
@@ -145,6 +145,8 @@
                             </label>
 
                             <input id="sobrenome" name="sobrenome" type="text" minlength="2" maxlength="80"
+                            pattern="[A-Za-zÀ-ÖØ-öø-ÿ]+([ '\-][A-Za-zÀ-ÖØ-öø-ÿ]+)*"
+                        title="Use apenas letras, espaços, hífens ou apóstrofos."
                                 placeholder="Ex.: Caldeira" autocomplete="family-name" required
                                 class="campo campo-simples">
                         </div>

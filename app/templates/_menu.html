@@ -207,11 +207,18 @@
     <a href="{{ url_for('admin.importacao') }}"><i data-lucide="upload"></i><span>Importação</span></a>
     <a href="{{ url_for('admin.configuracoes') }}"><i data-lucide="settings"></i><span>Meu perfil</span></a>
   </nav>
+  
   <div class="menu-usuario">
-    <div class="menu-avatar"><i data-lucide="user-round"></i></div>
-    <div>
-      <p class="menu-nome">Administrador</p>
-      <p class="menu-cargo">Gestão do Projeto</p>
+    <!-- Adicionamos o id="menu-avatar" aqui -->
+    <div class="menu-avatar" id="menu-avatar">
+      <i data-lucide="user-round"></i>
     </div>
+    <div>
+      <!-- Adicionamos id="menu-nome" e id="menu-cargo" aqui -->
+      <p class="menu-nome" id="menu-nome">Administrador</p>
+      <p class="menu-cargo" id="menu-cargo">Gestão do Projeto</p>
+    </div>
+  
   </div>
+
 </aside>

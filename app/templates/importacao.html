@@ -53,7 +53,7 @@
                         Sistemas OK
                     </span>
 
-                    <button type="button" aria-label="Notificações"
+                    <button id="abrir-notificacoes" type="button" aria-label="Notificações"
                         class="relative p-3 rounded-full border border-gray-200 bg-white">
                         <i data-lucide="bell" class="w-5 h-5"></i>
                         <span class="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-red-500"></span>
@@ -109,7 +109,7 @@
                         </p>
 
                         <p class="mb-3">
-                            1. Exporte a planilha de registros do sistema
+                            1. Importe a planilha de registros do sistema
                             atual da lavanderia (Atendimentos Sociais
                             e Contratos Comerciais).
                         </p>
@@ -218,6 +218,7 @@
 
     <script type="module" src="{{ url_for('static', filename='js/base.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/menu.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/notificacoes.js') }}"></script>
 </body>
 
 </html>
