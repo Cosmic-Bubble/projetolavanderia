@@ -16,23 +16,51 @@ Desenvolver uma aplicação web capaz de analisar dados históricos de demanda, 
 ## Tecnologias Utilizadas
 
 ### Linguagem e Backend
+
+![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-000000?logo=flask&logoColor=white)
+
 * **Python 3.11+** — Lógica da aplicação, processamento de dados e motores de previsão.
 * **Flask** — Framework web para o backend e rotas da aplicação.
 
 ### Análise de Dados e Estatística
+
+![Pandas](https://img.shields.io/badge/Pandas-150458?logo=pandas&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-013243?logo=numpy&logoColor=white)
+![SciPy](https://img.shields.io/badge/SciPy-8CAAE6?logo=scipy&logoColor=white)
+![Statsmodels](https://img.shields.io/badge/Statsmodels-2C5F9E)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikitlearn&logoColor=white)
+
 * **Pandas & NumPy** — Manipulação, tratamento e agregação de dados.
 * **SciPy & Statsmodels** — Cálculos estatísticos avançados e modelos de séries temporais.
 * **Scikit-learn** — Modelos preditivos e métricas de avaliação.
 
 ### Banco de Dados & Armazenamento
+
+![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
+
 * **Supabase (PostgreSQL)** — Banco de dados relacional.
 * **Supabase Storage (Buckets)** — Armazenamento seletivo de planilhas de atendimento (`.csv`/`.xlsx`) e imagens de perfil.
 
 ### Interface (Frontend)
+
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
+![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?logo=chartdotjs&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?logo=tailwindcss&logoColor=white)
+![Lucide](https://img.shields.io/badge/Lucide-F56565?logo=lucide&logoColor=white)
+
 * **HTML5, CSS3 & JavaScript** — Estrutura, estilização responsiva e interatividade.
 * **Chart.js / Gráficos Interativos** — Renderização de gráficos modernos no navegador a partir de dados JSON fornecidos pelo backend.
 
 ### Ferramentas de Desenvolvimento
+
+![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)
+![Pytest](https://img.shields.io/badge/Pytest-0A9EDC?logo=pytest&logoColor=white)
+
 * **Git & GitHub** — Controle de versão e colaboração em equipe.
 * **Pytest** — Automação de testes.
 
