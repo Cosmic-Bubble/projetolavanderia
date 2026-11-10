@@ -1,68 +1,172 @@
-from dotenv import load_dotenv
 import os
-from flask import Blueprint, render_template, request, jsonify, redirect, url_for, session
-from supabase import create_client, Client
 
-# Carrega as variáveis do ficheiro .env para o ambiente do Python
-load_dotenv()
+from flask import (
+    Blueprint,
+    render_template,
+    request,
+    jsonify,
+    redirect,
+    url_for,
+    session
+)
 
-# Agora o os.environ consegue ler as chaves corretamente
-url: str = os.environ.get("SUPABASE_URL")
-key: str = os.environ.get("SUPABASE_KEY")
+from app.services.supabase_client import supabase
 
-# Validação opcional para detetar o erro imediatamente se faltar alguma chave
-if not url or not key:
-    raise ValueError("As variáveis SUPABASE_URL e SUPABASE_KEY não foram encontradas. Verifique o seu ficheiro .env")
-
-supabase: Client = create_client(url, key)
 
 auth_bp = Blueprint('auth', __name__)
 
-@auth_bp.route('/', methods=['GET', 'POST'])
+
+# ============================================================
+# CADASTRO
+# ============================================================
 
 @auth_bp.route('/cadastro', methods=['GET', 'POST'])
 def cadastro():
-    if request.method == 'POST':
-        nome = request.form.get('nome')
-        sobrenome = request.form.get('sobrenome')
-        email = request.form.get('email')
-        senha = request.form.get('senha')
-        cargo_id = request.form.get('cargo')
-        arquivo_foto = request.files.get('foto')
 
-        if not email or not senha or not cargo_id:
-            return jsonify({"error": "Preencha todos os campos obrigatórios."}), 400
+    # --------------------------------------------------------
+    # GET - Carrega a página de cadastro com os cargos do banco
+    # --------------------------------------------------------
+
+    if request.method == 'GET':
+
+        cargos = []
 
         try:
-            # 1. Cria o utilizador no Supabase Auth
-            auth_response = supabase.auth.sign_up({"email": email, "password": senha})
-            user_id = auth_response.user.id if auth_response.user else None
 
-            if not user_id:
-                return jsonify({"error": "Erro ao criar utilizador no sistema de autenticação."}), 400
+            resposta = (
+                supabase
+                .table('cargos')
+                .select('id, nome_cargo')
+                .eq('status_cargo', True)
+                .order('nome_cargo')
+                .execute()
+            )
 
-            foto_url = None
-            # 2. Faz o upload da foto para o Storage do Supabase (se enviada)
-            if arquivo_foto and arquivo_foto.filename:
-                extensao = arquivo_foto.filename.split('.')[-1].lower()
-                caminho_arquivo = f"perfis/{user_id}_{os.urandom(4).hex()}.{extensao}"
-                
-                # Lê os bytes e obtém o tipo MIME correto enviado pelo navegador
-                file_bytes = arquivo_foto.read()
-                content_type = arquivo_foto.mimetype or f"image/{extensao}"
-                
-                # Correção: passar file_options com o content-type adequado para o Supabase
-                supabase.storage.from_('fotos_perfil').upload(
-                    caminho_arquivo, 
-                    file_bytes, 
-                    file_options={"content-type": content_type}
+            cargos = resposta.data or []
+
+        except Exception as err:
+
+            print("Erro ao carregar cargos:", err)
+
+        return render_template(
+            'cadastro.html',
+            cargos=cargos
+        )
+
+    # --------------------------------------------------------
+    # POST - Processa o cadastro
+    # --------------------------------------------------------
+
+    nome = request.form.get('nome')
+    sobrenome = request.form.get('sobrenome')
+    email = request.form.get('email')
+    senha = request.form.get('senha')
+
+    # O HTML usa name="cargo"
+    cargo_id = request.form.get('cargo')
+
+    arquivo_foto = request.files.get('foto')
+
+    # --------------------------------------------------------
+    # Validação
+    # --------------------------------------------------------
+
+    if (
+        not nome
+        or not sobrenome
+        or not email
+        or not senha
+        or not cargo_id
+    ):
+
+        return jsonify({
+            "error": "Preencha todos os campos obrigatórios."
+        }), 400
+
+    try:
+
+        # ----------------------------------------------------
+        # 1. Cria usuário no Supabase Auth
+        # ----------------------------------------------------
+
+        auth_response = supabase.auth.sign_up({
+            "email": email,
+            "password": senha
+        })
+
+        user_id = (
+            auth_response.user.id
+            if auth_response.user
+            else None
+        )
+
+        if not user_id:
+
+            return jsonify({
+                "error": (
+                    "Erro ao criar usuário "
+                    "no sistema de autenticação."
                 )
-                
-                # Obtém a URL pública
-                foto_url = supabase.storage.from_('fotos_perfil').get_public_url(caminho_arquivo)
+            }), 400
 
-            # 3. Insere o registo na tabela administradores
-            supabase.table('administradores').insert([{
+        # ----------------------------------------------------
+        # 2. Upload da foto
+        # ----------------------------------------------------
+
+        foto_url = None
+
+        if arquivo_foto and arquivo_foto.filename:
+
+            extensao = (
+                arquivo_foto.filename
+                .split('.')[-1]
+                .lower()
+            )
+
+            caminho_arquivo = (
+                f"perfis/"
+                f"{user_id}_"
+                f"{os.urandom(4).hex()}."
+                f"{extensao}"
+            )
+
+            file_bytes = arquivo_foto.read()
+
+            content_type = (
+                arquivo_foto.mimetype
+                or f"image/{extensao}"
+            )
+
+            (
+                supabase
+                .storage
+                .from_('fotos_perfil')
+                .upload(
+                    caminho_arquivo,
+                    file_bytes,
+                    file_options={
+                        "content-type": content_type
+                    }
+                )
+            )
+
+            foto_url = (
+                supabase
+                .storage
+                .from_('fotos_perfil')
+                .get_public_url(
+                    caminho_arquivo
+                )
+            )
+
+        # ----------------------------------------------------
+        # 3. Cria registro na tabela administradores
+        # ----------------------------------------------------
+
+        (
+            supabase
+            .table('administradores')
+            .insert([{
                 "auth_user_id": user_id,
                 "nome": nome,
                 "sobrenome": sobrenome,
@@ -70,143 +174,570 @@ def cadastro():
                 "cargo_id": cargo_id,
                 "foto_perfil_url": foto_url,
                 "status_usuario": "pendente"
-            }]).execute()
+            }])
+            .execute()
+        )
 
-            return jsonify({
-                "success": True, 
-                "message": "Cadastro realizado com sucesso! Verifique o seu e-mail para confirmação."
-            })
+        # ----------------------------------------------------
+        # 4. Retorna sucesso
+        # ----------------------------------------------------
 
-        except Exception as err:
-            print("Erro no cadastro:", err)
-            return jsonify({"error": str(err)}), 400
+        return jsonify({
+            "success": True,
+            "message": (
+                "Cadastro realizado com sucesso! "
+                "Verifique o seu e-mail para confirmação."
+            )
+        })
 
-    # Método GET: Vamos depurar o que vem do Supabase
-    cargos = []
-    try:
-        response = supabase.table('cargos').select('id, nome_cargo').eq('status_cargo', True).order('nome_cargo').execute()
-        print("--- RESPOSTA BRUTA DO SUPABASE (CARGOS) ---", response)
-        
-        # Garante que apanha a lista de dados independentemente da versão da lib
-        if hasattr(response, 'data'):
-            cargos = response.data
-        else:
-            cargos = response
-            
-        print("--- CARGOS PROCESSADOS ---", cargos)
     except Exception as err:
-        print("--- ERRO AO CARREGAR CARGOS ---", err)
 
-    return render_template('cadastro.html', cargos=cargos)
+        print("Erro no cadastro:", err)
+
+        return jsonify({
+            "error": str(err)
+        }), 400
+
+
+# ============================================================
+# LOGIN
+# ============================================================
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
+
     if request.method == 'POST':
+
         email = request.form.get('email')
         senha = request.form.get('senha')
 
+        if not email or not senha:
+
+            return render_template(
+                'login.html',
+                erro='Informe o e-mail e a senha.'
+            )
+
         try:
-            # Autenticação no Supabase Auth pelo backend
-            response = supabase.auth.sign_in_with_password({"email": email, "password": senha})
-            
-            # Guarda o ID e os tokens essenciais na sessão do Flask
-            session['user'] = response.user.id
-            if response.session:
-                session['access_token'] = response.session.access_token
-                session['refresh_token'] = response.session.refresh_token
-            
-            return redirect(url_for('admin.dashboard'))
-            
+
+            # ------------------------------------------------
+            # 1. Autenticação no Supabase
+            # ------------------------------------------------
+
+            response = supabase.auth.sign_in_with_password({
+                "email": email,
+                "password": senha
+            })
+
+            if not response.user or not response.session:
+
+                return render_template(
+                    'login.html',
+                    erro='E-mail ou senha incorretos.'
+                )
+
+            user_id = response.user.id
+
+            # ------------------------------------------------
+            # 2. Busca o administrador
+            # ------------------------------------------------
+
+            admin_response = (
+                supabase
+                .table('administradores')
+                .select(
+                    'id, auth_user_id, nome, sobrenome, '
+                    'email, cargo_id, foto_perfil_url, '
+                    'status_usuario'
+                )
+                .eq('auth_user_id', user_id)
+                .limit(1)
+                .execute()
+            )
+
+            if not admin_response.data:
+
+                supabase.auth.sign_out()
+
+                return render_template(
+                    'login.html',
+                    erro=(
+                        'Usuário não cadastrado '
+                        'no sistema administrativo.'
+                    )
+                )
+
+            administrador = admin_response.data[0]
+
+            # ------------------------------------------------
+            # 3. Verifica status do usuário
+            # ------------------------------------------------
+
+            status = administrador.get(
+                'status_usuario'
+            )
+
+            if status != 'ativo':
+
+                supabase.auth.sign_out()
+
+                if status == 'pendente':
+
+                    mensagem = (
+                        'Seu cadastro ainda está '
+                        'pendente de aprovação.'
+                    )
+
+                elif status == 'inativo':
+
+                    mensagem = (
+                        'Seu usuário está inativo. '
+                        'Entre em contato com um administrador.'
+                    )
+
+                else:
+
+                    mensagem = (
+                        'Seu usuário não possui '
+                        'permissão para acessar o sistema.'
+                    )
+
+                return render_template(
+                    'login.html',
+                    erro=mensagem
+                )
+
+            # ------------------------------------------------
+            # 4. Busca o cargo e as permissões
+            # ------------------------------------------------
+
+            cargo = {}
+
+            try:
+
+                cargo_id = administrador.get('cargo_id')
+
+                print(
+                    "Cargo ID do administrador:",
+                    cargo_id
+                )
+
+                if not cargo_id:
+
+                    print(
+                        "ERRO: O administrador não possui cargo_id."
+                    )
+
+                else:
+
+                    cargo_response = (
+                        supabase
+                        .table('cargos')
+                        .select(
+                            'id, nome_cargo, descricao_cargo, '
+                            'status_cargo, visao_geral, '
+                            'comercial, social, '
+                            'capacidade_maquinas, alertas, '
+                            'importacao'
+                        )
+                        .eq('id', cargo_id)
+                        .limit(1)
+                        .execute()
+                    )
+
+                    print(
+                        "Resultado da busca do cargo:",
+                        cargo_response.data
+                    )
+
+                    if cargo_response.data:
+
+                        cargo = cargo_response.data[0]
+
+            except Exception as err:
+
+                print(
+                    "ERRO REAL AO CARREGAR CARGO:",
+                    repr(err)
+                )
+
+                cargo = {}
+
+            # ------------------------------------------------
+            # 5. Verifica se o cargo foi encontrado
+            # ------------------------------------------------
+
+            if not cargo:
+
+                supabase.auth.sign_out()
+
+                return render_template(
+                    'login.html',
+                    erro=(
+                        'Não foi possível carregar o cargo '
+                        'do usuário. Verifique o terminal '
+                        'do Flask.'
+                    )
+                )
+
+            # ------------------------------------------------
+            # 6. Verifica se o cargo está ativo
+            # ------------------------------------------------
+
+            if not cargo.get('status_cargo', False):
+
+                supabase.auth.sign_out()
+
+                return render_template(
+                    'login.html',
+                    erro=(
+                        'O cargo do usuário está '
+                        'inativo no sistema.'
+                    )
+                )
+
+            # ------------------------------------------------
+            # 7. Nome do cargo
+            # ------------------------------------------------
+
+            nome_cargo = (
+                cargo.get('nome_cargo')
+                or 'Sem cargo'
+            )
+
+            # ------------------------------------------------
+            # 8. Limpa sessão anterior
+            # ------------------------------------------------
+
+            session.clear()
+
+            # ------------------------------------------------
+            # 9. Guarda dados do usuário na sessão
+            # ------------------------------------------------
+
+            session['user'] = user_id
+
+            session['access_token'] = (
+                response.session.access_token
+            )
+
+            session['refresh_token'] = (
+                response.session.refresh_token
+            )
+
+            session['administrador_id'] = (
+                administrador['id']
+            )
+
+            session['cargo_id'] = (
+                administrador['cargo_id']
+            )
+
+            session['nome_cargo'] = nome_cargo
+
+            session['nome_usuario'] = (
+                f"{administrador['nome']} "
+                f"{administrador['sobrenome']}"
+            )
+
+            # ------------------------------------------------
+            # 10. Guarda permissões dos módulos
+            # ------------------------------------------------
+
+            session['permissoes'] = {
+
+                'visao_geral': (
+                    cargo.get('visao_geral')
+                    or 'nenhum'
+                ),
+
+                'comercial': (
+                    cargo.get('comercial')
+                    or 'nenhum'
+                ),
+
+                'social': (
+                    cargo.get('social')
+                    or 'nenhum'
+                ),
+
+                'capacidade_maquinas': (
+                    cargo.get('capacidade_maquinas')
+                    or 'nenhum'
+                ),
+
+                'alertas': (
+                    cargo.get('alertas')
+                    or 'nenhum'
+                ),
+
+                'importacao': (
+                    cargo.get('importacao')
+                    or 'nenhum'
+                )
+            }
+
+            # ------------------------------------------------
+            # 11. Exibe no terminal as permissões carregadas
+            # ------------------------------------------------
+
+            print(
+                "Usuário logado:",
+                administrador['nome'],
+                administrador['sobrenome']
+            )
+
+            print(
+                "Cargo:",
+                nome_cargo
+            )
+
+            print(
+                "Permissões:",
+                session['permissoes']
+            )
+
+            # ------------------------------------------------
+            # 12. Vai para o dashboard
+            # ------------------------------------------------
+
+            return redirect(
+                url_for('admin.dashboard')
+            )
+
         except Exception as err:
-            print("Erro no login:", err)
-            return render_template('login.html', erro="E-mail ou senha incorretos.")
+
+            print(
+                "Erro no login:",
+                repr(err)
+            )
+
+            return render_template(
+                'login.html',
+                erro='E-mail ou senha incorretos.'
+            )
 
     return render_template('login.html')
 
+
+# ============================================================
+# ESQUECI A SENHA
+# ============================================================
+
 @auth_bp.route('/api/esqueci-senha', methods=['POST'])
 def esqueci_senha():
-    data = request.get_json()
+
+    data = request.get_json() or {}
+
     email = data.get('email')
 
     if not email:
-        return jsonify({"error": "E-mail não fornecido."}), 400
+
+        return jsonify({
+            "error": "E-mail não fornecido."
+        }), 400
 
     try:
-        # Envio de e-mail de redefinição pelo Supabase Python
+
         supabase.auth.reset_password_for_email(
             email,
-            {"redirect_to": request.host_url + "redefinir_senha"}
+            {
+                "redirect_to": (
+                    request.host_url +
+                    "redefinir_senha"
+                )
+            }
         )
-        return jsonify({"success": True, "message": "Instruções enviadas para o seu e-mail!"})
+
+        return jsonify({
+            "success": True,
+            "message": (
+                "Instruções enviadas para o seu e-mail!"
+            )
+        })
+
     except Exception as err:
-        print("Erro na redefinição:", err)
-        return jsonify({"error": str(err)}), 400
+
+        print(
+            "Erro na redefinição:",
+            err
+        )
+
+        return jsonify({
+            "error": str(err)
+        }), 400
+
+
+# ============================================================
+# GUARDAR SESSÃO
+# ============================================================
 
 @auth_bp.route('/api/guardar-sessao', methods=['POST'])
 def guardar_sessao():
-    data = request.get_json()
+
+    data = request.get_json() or {}
+
     access_token = data.get('access_token')
     refresh_token = data.get('refresh_token')
 
     if access_token:
+
         session['access_token'] = access_token
         session['refresh_token'] = refresh_token
-        return jsonify({"success": True})
-    
-    return jsonify({"error": "Tokens não fornecidos."}), 400
+
+        return jsonify({
+            "success": True
+        })
+
+    return jsonify({
+        "error": "Tokens não fornecidos."
+    }), 400
+
+
+# ============================================================
+# REDEFINIR SENHA
+# ============================================================
 
 @auth_bp.route('/redefinir_senha', methods=['GET', 'POST'])
 def redefinir_senha():
+
     if request.method == 'POST':
-        data = request.get_json()
+
+        data = request.get_json() or {}
+
         nova_senha = data.get('senha')
 
         if not nova_senha:
-            return jsonify({"error": "Nova senha não fornecida."}), 400
 
-        # Recupera ambos os tokens guardados na sessão do Flask
-        access_token = session.get('access_token')
-        refresh_token = session.get('refresh_token') # <--- Linha que faltava
+            return jsonify({
+                "error": "Nova senha não fornecida."
+            }), 400
+
+        access_token = session.get(
+            'access_token'
+        )
+
+        refresh_token = session.get(
+            'refresh_token'
+        )
 
         if not access_token:
-            return jsonify({"error": "Sessão de recuperação expirada ou inválida. Solicite um novo e-mail."}), 400
+
+            return jsonify({
+                "error": (
+                    "Sessão de recuperação expirada "
+                    "ou inválida. Solicite um novo e-mail."
+                )
+            }), 400
 
         try:
-            # Passa ambos os tokens para o cliente do Supabase
-            supabase.auth.set_session(access_token, refresh_token)
-            
-            # Atualiza a senha do utilizador no Supabase
-            supabase.auth.update_user({"password": nova_senha})
-            
-            # Limpa os tokens da sessão do Flask após o sucesso
-            session.pop('access_token', None)
-            session.pop('refresh_token', None)
 
-            return jsonify({"success": True, "message": "Senha redefinida com sucesso! Redirecionando..."})
+            supabase.auth.set_session(
+                access_token,
+                refresh_token
+            )
+
+            supabase.auth.update_user({
+                "password": nova_senha
+            })
+
+            session.pop(
+                'access_token',
+                None
+            )
+
+            session.pop(
+                'refresh_token',
+                None
+            )
+
+            return jsonify({
+                "success": True,
+                "message": (
+                    "Senha redefinida com sucesso! "
+                    "Redirecionando..."
+                )
+            })
+
         except Exception as err:
-            print("Erro ao redefinir senha:", err)
-            return jsonify({"error": str(err)}), 400
 
-    # Método GET
+            print(
+                "Erro ao redefinir senha:",
+                err
+            )
+
+            return jsonify({
+                "error": str(err)
+            }), 400
+
+    # --------------------------------------------------------
+    # Recuperação via código
+    # --------------------------------------------------------
+
     code = request.args.get('code')
-    print("CODE RECEBIDO NA URL:", code)  # DEBUG
+
+    print(
+        "CODE RECEBIDO NA URL:",
+        code
+    )
 
     if code:
-        try:
-            # O SDK espera um dict com a chave 'auth_code'
-            auth_response = supabase.auth.exchange_code_for_session({
-                "auth_code": code
-            })
-            session['access_token'] = auth_response.session.access_token
-            session['refresh_token'] = auth_response.session.refresh_token
-            print("Sessão guardada com sucesso na session do Flask!")
-        except Exception as err:
-            print("Erro ao trocar código por sessão:", err)
 
-    return render_template('redefinir_senha.html')
+        try:
+
+            auth_response = (
+                supabase.auth.exchange_code_for_session({
+                    "auth_code": code
+                })
+            )
+
+            if auth_response.session:
+
+                session['access_token'] = (
+                    auth_response.session.access_token
+                )
+
+                session['refresh_token'] = (
+                    auth_response.session.refresh_token
+                )
+
+                print(
+                    "Sessão guardada com sucesso "
+                    "na session do Flask!"
+                )
+
+        except Exception as err:
+
+            print(
+                "Erro ao trocar código por sessão:",
+                err
+            )
+
+    return render_template(
+        'redefinir_senha.html'
+    )
+
+
+# ============================================================
+# LOGOUT
+# ============================================================
 
 @auth_bp.route('/logout')
 def logout():
-    # Remove todos os dados da sessão do Flask (access_token, user id, etc.)
+
+    try:
+
+        supabase.auth.sign_out()
+
+    except Exception as err:
+
+        print(
+            "Erro ao fazer logout:",
+            err
+        )
+
     session.clear()
-    return redirect(url_for('auth.login'))
+
+    return redirect(
+        url_for('auth.login')
+    )

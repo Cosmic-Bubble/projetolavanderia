@@ -1,224 +1,587 @@
-<!-- Menu compartilhado. CSS incluído aqui para funcionar quando inserido nas páginas via fetch/innerHTML. -->
+<!-- ==========================================================
+     MENU COMPARTILHADO
+========================================================== -->
+
 <style>
-  #menu-lateral,
-  #menu-lateral * {
-    box-sizing: border-box;
-  }
 
-  #menu-lateral {
-    width: 260px;
-    min-width: 260px;
-    height: 100vh;
-    background: #fff;
-    border-right: 1px solid #e5e7eb;
-    display: flex;
-    flex-direction: column;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #263247;
-    z-index: 40;
-    overflow-y: auto;
-    transition: transform .2s ease;
-  }
+    /* ==========================================================
+       MENU LATERAL
+    ========================================================== */
 
-  #menu-lateral p {
-    margin: 0;
-  }
-
-  #menu-lateral .menu-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 28px 22px 22px;
-  }
-
-  #menu-lateral .menu-logo img {
-    display: block;
-    width: 44px;
-    height: 44px;
-    object-fit: contain;
-    flex-shrink: 0;
-  }
-
-  #menu-lateral .menu-marca {
-    font-size: 10px;
-    letter-spacing: 1px;
-    line-height: 1.3;
-  }
-
-  #menu-lateral .menu-marca p:first-child {
-    color: #a3cf29;
-    font-weight: 600;
-  }
-
-  #menu-lateral .menu-marca p:last-child {
-    color: #24a5db;
-    font-weight: 600;
-  }
-
-  #menu-lateral .menu-links {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    gap: 5px;
-    padding: 18px 14px;
-  }
-
-  #menu-lateral .menu-links a {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 13px;
-    border-radius: 8px;
-    color: #647084;
-    text-decoration: none;
-    font-size: 13px;
-    line-height: 1.45;
-    font-weight: 400;
-  }
-
-  #menu-lateral .menu-links a:hover,
-  #menu-lateral .menu-links a[aria-current="page"] {
-    background: #f3edf8;
-    color: #783c91;
-  }
-
-  #menu-lateral .menu-links a i,
-  #menu-lateral .menu-links a svg {
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-  }
-
-  #menu-lateral .menu-usuario {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    padding: 17px 18px;
-    border-top: 1px solid #e5e7eb;
-  }
-
-  #menu-lateral .menu-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background: #f3e8ff;
-    color: #783c91;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  #menu-lateral .menu-avatar i,
-  #menu-lateral .menu-avatar svg {
-    width: 20px;
-    height: 20px;
-  }
-
-  #menu-lateral .menu-usuario .menu-nome {
-    font-size: 13px;
-    font-weight: 600;
-  }
-
-  #menu-lateral .menu-usuario .menu-cargo {
-    font-size: 11px;
-    color: #64748b;
-    margin-top: 3px;
-  }
-
-  #fechar-menu {
-    display: none;
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    border: 0;
-    background: transparent;
-    padding: 8px;
-    cursor: pointer;
-    color: #475569;
-  }
-
-  #menu-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 30;
-    background: rgba(0, 0, 0, .4);
-  }
-
-  #menu-overlay.hidden {
-    display: none !important;
-  }
-
-  @media (min-width:1024px) {
     #menu-lateral {
-      position: sticky !important;
-      top: 0;
-      left: 0;
-      transform: none !important;
+        width: 260px;
+        min-width: 260px;
+        height: 100vh;
+
+        background: #ffffff;
+
+        border-right: 1px solid #e5e7eb;
+
+        display: flex;
+        flex-direction: column;
+
+        font-family: Arial, Helvetica, sans-serif;
+
+        color: #263247;
+
+        overflow-y: auto;
+
+        box-sizing: border-box;
+
+        flex-shrink: 0;
     }
 
-    #menu-overlay {
-      display: none !important;
-    }
-  }
 
-  @media (max-width:1023px) {
-    #menu-lateral {
-      position: fixed !important;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      transform: translateX(-100%);
+    #menu-lateral *,
+    #menu-lateral *::before,
+    #menu-lateral *::after {
+        box-sizing: border-box;
     }
 
-    #menu-lateral:not([class~="-translate-x-full"]),
-    #menu-lateral.translate-x-0,
-    #menu-lateral.menu-aberto {
-      transform: translateX(0) !important;
+
+    /* ==========================================================
+       LOGO
+    ========================================================== */
+
+    #menu-lateral .menu-logo {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 12px;
+
+        padding: 28px 22px 22px;
     }
 
-    #menu-lateral.-translate-x-full:not(.translate-x-0):not(.menu-aberto) {
-      transform: translateX(-100%) !important;
+
+    #menu-lateral .menu-logo img {
+
+        display: block;
+
+        width: 44px;
+
+        height: 44px;
+
+        object-fit: contain;
+
+        flex-shrink: 0;
     }
+
+
+    #menu-lateral .menu-marca {
+
+        font-size: 10px;
+
+        letter-spacing: 1px;
+
+        line-height: 1.3;
+    }
+
+
+    #menu-lateral .menu-marca p {
+
+        margin: 0;
+    }
+
+
+    #menu-lateral .menu-marca p:first-child {
+
+        color: #a3cf29;
+
+        font-weight: 600;
+    }
+
+
+    #menu-lateral .menu-marca p:last-child {
+
+        color: #24a5db;
+
+        font-weight: 600;
+    }
+
+
+    /* ==========================================================
+       LINKS
+    ========================================================== */
+
+    #menu-lateral .menu-links {
+
+        display: flex;
+
+        flex: 1;
+
+        flex-direction: column;
+
+        gap: 5px;
+
+        padding: 18px 14px;
+    }
+
+
+    #menu-lateral .menu-links a {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 12px;
+
+        padding: 12px 13px;
+
+        border-radius: 8px;
+
+        color: #647084;
+
+        text-decoration: none;
+
+        font-size: 13px;
+
+        line-height: 1.45;
+
+        font-weight: 400;
+
+        transition:
+            background 0.15s ease,
+            color 0.15s ease;
+    }
+
+
+    #menu-lateral .menu-links a:hover {
+
+        background: #f3edf8;
+
+        color: #783c91;
+    }
+
+
+    #menu-lateral .menu-links a i,
+    #menu-lateral .menu-links a svg {
+
+        width: 18px;
+
+        height: 18px;
+
+        flex-shrink: 0;
+    }
+
+
+    /* ==========================================================
+       USUÁRIO
+    ========================================================== */
+
+    #menu-lateral .menu-usuario {
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 11px;
+
+        padding: 17px 18px;
+
+        border-top: 1px solid #e5e7eb;
+    }
+
+
+    #menu-lateral .menu-avatar {
+
+        width: 40px;
+
+        height: 40px;
+
+        border-radius: 50%;
+
+        background: #f3e8ff;
+
+        color: #783c91;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        flex-shrink: 0;
+    }
+
+
+    #menu-lateral .menu-avatar i,
+    #menu-lateral .menu-avatar svg {
+
+        width: 20px;
+
+        height: 20px;
+    }
+
+
+    #menu-lateral .menu-usuario .menu-nome {
+
+        margin: 0;
+
+        font-size: 13px;
+
+        font-weight: 600;
+    }
+
+
+    #menu-lateral .menu-usuario .menu-cargo {
+
+        margin: 3px 0 0;
+
+        font-size: 11px;
+
+        color: #64748b;
+    }
+
+
+    /* ==========================================================
+       BOTÃO FECHAR
+    ========================================================== */
 
     #fechar-menu {
-      display: block;
+
+        display: none;
+
+        position: absolute;
+
+        top: 12px;
+
+        right: 12px;
+
+        border: 0;
+
+        background: transparent;
+
+        padding: 8px;
+
+        cursor: pointer;
+
+        color: #475569;
     }
-  }
+
+
+    /* ==========================================================
+       DESKTOP
+    ========================================================== */
+
+    @media (min-width: 1024px) {
+
+        #menu-lateral {
+
+            position: relative;
+
+            top: auto;
+
+            left: auto;
+
+            transform: none;
+
+            z-index: 1;
+        }
+
+    }
+
+
+    /* ==========================================================
+       TABLET / CELULAR
+    ========================================================== */
+
+    @media (max-width: 1023px) {
+
+        #menu-lateral {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 260px;
+
+            height: 100vh;
+
+            z-index: 1000;
+
+            transform: translateX(-100%);
+
+            transition: transform 0.2s ease;
+        }
+
+
+        #menu-lateral.menu-aberto {
+
+            transform: translateX(0);
+        }
+
+
+        #menu-lateral.translate-x-0 {
+
+            transform: translateX(0);
+        }
+
+
+        #fechar-menu {
+
+            display: block;
+        }
+
+    }
+
+
+    /* ==========================================================
+       OVERLAY
+    ========================================================== */
+
+    #menu-overlay {
+
+        display: none;
+    }
+
+
+    @media (max-width: 1023px) {
+
+        #menu-overlay.menu-aberto {
+
+            display: block;
+
+            position: fixed;
+
+            inset: 0;
+
+            background: rgba(0, 0, 0, 0.4);
+
+            z-index: 999;
+        }
+
+    }
+
 </style>
-<div id="menu-overlay" class="fixed inset-0 z-30 hidden bg-black/40 lg:hidden" aria-hidden="true"></div>
-<aside id="menu-lateral" aria-label="Menu principal"
-  class="fixed inset-y-0 left-0 z-40 w-[260px] shrink-0 bg-white border-r border-gray-200 flex flex-col transform -translate-x-full transition-transform duration-200 lg:translate-x-0 lg:sticky lg:top-0 lg:h-screen">
-  <button id="fechar-menu" type="button" aria-label="Fechar menu"><i data-lucide="x"></i></button>
-  <div class="menu-logo">
-    <img src="{{ url_for('static', filename='assets/img/logo.png') }}" alt="Projeto Lavanderia">
-    <div class="menu-marca">
-      <p>PROJETO</p>
-      <p>LAVANDERIA</p>
+
+
+<!-- ==========================================================
+     OVERLAY
+========================================================== -->
+
+<div
+    id="menu-overlay"
+    aria-hidden="true">
+</div>
+
+
+<!-- ==========================================================
+     MENU
+========================================================== -->
+
+<aside
+    id="menu-lateral"
+    aria-label="Menu principal">
+
+
+    <!-- ======================================================
+         BOTÃO FECHAR
+    ====================================================== -->
+
+    <button
+        id="fechar-menu"
+        type="button"
+        aria-label="Fechar menu">
+
+        <i data-lucide="x"></i>
+
+    </button>
+
+
+    <!-- ======================================================
+         LOGO
+    ====================================================== -->
+
+    <div class="menu-logo">
+
+        <img
+            src="{{ url_for('static', filename='assets/img/logo.png') }}"
+            alt="Projeto Lavanderia">
+
+
+        <div class="menu-marca">
+
+            <p>PROJETO</p>
+
+            <p>LAVANDERIA</p>
+
+        </div>
+
     </div>
-  </div>
-  <nav class="menu-links" aria-label="Navegação do painel">
-    <a href="{{ url_for('admin.dashboard') }}"><i data-lucide="layout-dashboard"></i><span>Dashboard Geral</span></a>
-    <a href="{{ url_for('admin.comercial') }}"><i data-lucide="shopping-cart"></i><span>Módulo Comercial</span></a>
-    <a href="{{ url_for('admin.social') }}"><i data-lucide="heart"></i><span>Módulo Social</span></a>
-    <a href="{{ url_for('admin.capacidade') }}"><i data-lucide="activity"></i><span>Consolidação de
-        Capacidade</span></a>
-    <a href="{{ url_for('admin.alertas') }}"><i data-lucide="bell"></i><span>Alertas e Avisos</span></a>
-    <a href="{{ url_for('admin.importacao') }}"><i data-lucide="upload"></i><span>Importação</span></a>
-    <a href="{{ url_for('admin.configuracoes') }}"><i data-lucide="settings"></i><span>Meu perfil</span></a>
-  </nav>
-  
-  <div class="menu-usuario">
-    <!-- Adicionamos o id="menu-avatar" aqui -->
-    <div class="menu-avatar" id="menu-avatar">
-      <i data-lucide="user-round"></i>
+
+
+    <!-- ======================================================
+         NAVEGAÇÃO
+    ====================================================== -->
+
+    <nav
+        class="menu-links"
+        aria-label="Navegação do painel">
+
+
+        <!-- DASHBOARD -->
+
+        {% if session.get('permissoes', {}).get('visao_geral') in ['leitura', 'gerenciar'] %}
+
+        <a href="{{ url_for('admin.dashboard') }}">
+
+            <i data-lucide="layout-dashboard"></i>
+
+            <span>Dashboard Geral</span>
+
+        </a>
+
+        {% endif %}
+
+
+        <!-- COMERCIAL -->
+
+        {% if session.get('permissoes', {}).get('comercial') in ['leitura', 'gerenciar'] %}
+
+        <a href="{{ url_for('admin.comercial') }}">
+
+            <i data-lucide="shopping-cart"></i>
+
+            <span>Módulo Comercial</span>
+
+        </a>
+
+        {% endif %}
+
+
+        <!-- SOCIAL -->
+
+        {% if session.get('permissoes', {}).get('social') in ['leitura', 'gerenciar'] %}
+
+        <a href="{{ url_for('admin.social') }}">
+
+            <i data-lucide="heart"></i>
+
+            <span>Módulo Social</span>
+
+        </a>
+
+        {% endif %}
+
+
+        <!-- CAPACIDADE -->
+
+        {% if session.get('permissoes', {}).get('capacidade_maquinas') in ['leitura', 'gerenciar'] %}
+
+        <a href="{{ url_for('admin.capacidade') }}">
+
+            <i data-lucide="activity"></i>
+
+            <span>Consolidação de Capacidade</span>
+
+        </a>
+
+        {% endif %}
+
+
+        <!-- ALERTAS -->
+
+        {% if session.get('permissoes', {}).get('alertas') in ['leitura', 'gerenciar'] %}
+
+        <a href="{{ url_for('admin.alertas') }}">
+
+            <i data-lucide="bell"></i>
+
+            <span>Alertas e Avisos</span>
+
+        </a>
+
+        {% endif %}
+
+
+        <!-- IMPORTAÇÃO -->
+
+        {% if session.get('permissoes', {}).get('importacao') == 'gerenciar' %}
+
+        <a href="{{ url_for('admin.importacao') }}">
+
+            <i data-lucide="upload"></i>
+
+            <span>Importação</span>
+
+        </a>
+
+        {% endif %}
+
+
+        <!-- SOLICITAÇÕES -->
+
+        {% if session.get('nome_cargo') == 'Administrador' %}
+
+        <a href="{{ url_for('solicitacoes.solicitacoes') }}">
+
+            <i data-lucide="user-check"></i>
+
+            <span>Solicitações</span>
+
+        </a>
+
+        {% endif %}
+
+
+        <!-- MEU PERFIL -->
+
+        {% if session.get('access_token') %}
+
+        <a href="{{ url_for('admin.configuracoes') }}">
+
+            <i data-lucide="settings"></i>
+
+            <span>Meu perfil</span>
+
+        </a>
+
+        {% endif %}
+
+
+    </nav>
+
+
+    <!-- ======================================================
+         USUÁRIO LOGADO
+    ====================================================== -->
+
+    <div class="menu-usuario">
+
+        <div
+            class="menu-avatar"
+            id="menu-avatar">
+
+            <i data-lucide="user-round"></i>
+
+        </div>
+
+
+        <div>
+
+            <p
+                class="menu-nome"
+                id="menu-nome">
+
+                Administrador
+
+            </p>
+
+
+            <p
+                class="menu-cargo"
+                id="menu-cargo">
+
+                Gestão do Projeto
+
+            </p>
+
+        </div>
+
     </div>
-    <div>
-      <!-- Adicionamos id="menu-nome" e id="menu-cargo" aqui -->
-      <p class="menu-nome" id="menu-nome">Administrador</p>
-      <p class="menu-cargo" id="menu-cargo">Gestão do Projeto</p>
-    </div>
-  
-  </div>
 
 </aside>
