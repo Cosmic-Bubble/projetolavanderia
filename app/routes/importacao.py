@@ -3,7 +3,7 @@ from io import BytesIO
 import pandas as pd
 from flask import Blueprint, jsonify, request
 
-from app.services.importacao_service import upsert_dados
+from app.services.importacao_service import registrar_importacao, upsert_dados
 from app.services.supabase_client import supabase
 from app.services.validacao_service import validar_planilha
 
@@ -24,20 +24,20 @@ def importar_planilha():
     if not arquivo or not arquivo.filename:
         return jsonify({"sucesso": False, "mensagem": "Arquivo Excel não foi enviado."}), 400
 
-    nome_arquivo = arquivo.filename.lower()
-    if not nome_arquivo.endswith(".xlsx"):
+    nome_arquivo = arquivo.filename
+    if not nome_arquivo.lower().endswith(".xlsx"):
         return jsonify({"sucesso": False, "mensagem": "Formato inválido. Selecione um arquivo .xlsx."}), 400
 
     try:
         excel = pd.read_excel(BytesIO(arquivo.read()), sheet_name=None, engine="openpyxl")
     except Exception as e:
-        # Expor o erro real ajuda no diagnóstico (remova em produção se preferir)
+        registrar_importacao(nome_arquivo, status="erro")
         return jsonify({
             "sucesso": False,
             "mensagem": f"Não foi possível ler o arquivo Excel: {e}",
         }), 400
 
-    # Busca o nome da aba no dicionário ABAS_VALIDAS (chave = nome da aba)
+    # Detecção de aba
     abas_encontradas = []
     for nome_aba, df in excel.items():
         if nome_aba in ABAS_VALIDAS:
@@ -45,6 +45,7 @@ def importar_planilha():
 
     if not abas_encontradas:
         abas_no_arquivo = [str(n) for n in excel.keys()]
+        registrar_importacao(nome_arquivo, status="erro")
         return jsonify({
             "sucesso": False,
             "mensagem": (
@@ -56,6 +57,7 @@ def importar_planilha():
         }), 400
 
     if len(abas_encontradas) > 1:
+        registrar_importacao(nome_arquivo, status="erro")
         return jsonify({
             "sucesso": False,
             "mensagem": "Foi detectada mais de uma aba de dados no arquivo. Envie um modelo por vez.",
@@ -65,19 +67,23 @@ def importar_planilha():
     df_normalizado, erros = validar_planilha(df, tipo)
 
     if erros:
+        registrar_importacao(nome_arquivo, status="erro")
         return jsonify({"sucesso": False, "erros": erros}), 400
 
     try:
         registros_processados = upsert_dados(tipo, df_normalizado)
     except RuntimeError as exc:
+        registrar_importacao(nome_arquivo, status="erro")
         return jsonify({"sucesso": False, "mensagem": str(exc)}), 500
+
+    # ✅ Log de sucesso — após o upsert ter ido bem
+    registrar_importacao(nome_arquivo, status="sucesso")
 
     return jsonify({
         "sucesso": True,
         "tipo_detectado": ABAS_VALIDAS[tipo],
         "registros_processados": registros_processados,
     }), 200
-
 
 @importacao_bp.route("/api/historico-importacoes", methods=["GET"])
 def historico_importacoes():

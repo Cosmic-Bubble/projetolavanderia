@@ -81,3 +81,23 @@ def upsert_dados(tipo: str, df: pd.DataFrame) -> int:
         ) from exc
 
     return len(df)
+
+def registrar_importacao(
+    nome_arquivo: str,
+    status: str = "sucesso",
+    administrador_id: int | None = None,
+) -> None:
+
+    if supabase is None:
+        print("[importacao] aviso: Supabase indisponível, log de importação não registrado.")
+        return
+
+    try:
+        supabase.table("historico_importacoes").insert({
+            "nome_arquivo": nome_arquivo,
+            "status_importacao": status,
+            "administrador_id": administrador_id,  # pode ser None
+        }).execute()
+        print(f"[importacao] log registrado: {nome_arquivo} ({status})")
+    except Exception as exc:
+        print(f"[importacao] aviso: falha ao registrar log de importação: {exc}")
