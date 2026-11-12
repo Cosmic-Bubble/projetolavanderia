@@ -52,9 +52,16 @@ const senha = document.getElementById("senha");
 const confirmarSenha = document.getElementById("confirmarSenha");
 const botaoMostrar = document.getElementById("mostrarSenha");
 const mensagem = document.getElementById("mensagem");
-const foto = document.getElementById("foto");
 const formCadastro = document.getElementById("formCadastro");
 const erroSenha = document.getElementById("erroSenha");
+
+const foto = document.getElementById("foto");
+const previewFoto = document.getElementById("previewFoto");
+const placeholderFoto = document.getElementById("placeholderFoto");
+const removerFoto = document.getElementById("removerFoto");
+const nomeArq = document.getElementById("nomeArquivo");
+
+let urlPreview = null;
 
 // Mostrar ou ocultar senha
 if (botaoMostrar && senha) {
@@ -116,22 +123,74 @@ function verificarSenhas() {
 if (senha) senha.addEventListener("input", verificarSenhas);
 if (confirmarSenha) confirmarSenha.addEventListener("input", verificarSenhas);
 
-// Conferir foto selecionada
+// preview da foto de perfil
+// Conferir foto selecionada e exibir preview
 if (foto) {
     foto.addEventListener("change", function () {
+
         const arquivo = foto.files[0];
+
         if (!arquivo) return;
 
         const tipos = ["image/png", "image/jpeg"];
+
+        // Validar formato e tamanho
         if (!tipos.includes(arquivo.type) || arquivo.size > 2 * 1024 * 1024) {
+
             alert("Selecione uma imagem PNG ou JPG de até 2 MB.");
-            foto.value = "";
-            const nomeArq = document.getElementById("nomeArquivo");
-            if (nomeArq) nomeArq.textContent = "";
+
+            limparPreviewFoto();
             return;
         }
-        const nomeArq = document.getElementById("nomeArquivo");
-        if (nomeArq) nomeArq.textContent = arquivo.name;
+
+        // Liberar URL da imagem anterior, se existir
+        if (urlPreview) {
+            URL.revokeObjectURL(urlPreview);
+        }
+
+        // Criar URL temporária para a imagem
+        urlPreview = URL.createObjectURL(arquivo);
+
+        // Exibir a foto no lugar do ícone da câmera
+        previewFoto.src = urlPreview;
+        previewFoto.classList.remove("hidden");
+        placeholderFoto.classList.add("hidden");
+
+        // Exibir botão de remoção
+        removerFoto.classList.remove("hidden");
+
+        // Exibir nome do arquivo
+        if (nomeArq) {
+            nomeArq.textContent = arquivo.name;
+        }
+    });
+}
+
+// Limpar preview e restaurar estado inicial
+function limparPreviewFoto() {
+
+    foto.value = "";
+
+    if (urlPreview) {
+        URL.revokeObjectURL(urlPreview);
+        urlPreview = null;
+    }
+
+    previewFoto.src = "";
+    previewFoto.classList.add("hidden");
+
+    placeholderFoto.classList.remove("hidden");
+    removerFoto.classList.add("hidden");
+
+    if (nomeArq) {
+        nomeArq.textContent = "";
+    }
+}
+
+// Remover foto selecionada
+if (removerFoto) {
+    removerFoto.addEventListener("click", function () {
+        limparPreviewFoto();
     });
 }
 
@@ -174,8 +233,7 @@ if (formCadastro) {
             }
 
             formCadastro.reset();
-            const nomeArq = document.getElementById("nomeArquivo");
-            if (nomeArq) nomeArq.textContent = "";
+            limparPreviewFoto();
 
             setTimeout(() => {
                 window.location.href = "/login";
