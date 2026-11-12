@@ -76,7 +76,7 @@ def importar_planilha():
         registrar_importacao(nome_arquivo, status="erro")
         return jsonify({"sucesso": False, "mensagem": str(exc)}), 500
 
-    # ✅ Log de sucesso — após o upsert ter ido bem
+    # Log de sucesso — após o upsert ter ido bem
     registrar_importacao(nome_arquivo, status="sucesso")
 
     return jsonify({
@@ -88,25 +88,33 @@ def importar_planilha():
 @importacao_bp.route("/api/historico-importacoes", methods=["GET"])
 def historico_importacoes():
     if supabase is None:
+        print("[importacao] aviso: Supabase indisponível para histórico.")
         return jsonify([])
 
     try:
         resposta = (
-            supabase.table("historico_importacoes")  # não importacoes_log
-            .select("nome_arquivo, status_importacao, criado_em")
+            supabase.table("historico_importacoes")
+            .select("id, nome_arquivo, status_importacao, criado_em")
             .order("criado_em", desc=True)
+            .limit(50)
             .execute()
         )
         registros = resposta.data or []
-    except Exception:
+        print(f"[importacao] histórico: {len(registros)} registro(s) encontrado(s)")
+        if registros:
+            print(f"[importacao]    primeiro: {registros[0]}")
+    except Exception as exc:
+        print(f"[importacao] erro ao buscar histórico: {exc}")
         return jsonify([])
 
     retorno = []
     for item in registros:
         retorno.append({
+            "id": item.get("id"),
             "nome_arquivo": item.get("nome_arquivo", "Arquivo sem nome"),
-            "tipo": "Importação", 
+            "tipo": "Importação",
             "data_importacao": item.get("criado_em"),
+            # Status vem do banco: 'sucesso', 'erro', 'processando'
             "status": item.get("status_importacao", "sucesso"),
         })
 

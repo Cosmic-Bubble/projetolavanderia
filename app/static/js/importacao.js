@@ -90,44 +90,54 @@ function iniciarImportacao() {
     }
 
     async function carregarHistorico() {
-        try {
-            const resposta = await fetch("/api/historico-importacoes");
-            const dados = await resposta.json();
+    try {
+        const resposta = await fetch("/api/historico-importacoes");
+        const dados = await resposta.json();
 
-            if (!Array.isArray(dados) || dados.length === 0) {
-                listaHistorico.innerHTML =
-                    '<p class="text-sm text-gray-400 text-center py-6">Nenhuma importação registrada ainda.</p>';
-                renderIcons();
-                return;
-            }
+        console.log("[importacao] histórico recebido:", dados);
 
-            listaHistorico.innerHTML = dados
-                .map((item) => {
-                    const status = item.status === "Processado" ? "Processado" : "Substituído";
-                    const badgeClass = status === "Processado" ? "text-cyan-500" : "text-orange-500";
-
-                    return `
-                        <div class="border border-gray-200 rounded-xl p-4 flex items-center justify-between gap-3">
-                            <div class="flex items-center gap-3 min-w-0">
-                                <i data-lucide="file-text" class="w-5 h-5 text-[#586864] shrink-0"></i>
-                                <div class="min-w-0">
-                                    <p class="text-sm font-semibold break-all">${item.nome_arquivo || "Arquivo importado"}</p>
-                                    <p class="text-xs text-gray-400">${calcularTempo(item.data_importacao)}</p>
-                                </div>
-                            </div>
-                            <span class="self-start sm:self-auto bg-gray-100 ${badgeClass} text-xs px-3 py-1 rounded-md shrink-0">${status}</span>
-                        </div>
-                    `;
-                })
-                .join("");
-
-            renderIcons();
-        } catch (erro) {
+        if (!Array.isArray(dados) || dados.length === 0) {
             listaHistorico.innerHTML =
-                '<p class="text-sm text-red-500 text-center py-6">Não foi possível carregar o histórico.</p>';
+                '<p class="text-sm text-gray-400 text-center py-6">Nenhuma importação registrada ainda.</p>';
             renderIcons();
+            return;
         }
+
+        listaHistorico.innerHTML = dados
+            .map((item) => {
+                const statusBanco = (item.status || "sucesso").toLowerCase();
+
+                // Mapeamento: status do banco → label amigável + cor
+                const MAPA = {
+                    "sucesso":     { label: "Processado",  classe: "text-cyan-500" },
+                    "erro":        { label: "Erro",        classe: "text-red-500" },
+                    "processando": { label: "Processando", classe: "text-yellow-500" },
+                };
+                const info = MAPA[statusBanco] || MAPA["sucesso"];
+
+                return `
+                    <div class="border border-gray-200 rounded-xl p-4 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <i data-lucide="file-text" class="w-5 h-5 text-[#586864] shrink-0"></i>
+                            <div class="min-w-0">
+                                <p class="text-sm font-semibold break-all">${item.nome_arquivo || "Arquivo importado"}</p>
+                                <p class="text-xs text-gray-400">${calcularTempo(item.data_importacao)}</p>
+                            </div>
+                        </div>
+                        <span class="self-start sm:self-auto bg-gray-100 ${info.classe} text-xs px-3 py-1 rounded-md shrink-0">${info.label}</span>
+                    </div>
+                `;
+            })
+            .join("");
+
+        renderIcons();
+    } catch (erro) {
+        console.error("[importacao] erro ao carregar histórico:", erro);
+        listaHistorico.innerHTML =
+            '<p class="text-sm text-red-500 text-center py-6">Não foi possível carregar o histórico.</p>';
+        renderIcons();
     }
+}
 
     // ----- 2.4 Upload -----
     async function importarArquivo() {
