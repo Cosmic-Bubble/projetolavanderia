@@ -96,7 +96,7 @@ def historico_importacoes():
             supabase.table("historico_importacoes")
             .select("id, nome_arquivo, status_importacao, criado_em")
             .order("criado_em", desc=True)
-            .limit(50)
+            .limit(5)
             .execute()
         )
         registros = resposta.data or []
