@@ -1,36 +1,25 @@
-<!-- ==========================================================
+<!-- 
      MENU COMPARTILHADO
-========================================================== -->
+     - Estilos do menu lateral
+     - Overlay (mobile)
+     - Markup do menu (logo, navegação, usuário) -->
 
 <style>
-
-    /* ==========================================================
-       MENU LATERAL
-    ========================================================== */
-
+    /* MENU LATERAL — ESTRUTURA BASE*/
     #menu-lateral {
         width: 260px;
         min-width: 260px;
         height: 100vh;
-
         background: #ffffff;
-
         border-right: 1px solid #e5e7eb;
-
         display: flex;
         flex-direction: column;
-
         font-family: Arial, Helvetica, sans-serif;
-
         color: #263247;
-
         overflow-y: auto;
-
         box-sizing: border-box;
-
         flex-shrink: 0;
     }
-
 
     #menu-lateral *,
     #menu-lateral *::before,
@@ -38,548 +27,289 @@
         box-sizing: border-box;
     }
 
-
-    /* ==========================================================
-       LOGO
-    ========================================================== */
-
+    /* LOGO / MARCA */
     #menu-lateral .menu-logo {
-
         display: flex;
-
         align-items: center;
-
         gap: 12px;
-
         padding: 28px 22px 22px;
     }
 
-
     #menu-lateral .menu-logo img {
-
         display: block;
-
         width: 44px;
-
         height: 44px;
-
         object-fit: contain;
-
         flex-shrink: 0;
     }
 
-
     #menu-lateral .menu-marca {
-
         font-size: 10px;
-
         letter-spacing: 1px;
-
         line-height: 1.3;
     }
 
-
     #menu-lateral .menu-marca p {
-
         margin: 0;
     }
 
-
     #menu-lateral .menu-marca p:first-child {
-
         color: #a3cf29;
-
         font-weight: 600;
     }
-
 
     #menu-lateral .menu-marca p:last-child {
-
         color: #24a5db;
-
         font-weight: 600;
     }
 
-
-    /* ==========================================================
-       LINKS
-    ========================================================== */
-
+    /* LINKS DE NAVEGAÇÃO */
     #menu-lateral .menu-links {
-
         display: flex;
-
         flex: 1;
-
         flex-direction: column;
-
         gap: 5px;
-
         padding: 18px 14px;
     }
 
-
     #menu-lateral .menu-links a {
-
         display: flex;
-
         align-items: center;
-
         gap: 12px;
-
         padding: 12px 13px;
-
         border-radius: 8px;
-
         color: #647084;
-
         text-decoration: none;
-
         font-size: 13px;
-
         line-height: 1.45;
-
         font-weight: 400;
-
-        transition:
-            background 0.15s ease,
-            color 0.15s ease;
+        transition: background 0.15s ease, color 0.15s ease;
     }
-
 
     #menu-lateral .menu-links a:hover {
-
         background: #f3edf8;
-
         color: #783c91;
     }
-
 
     #menu-lateral .menu-links a i,
     #menu-lateral .menu-links a svg {
-
         width: 18px;
-
         height: 18px;
-
         flex-shrink: 0;
     }
 
-
-    /* ==========================================================
-       USUÁRIO
-    ========================================================== */
-
+    /* BLOCO DE USUÁRIO */
     #menu-lateral .menu-usuario {
-
         display: flex;
-
         align-items: center;
-
         gap: 11px;
-
         padding: 17px 18px;
-
         border-top: 1px solid #e5e7eb;
     }
 
-
     #menu-lateral .menu-avatar {
-
         width: 40px;
-
         height: 40px;
-
         border-radius: 50%;
-
         background: #f3e8ff;
-
         color: #783c91;
-
         display: flex;
-
         align-items: center;
-
         justify-content: center;
-
         flex-shrink: 0;
     }
 
-
     #menu-lateral .menu-avatar i,
     #menu-lateral .menu-avatar svg {
-
         width: 20px;
-
         height: 20px;
     }
 
-
     #menu-lateral .menu-usuario .menu-nome {
-
         margin: 0;
-
         font-size: 13px;
-
         font-weight: 600;
     }
 
-
     #menu-lateral .menu-usuario .menu-cargo {
-
         margin: 3px 0 0;
-
         font-size: 11px;
-
         color: #64748b;
     }
 
-
-    /* ==========================================================
-       BOTÃO FECHAR
-    ========================================================== */
-
+    /* BOTÃO FECHAR (mobile) */
     #fechar-menu {
-
         display: none;
-
         position: absolute;
-
         top: 12px;
-
         right: 12px;
-
         border: 0;
-
         background: transparent;
-
         padding: 8px;
-
         cursor: pointer;
-
         color: #475569;
     }
 
-
-    /* ==========================================================
-       DESKTOP
-    ========================================================== */
-
+    /* DESKTOP (>= 1024px) */
     @media (min-width: 1024px) {
-
         #menu-lateral {
-
-            position: relative;
-
-            top: auto;
-
-            left: auto;
-
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 260px;
+            height: 100vh;
             transform: none;
-
-            z-index: 1;
+            z-index: 100;
         }
 
+        body {
+            padding-left: 260px;
+        }
     }
 
-
-    /* ==========================================================
-       TABLET / CELULAR
-    ========================================================== */
-
+    /* TABLET / CELULAR (<= 1023px) - Menu vira drawer lateral */
     @media (max-width: 1023px) {
-
         #menu-lateral {
-
             position: fixed;
-
             top: 0;
-
             left: 0;
-
             width: 260px;
-
             height: 100vh;
-
             z-index: 1000;
-
-            transform: translateX(-100%);
-
-            transition: transform 0.2s ease;
         }
-
 
         #menu-lateral.menu-aberto {
-
             transform: translateX(0);
         }
-
-
-        #menu-lateral.translate-x-0 {
-
-            transform: translateX(0);
-        }
-
 
         #fechar-menu {
-
             display: block;
         }
-
     }
 
-
-    /* ==========================================================
-       OVERLAY
-    ========================================================== */
-
+    /* OVERLAY (fundo escuro atrás do menu no mobile) */
     #menu-overlay {
-
         display: none;
     }
 
-
     @media (max-width: 1023px) {
-
         #menu-overlay.menu-aberto {
-
             display: block;
-
             position: fixed;
-
             inset: 0;
-
             background: rgba(0, 0, 0, 0.4);
-
             z-index: 999;
         }
-
     }
-
 </style>
 
 
-<!-- ==========================================================
-     OVERLAY
-========================================================== -->
-
-<div
-    id="menu-overlay"
-    aria-hidden="true">
-</div>
+<!-- OVERLAY (mobile) -->
+<div id="menu-overlay" aria-hidden="true"></div>
 
 
-<!-- ==========================================================
-     MENU
-========================================================== -->
+<!-- MENU LATERAL -->
+<aside id="menu-lateral" aria-label="Menu principal">
 
-<aside
-    id="menu-lateral"
-    aria-label="Menu principal">
-
-
-    <!-- ======================================================
-         BOTÃO FECHAR
-    ====================================================== -->
-
-    <button
-        id="fechar-menu"
-        type="button"
-        aria-label="Fechar menu">
-
+    <!-- Botão fechar (mobile) -->
+    <button id="fechar-menu" type="button" aria-label="Fechar menu">
         <i data-lucide="x"></i>
-
     </button>
 
 
-    <!-- ======================================================
-         LOGO
-    ====================================================== -->
-
+    <!-- Logo / marca -->
     <div class="menu-logo">
-
         <img
             src="{{ url_for('static', filename='assets/img/logo.png') }}"
             alt="Projeto Lavanderia">
 
-
         <div class="menu-marca">
-
             <p>PROJETO</p>
-
             <p>LAVANDERIA</p>
-
         </div>
-
     </div>
 
 
-    <!-- ======================================================
-         NAVEGAÇÃO
-    ====================================================== -->
+    <!-- Navegação (itens condicionados por permissões) -->
+    <nav class="menu-links" aria-label="Navegação do painel">
 
-    <nav
-        class="menu-links"
-        aria-label="Navegação do painel">
-
-
-        <!-- DASHBOARD -->
-
+        <!-- Dashboard Geral -->
         {% if session.get('permissoes', {}).get('visao_geral') in ['leitura', 'gerenciar'] %}
-
         <a href="{{ url_for('admin.dashboard') }}">
-
             <i data-lucide="layout-dashboard"></i>
-
             <span>Dashboard Geral</span>
-
         </a>
-
         {% endif %}
 
-
-        <!-- COMERCIAL -->
-
+        <!-- Módulo Comercial -->
         {% if session.get('permissoes', {}).get('comercial') in ['leitura', 'gerenciar'] %}
-
         <a href="{{ url_for('admin.comercial') }}">
-
             <i data-lucide="shopping-cart"></i>
-
             <span>Módulo Comercial</span>
-
         </a>
-
         {% endif %}
 
-
-        <!-- SOCIAL -->
-
+        <!-- Módulo Social -->
         {% if session.get('permissoes', {}).get('social') in ['leitura', 'gerenciar'] %}
-
         <a href="{{ url_for('admin.social') }}">
-
             <i data-lucide="heart"></i>
-
             <span>Módulo Social</span>
-
         </a>
-
         {% endif %}
 
-
-        <!-- CAPACIDADE -->
-
+        <!-- Consolidação de Capacidade -->
         {% if session.get('permissoes', {}).get('capacidade_maquinas') in ['leitura', 'gerenciar'] %}
-
         <a href="{{ url_for('admin.capacidade') }}">
-
             <i data-lucide="activity"></i>
-
             <span>Consolidação de Capacidade</span>
-
         </a>
-
         {% endif %}
 
-
-        <!-- ALERTAS -->
-
+        <!-- Alertas e Avisos -->
         {% if session.get('permissoes', {}).get('alertas') in ['leitura', 'gerenciar'] %}
-
         <a href="{{ url_for('admin.alertas') }}">
-
             <i data-lucide="bell"></i>
-
             <span>Alertas e Avisos</span>
-
         </a>
-
         {% endif %}
 
-
-        <!-- IMPORTAÇÃO -->
-
+        <!-- Importação (somente 'gerenciar') -->
         {% if session.get('permissoes', {}).get('importacao') == 'gerenciar' %}
-
         <a href="{{ url_for('admin.importacao') }}">
-
             <i data-lucide="upload"></i>
-
             <span>Importação</span>
-
         </a>
-
         {% endif %}
 
-
-        <!-- SOLICITAÇÕES -->
-
+        <!-- Solicitações (somente Administrador) -->
         {% if session.get('nome_cargo') == 'Administrador' %}
-
         <a href="{{ url_for('solicitacoes.solicitacoes') }}">
-
             <i data-lucide="user-check"></i>
-
             <span>Solicitações</span>
-
         </a>
-
         {% endif %}
 
-
-        <!-- MEU PERFIL -->
-
+        <!-- Meu perfil -->
         {% if session.get('access_token') %}
-
         <a href="{{ url_for('admin.configuracoes') }}">
-
             <i data-lucide="settings"></i>
-
             <span>Meu perfil</span>
-
         </a>
-
         {% endif %}
-
 
     </nav>
 
 
-    <!-- ======================================================
-         USUÁRIO LOGADO
-    ====================================================== -->
-
+    <!-- Usuário logado -->
     <div class="menu-usuario">
 
-        <div
-            class="menu-avatar"
-            id="menu-avatar">
-
+        <div class="menu-avatar" id="menu-avatar">
             <i data-lucide="user-round"></i>
-
         </div>
 
-
         <div>
-
-            <p
-                class="menu-nome"
-                id="menu-nome">
-
-                Administrador
-
-            </p>
-
-
-            <p
-                class="menu-cargo"
-                id="menu-cargo">
-
-                Gestão do Projeto
-
-            </p>
-
+            <p class="menu-nome" id="menu-nome">Administrador</p>
+            <p class="menu-cargo" id="menu-cargo">Gestão do Projeto</p>
         </div>
 
     </div>
