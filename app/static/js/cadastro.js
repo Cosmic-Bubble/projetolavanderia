@@ -1,5 +1,53 @@
 lucide.createIcons();
 
+// Carregar cargos da tabela "cargos" do banco
+async function carregarCargos() {
+    const selectCargo = document.getElementById("cargo_id");
+
+    if (!selectCargo) return;
+
+    try {
+        const response = await fetch("/api/cargos");
+
+        if (!response.ok) {
+            throw new Error("Erro ao buscar cargos.");
+        }
+
+        const cargos = await response.json();
+
+        // Limpa as opções atuais
+        selectCargo.innerHTML = "";
+
+        // Opção inicial
+        const opcaoInicial = document.createElement("option");
+        opcaoInicial.value = "";
+        opcaoInicial.textContent = "Selecione um cargo";
+        opcaoInicial.disabled = true;
+        opcaoInicial.selected = true;
+        selectCargo.appendChild(opcaoInicial);
+
+        // Adiciona os cargos vindos do banco
+        cargos.forEach(cargo => {
+            const option = document.createElement("option");
+
+            option.value = cargo.id;
+            option.textContent = cargo.nome_cargo;
+
+            selectCargo.appendChild(option);
+        });
+
+    } catch (erro) {
+        console.error("Erro ao carregar cargos:", erro);
+
+        selectCargo.innerHTML = `
+            <option value="">Erro ao carregar cargos</option>
+        `;
+    }
+}
+
+// Executar quando a página carregar
+document.addEventListener("DOMContentLoaded", carregarCargos);
+
 const senha = document.getElementById("senha");
 const confirmarSenha = document.getElementById("confirmarSenha");
 const botaoMostrar = document.getElementById("mostrarSenha");
