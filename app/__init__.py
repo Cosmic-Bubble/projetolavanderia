@@ -9,7 +9,7 @@ from app.routes.admin import admin_bp
 from app.routes.importacao import importacao_bp
 from app.routes.perfil import perfil_bp
 from app.routes.solicitacoes import solicitacoes_bp
-
+from app.routes.previsao import previsao_bp
 
 def create_app():
     app = Flask(
@@ -31,5 +31,6 @@ def create_app():
     app.register_blueprint(importacao_bp)
     app.register_blueprint(perfil_bp)
     app.register_blueprint(solicitacoes_bp)
+    app.register_blueprint(previsao_bp)
 
     return app
