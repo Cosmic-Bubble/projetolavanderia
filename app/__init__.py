@@ -5,6 +5,7 @@ from config import Config
 from app.routes.auth import auth_bp
 from app.routes.admin import admin_bp
 from app.routes.perfil import perfil_bp
+from app.routes.solicitacoes import solicitacoes_bp
 
 def create_app():
     app = Flask(__name__)
@@ -15,6 +16,7 @@ def create_app():
     # Regista os Blueprints
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
-    app.register_blueprint(perfil_bp) # <-- Adicionado aqui dentro
+    app.register_blueprint(perfil_bp) 
+    app.register_blueprint(solicitacoes_bp)
 
     return app
