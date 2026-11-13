@@ -18,6 +18,29 @@
 
   <!-- Ícones -->
   <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Gráfico */
+    .chart-tooltip {
+        position: absolute;
+        background-color: #1e293b; 
+        color: #ffffff;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+        pointer-events: none; 
+        opacity: 0;
+        transition: opacity 0.2s;
+        z-index: 50;
+        white-space: nowrap;
+        transform: translate(-50%, -100%); 
+        margin-top: -10px; 
+    }
+    .chart-tooltip.visible {
+        opacity: 1;
+    }
+  </style>
 </head>
 
 <body class="pagina-comercial bg-[#f8f9fa] text-slate-800">
@@ -48,6 +71,7 @@
               class="absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-red-500"></span></button>
         </div>
       </header>
+
       <section aria-label="Período da previsão"
         class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
         <div class="inline-flex self-start rounded-lg border border-gray-200 overflow-hidden bg-white" role="group"
@@ -63,12 +87,13 @@
           demanda em hotéis)
         </p>
       </section>
+
       <section class="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 mb-5" aria-labelledby="titulo-grafico">
         <h2 id="titulo-grafico" class="text-base sm:text-lg font-bold text-[#202927] mb-4">Histórico e Previsão de
           Faturamento (R$) com Intervalo de Confiança</h2>
         <p id="descricao-grafico" class="sr-only">Gráfico ilustrativo, com histórico de março a maio e previsão de junho
           a agosto. Valores demonstrativos.</p>
-        <div class="grafico-scroll" role="img" aria-labelledby="titulo-grafico descricao-grafico">
+        <div class="grafico-scroll relative" role="img" aria-labelledby="titulo-grafico descricao-grafico">
           <svg id="grafico-faturamento" viewBox="0 0 760 210" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             <rect class="faixa-confianca" x="375" y="28" width="345" height="112" rx="5"></rect>
             <text class="rotulo-confianca" x="389" y="47">INTERVALO DE SEGURANÇA (89%)</text>
@@ -90,46 +115,111 @@
           </svg>
         </div>
         <p class="text-xs text-slate-500 mt-3"></p>
-      </section>
-      <section class="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6" aria-labelledby="titulo-contratos">
-        <h2 id="titulo-contratos" class="text-base sm:text-lg font-bold text-[#202927] mb-4">Contratos de Clientes
-          Ativos e Volume Previsto (kg)</h2>
-        <div class="overflow-x-auto">
-          <table class="w-full min-w-[610px] text-left text-sm tabela-contratos">
-            <thead>
-              <tr>
-                <th scope="col">Nome do Cliente / Hotel</th>
-                <th scope="col">Categoria</th>
-                <th scope="col">Volume Previsto (Mês)</th>
-                <th scope="col">Status do Contrato</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">Hotel Plaza Imperial</th>
-                <td>Hotelaria</td>
-                <td>1.800 kg</td>
-                <td><span class="status-vigente">Vigente</span></td>
-              </tr>
-              <tr>
-                <th scope="row">Academia Body Fit</th>
-                <td>Esportivo</td>
-                <td>600 kg</td>
-                <td><span class="status-vigente">Vigente</span></td>
-              </tr>
-              <tr>
-                <th scope="row">Restaurante Sabores</th>
-                <td>Gastronomia</td>
-                <td>400 kg</td>
-                <td><span class="status-vencendo">Vencendo em 45d</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <p class="text-xs text-slate-500 mt-3"></p>
+
+      <!-- Seção de Contratos Ativos -->
+      <section class="painel-card p-5 mt-5">
+          <div class="flex justify-between items-center mb-4">
+              <h2 class="font-bold text-base text-slate-800">Contratos de Clientes Ativos e Volume Previsto (kg)</h2>
+              <button id="btn-novo-contrato" class="bg-[#7d3c98] hover:bg-[#6a2f84] text-white text-sm font-semibold px-4 py-2.5 rounded-lg transition flex items-center gap-2 shadow-sm">
+                  <i data-lucide="plus" class="w-4 h-4"></i> Novo Contrato
+              </button>
+          </div>
+          
+          <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                  <thead>
+                      <tr class="border-b border-gray-200 text-xs text-slate-500 uppercase tracking-wide">
+                        <th class="py-3 px-4 font-semibold">Nome do Cliente</th>
+                        <th class="py-3 px-4 font-semibold">Início</th>
+                        <th class="py-3 px-4 font-semibold">Fim</th>
+                        <th class="py-3 px-4 font-semibold">Volume Previsto</th>
+                        <th class="py-3 px-4 font-semibold">Status</th>
+                        <th class="py-3 px-4 font-semibold text-center">Ações</th>
+                      </tr>
+                    </thead>
+                  <tbody id="tabela-contratos" class="text-sm text-slate-700">
+                      <tr>
+                          <td colspan="5" class="text-center py-6 text-gray-400">Carregando contratos...</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
       </section>
     </main>
   </div>
+
+  <!-- MODAL DE CONTRATO (Oculto por padrão) -->
+  <div id="modal-contrato" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4 backdrop-blur-sm transition-opacity">
+      <div class="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl transform transition-transform scale-100">
+          <div class="flex justify-between items-center mb-5">
+              <h3 id="modal-titulo" class="text-lg font-bold text-slate-800">Novo Contrato</h3>
+              <button id="btn-fechar-modal" class="text-gray-400 hover:text-gray-600">
+                  <i data-lucide="x" class="w-5 h-5"></i>
+              </button>
+          </div>
+          
+          <form id="form-contrato" class="space-y-4">
+            <!-- Campo oculto para guardar o ID na hora de editar -->
+            <input type="hidden" name="id_contrato" id="input-id-contrato">
+
+            <div>
+                <label class="text-xs font-semibold text-slate-600">Razão Social *</label>
+                <input type="text" name="cliente_razao_social" id="input-razao" required 
+                      class="w-full mt-1 border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#7d3c98] focus:border-[#7d3c98] outline-none transition">
+            </div>
+            
+            <div>
+                <label class="text-xs font-semibold text-slate-600">CNPJ (só números) *</label>
+                <input type="text" name="cliente_cnpj" id="input-cnpj" required maxlength="14" 
+                      class="w-full mt-1 border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#7d3c98] focus:border-[#7d3c98] outline-none transition">
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-xs font-semibold text-slate-600">Data Início *</label>
+                    <input type="date" name="data_inicio" id="input-data" required 
+                          class="w-full mt-1 border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#7d3c98] focus:border-[#7d3c98] outline-none transition">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-slate-600">Data Fim</label>
+                    <input type="date" name="data_fim" id="input-data-fim" 
+                          class="w-full mt-1 border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#7d3c98] focus:border-[#7d3c98] outline-none transition">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="text-xs font-semibold text-slate-600">Valor Mensal (R$) *</label>
+                    <input type="number" step="0.01" name="valor_mensal_contratado" id="input-valor" required 
+                          class="w-full mt-1 border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#7d3c98] focus:border-[#7d3c98] outline-none transition">
+                </div>
+                <div>
+                    <label class="text-xs font-semibold text-slate-600">Franquia KG/Mês</label>
+                    <input type="number" step="0.01" name="franquia_kg_mes" id="input-franquia-kg" 
+                          class="w-full mt-1 border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#7d3c98] focus:border-[#7d3c98] outline-none transition">
+                </div>
+            </div>
+
+            <div>
+                <label class="text-xs font-semibold text-slate-600">Franquia Peças/Mês</label>
+                <input type="number" name="franquia_pecas_mes" id="input-franquia-pecas" 
+                      class="w-full mt-1 border border-gray-300 rounded-lg p-2.5 text-sm focus:ring-2 focus:ring-[#7d3c98] focus:border-[#7d3c98] outline-none transition">
+            </div>
+            
+            <div class="flex justify-end gap-3 mt-6 pt-2">
+                <button type="button" id="btn-cancelar-modal" 
+                        class="px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-gray-100 rounded-lg transition">
+                    Cancelar
+                </button>
+                <button type="submit" id="btn-salvar-modal"
+                        class="px-4 py-2 text-sm font-semibold text-white bg-[#7d3c98] hover:bg-[#6a2f84] rounded-lg transition flex items-center gap-2">
+                    <i data-lucide="save" class="w-4 h-4"></i> Salvar Contrato
+                </button>
+            </div>
+        </form>
+      </div>
+  </div>
+
   <script type="module" src="{{ url_for('static', filename='js/comercial.js') }}"></script>
   <script type="module" src="{{ url_for('static', filename='js/menu.js') }}"></script>
   <script src="{{ url_for('static', filename='js/notificacoes.js') }}"></script>
