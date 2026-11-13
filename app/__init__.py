@@ -10,6 +10,7 @@ from app.routes.importacao import importacao_bp
 from app.routes.perfil import perfil_bp
 from app.routes.solicitacoes import solicitacoes_bp
 from app.routes.previsao import previsao_bp
+from app.services.comercial_service import listar_contratos_ativos
 
 def create_app():
     app = Flask(
