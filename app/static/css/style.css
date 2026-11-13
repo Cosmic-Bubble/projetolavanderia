@@ -265,7 +265,46 @@ body.pagina-painel {
 .pagina-config .config-btn:hover{background:#66327c}
 .pagina-config .config-btn:focus-visible{outline:3px solid #b88bc9;outline-offset:2px}
 
-/* ==========================================================================
-   Layout Compartilhado
-   ========================================================================== */
-#menu-compartilhado { display: contents; }
+/* ==========================================================
+   LINKS DO MENU
+========================================================== */
+
+#menu-lateral .menu-links a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 13px;
+    border-radius: 8px;
+
+    color: #647084;
+    background: transparent;
+
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 1.45;
+    font-weight: 400;
+
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Mouse sobre a opção */
+#menu-lateral .menu-links a:hover {
+    background-color: #06b6d4;
+    color: #ffffff;
+}
+
+/* Página atualmente selecionada */
+#menu-lateral .menu-links a[aria-current="page"],
+#menu-lateral .menu-links a.ativo {
+    background-color: #06b6d4 !important;
+    color: #ffffff !important;
+}
+
+/* Ícones acompanham a cor do texto */
+#menu-lateral .menu-links a i,
+#menu-lateral .menu-links a svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: inherit;
+}
