@@ -7,6 +7,9 @@ python-dotenv>=1.0.0
 # SDK Oficial do Supabase para Python
 supabase>=2.0.0
 
+# Leitura de arquivos Excel
+openpyxl>=3.1.0
+
 # Ciência de Dados, Estatística e Machine Learning
 pandas>=2.0.0
 numpy>=1.24.0

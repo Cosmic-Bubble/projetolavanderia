@@ -18,7 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Ícones -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="{{ url_for('static', filename='js/vendor/lucide.js') }}"></script>
 </head>
 
 <body class="pagina-base bg-[#f8f9fa] text-slate-800">
@@ -76,30 +76,39 @@
                         Importar Nova Planilha de Atendimentos
                     </h2>
 
-                    <!-- ÁREA DE UPLOAD -->
-                    <div id="drop-zone" role="button" tabindex="0" aria-label="Selecionar planilha Excel" class="border-2 border-dashed border-[#7d3c98]
-                    bg-[#f5f5f7] rounded-xl
-                    min-h-[158px] flex flex-col
-                    items-center justify-center
-                    text-center cursor-pointer
-                    hover:bg-purple-50 transition">
-
+                    <!-- ÁREA DE UPLOAD (única para os 4 modelos) -->
+                    <div id="drop-zone" role="button" tabindex="0"
+                        aria-label="Selecionar planilha Excel"
+                        class="border-2 border-dashed border-[#7d3c98] bg-[#f5f5f7]
+                            rounded-xl min-h-[158px] flex flex-col items-center justify-center
+                            text-center cursor-pointer hover:bg-purple-50 transition">
                         <i data-lucide="cloud-upload" class="w-10 h-10 text-[#7d3c98] mb-4"></i>
+                        <p class="text-[#7d3c98] font-semibold text-sm">Arraste e solte o arquivo Excel (.xlsx)</p>
+                        <p class="text-xs text-gray-600 mt-1">ou clique para buscar em seu computador</p>
+                        <p class="text-[11px] text-gray-400 mt-2">Aceita os 4 modelos: Operacional, Insumos, Custos e Contratos</p>
+                        <input type="file" id="arquivo-excel" name="arquivo_excel" accept=".xlsx"
+                            class="sr-only" aria-hidden="true" tabindex="-1">                
+                        </div>
 
-                        <p class="text-[#7d3c98] font-semibold text-sm">
-                            Arraste e solte o arquivo Excel (.xlsx)
-                        </p>
+                    <div id="arquivo-selecionado" class="hidden mt-4 p-3 rounded-lg text-sm"></div>
 
-                        <p class="text-xs text-gray-600 mt-1">
-                            ou clique aqui para buscar em seu computador
-                        </p>
-
-                        <input type="file" id="arquivo-excel" name="arquivo_excel" accept=".xlsx" class="hidden">
+                    <div id="acao-importar" class="hidden mt-3 flex gap-2">
+                        <button id="btn-importar" type="button"
+                                class="flex-1 inline-flex items-center justify-center gap-2
+                                    bg-[#7d3c98] hover:bg-[#6a2f84] text-white font-semibold
+                                    text-sm rounded-lg px-4 py-2.5 transition">
+                            <i data-lucide="upload" class="w-4 h-4"></i>
+                            Confirmar Importação
+                        </button>
+                        <button id="btn-cancelar" type="button"
+                                class="inline-flex items-center justify-center gap-2
+                                    bg-white border border-gray-300 hover:bg-gray-50
+                                    text-slate-700 font-semibold text-sm rounded-lg px-4 py-2.5 transition">
+                            Cancelar
+                        </button>
                     </div>
 
-                    <!-- MENSAGEM DO ARQUIVO -->
-                    <div id="arquivo-selecionado" class="hidden mt-4 p-3 rounded-lg text-sm">
-                    </div>
+                    <div id="resultado-importacao" class="hidden mt-4 p-3 rounded-lg text-sm"></div>
 
                     <!-- INSTRUÇÕES -->
                     <div class="mt-5 text-sm text-[#586864] leading-relaxed">
@@ -134,77 +143,8 @@
                         Histórico de Arquivos Importados
                     </h2>
 
-                    <div class="space-y-3">
-
-                        <!-- ARQUIVO 1 -->
-                        <div class="border border-gray-200 rounded-xl p-4
-                        flex items-center justify-between gap-3">
-
-                            <div class="flex items-center gap-3 min-w-0">
-                                <i data-lucide="file-text" class="w-5 h-5 text-[#586864] shrink-0"></i>
-
-                                <div class="min-w-0">
-                                    <p class="text-sm font-semibold break-all">
-                                        Relatorio_Operacional.xlsx
-                                    </p>
-                                    <p class="text-xs text-gray-400">
-                                        Há 12 dias
-                                    </p>
-                                </div>
-                            </div>
-
-                            <span class="self-start sm:self-auto bg-gray-100 text-cyan-500
-                             text-xs px-3 py-1 rounded-md shrink-0">
-                                Processado
-                            </span>
-                        </div>
-
-                        <!-- ARQUIVO 2 -->
-                        <div class="border border-gray-200 rounded-xl p-4
-                        flex items-center justify-between gap-3">
-
-                            <div class="flex items-center gap-3 min-w-0">
-                                <i data-lucide="file-text" class="w-5 h-5 text-[#586864] shrink-0"></i>
-
-                                <div class="min-w-0">
-                                    <p class="text-sm font-semibold break-all">
-                                        Insumos_Mensais.xlsx
-                                    </p>
-                                    <p class="text-xs text-gray-400">
-                                        Há 25 dias
-                                    </p>
-                                </div>
-                            </div>
-
-                            <span class="self-start sm:self-auto bg-gray-100 text-cyan-500
-                             text-xs px-3 py-1 rounded-md shrink-0">
-                                Processado
-                            </span>
-                        </div>
-
-                        <!-- ARQUIVO 3 -->
-                        <div class="border border-gray-200 rounded-xl p-4
-                        flex items-center justify-between gap-3">
-
-                            <div class="flex items-center gap-3 min-w-0">
-                                <i data-lucide="file-text" class="w-5 h-5 text-[#586864] shrink-0"></i>
-
-                                <div class="min-w-0">
-                                    <p class="text-sm font-semibold break-all">
-                                        Custos_Operacionais.xlsx
-                                    </p>
-                                    <p class="text-xs text-gray-400">
-                                        Há 2 meses
-                                    </p>
-                                </div>
-                            </div>
-
-                            <span class="self-start sm:self-auto bg-gray-100 text-orange-500
-                             text-xs px-3 py-1 rounded-md shrink-0">
-                                Substituído
-                            </span>
-                        </div>
-
+                    <div id="lista-historico" class="space-y-3">
+                        <p class="text-sm text-gray-400 text-center py-6">Carregando histórico...</p>
                     </div>
                 </div>
 
@@ -215,9 +155,8 @@
     </div>
 
     <!-- JAVASCRIPT -->
-
-    <script type="module" src="{{ url_for('static', filename='js/base.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/menu.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/importacao.js') }}"></script>
     <script src="{{ url_for('static', filename='js/notificacoes.js') }}"></script>
 </body>
 

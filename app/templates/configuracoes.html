@@ -71,18 +71,51 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <!-- CAMPO DO CARGO (Apenas leitura) -->
                             <div>
-                                <label class="config-label">Cargo <span class="font-normal text-slate-500">(não editável)</span></label>
+                                <label class="config-label">Cargo</label>
                                 <div class="config-input bg-slate-50 text-slate-600 flex items-center cursor-not-allowed" id="perfil-cargo-display">
                                     Carregando...
                                 </div>
                             </div>
                             
-                            <!-- CAMPO DA FOTO (De volta ao normal!) -->
+                            <!-- CAMPO DA FOTO -->
                             <div>
-                                <label class="config-label" for="perfil-foto">Foto <span class="font-normal text-slate-500">(opcional)</span></label>
-                                <input class="config-input config-file" id="perfil-foto" name="foto" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg">
-                                <p class="text-xs text-slate-500 mt-1">PNG ou JPEG, até 2 MB.</p>
+                                <label class="config-label" for="perfil-foto">
+                                    Foto 
+                                </label>
+
+                                <div class="flex items-center gap-4 mt-2">
+                                    <!-- Preview da foto -->
+                                    <div class="w-16 h-16 rounded-full overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0">
+                                        <img
+                                            id="perfil-foto-preview"
+                                            alt="Prévia da foto de perfil"
+                                            class="w-full h-full object-cover hidden"
+                                        >
+
+                                        <i
+                                            id="perfil-foto-icone"
+                                            data-lucide="camera"
+                                            class="w-6 h-6 text-slate-400"
+                                        ></i>
+                                    </div>
+
+                                    <!-- Campo de upload -->
+                                    <div class="flex-1 min-w-0">
+                                        <input
+                                            class="config-input config-file"
+                                            id="perfil-foto"
+                                            name="foto"
+                                            type="file"
+                                            accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+                                        >
+
+                                        <p class="text-xs text-slate-500 mt-1">
+                                            PNG ou JPEG, até 2 MB.
+                                        </p>
+                                    </div>
+                                </div>
                             </div>
+
                         </div>
                         <div class="flex flex-wrap items-center gap-3 mt-4"><button type="submit"
                                 class="config-btn">Atualizar perfil</button>

@@ -192,6 +192,7 @@
                         </select>
                     </div>
 
+                    
                     <!-- FOTO DE PERFIL -->
                     <div class="mb-8">
 
@@ -199,28 +200,58 @@
                             Foto de Perfil
                         </span>
 
-                        <label for="foto" class="area-upload p-5 flex flex-col items-center cursor-pointer">
+                        <div class="area-upload relative p-5 flex flex-col items-center justify-center">
 
-                            <div class="icone-topo w-11 h-11 flex items-center justify-center mb-3">
-                                <i data-lucide="camera" class="w-5 h-5" style="color:var(--navy)"></i>
-                            </div>
+                            <!-- Área clicável para selecionar a foto -->
+                            <label for="foto"
+                                class="flex flex-col items-center cursor-pointer gap-3">
 
-                            <span class="font-bold text-sm" style="color:var(--purple)">
-                                Clique para enviar
-                            </span>
+                                <!-- Ícone exibido inicialmente -->
+                                <div id="placeholderFoto"
+                                    class="icone-topo w-16 h-16 flex items-center justify-center rounded-full">
 
-                            <span class="text-xs mt-2" style="color:var(--muted)">
-                                Suporta PNG, JPG ou JPEG de até 2 MB
-                            </span>
+                                    <i data-lucide="camera" class="w-6 h-6"
+                                        style="color:var(--navy)"></i>
+                                </div>
 
-                            <span id="nomeArquivo" class="text-xs mt-2" style="color:var(--navy)"></span>
+                                <!-- Foto exibida após a seleção -->
+                                <img id="previewFoto"
+                                    class="hidden w-20 h-20 rounded-full object-cover border-2 border-white shadow-md"
+                                    alt="Pré-visualização da foto selecionada">
 
-                        </label>
+                                <span id="textoUpload" class="font-bold text-sm"
+                                    style="color:var(--purple)">
+                                    Clique para cadastrar uma foto de perfil
+                                </span>
 
-                        <input id="foto" name="foto" type="file" accept=".png,.jpg,.jpeg,image/png,image/jpeg"
+                                <span class="text-xs text-center"
+                                    style="color:var(--muted)">
+                                    Suporta PNG, JPG ou JPEG de até 2 MB
+                                </span>
+
+                            </label>
+
+                            <!-- Botão para remover a foto -->
+                            <button type="button" id="removerFoto"
+                                class="hidden absolute top-3 right-3 bg-red-500 hover:bg-red-600
+                                    text-white rounded-full w-7 h-7 flex items-center
+                                    justify-center shadow-md transition-colors"
+                                aria-label="Remover foto selecionada">
+
+                                <i data-lucide="x" class="w-4 h-4"></i>
+                            </button>
+
+                        </div>
+
+                        <p id="nomeArquivo" class="text-xs mt-2 text-center"
+                            style="color:var(--muted)"></p>
+
+                        <input id="foto" name="foto" type="file"
+                            accept=".png,.jpg,.jpeg,image/png,image/jpeg"
                             class="hidden">
 
                     </div>
+
 
                     <!-- SEGURANÇA -->
                     <h3 class="secao">3. SEGURANÇA</h3>

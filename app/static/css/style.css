@@ -1,6 +1,10 @@
 /* ==========================================================================
    Estilos Gerais e Tipografia
    ========================================================================== */
+#drop-zone svg {
+    pointer-events: none;
+}
+
 body.pagina-login {
     font-family: 'Montserrat', system-ui, sans-serif;
     color: var(--navy);
@@ -269,3 +273,9 @@ body.pagina-painel {
    Layout Compartilhado
    ========================================================================== */
 #menu-compartilhado { display: contents; }
+
+/* Impede que SVGs gerados pelo Lucide capturem cliques no dropzone */
+#drop-zone svg,
+#drop-zone i[data-lucide] {
+    pointer-events: none;
+}
