@@ -1,7 +1,6 @@
 # Projeto de Previsão de Demanda
-
-![Status](https://img.shields.io/badge/status-em%20andamento-2563EB?style=for-the-badge)
-![Prazo MVP](https://img.shields.io/badge/Entrega%20MVP-16%20de%20Novembro%202026-blue?style=for-the-badge)
+![Status](https://img.shields.io/badge/status-em%20andamento-1E3A8A?style=for-the-badge)
+![Prazo MVP](https://img.shields.io/badge/Entrega%20MVP-16%20de%20Novembro%202026-1E3A8A?style=for-the-badge)
 
 Projeto acadêmico desenvolvido para a disciplina de Empreendedorismo, com foco na aplicação de conceitos de matemática, estatística e programação na análise e previsão de demanda para uma iniciativa comunitária de lavanderia.
 
@@ -17,19 +16,20 @@ Desenvolver uma aplicação web capaz de analisar dados históricos de demanda, 
 
 ### Linguagem e Backend
 
-![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
-![Flask](https://img.shields.io/badge/Flask-000000?logo=flask&logoColor=white)
+![Python](https://img.shields.io/badge/Python-2563EB?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-2563EB?style=for-the-badge&logo=flask&logoColor=white)
 
 * **Python 3.11+** — Lógica da aplicação, processamento de dados e motores de previsão.
 * **Flask** — Framework web para o backend e rotas da aplicação.
 
 ### Análise de Dados e Estatística
 
-![Pandas](https://img.shields.io/badge/Pandas-150458?logo=pandas&logoColor=white)
-![NumPy](https://img.shields.io/badge/NumPy-013243?logo=numpy&logoColor=white)
-![SciPy](https://img.shields.io/badge/SciPy-8CAAE6?logo=scipy&logoColor=white)
-![Statsmodels](https://img.shields.io/badge/Statsmodels-2C5F9E)
-![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?logo=scikitlearn&logoColor=white)
+![Pandas](https://img.shields.io/badge/Pandas-2563EB?style=for-the-badge&logo=pandas&logoColor=white)
+![NumPy](https://img.shields.io/badge/NumPy-2563EB?style=for-the-badge&logo=numpy&logoColor=white)
+![SciPy](https://img.shields.io/badge/SciPy-2563EB?style=for-the-badge&logo=scipy&logoColor=white)
+![Statsmodels](https://img.shields.io/badge/Statsmodels-2563EB?style=for-the-badge)
+![scikit-learn](https://img.shields.io/badge/scikit--learn-2563EB?style=for-the-badge&logo=scikitlearn&logoColor=white)
+
 
 * **Pandas & NumPy** — Manipulação, tratamento e agregação de dados.
 * **SciPy & Statsmodels** — Cálculos estatísticos avançados e modelos de séries temporais.
@@ -37,29 +37,29 @@ Desenvolver uma aplicação web capaz de analisar dados históricos de demanda, 
 
 ### Banco de Dados & Armazenamento
 
-![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?logo=supabase&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
+![Supabase](https://img.shields.io/badge/Supabase-2563EB?style=for-the-badge&logo=supabase&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-2563EB?style=for-the-badge&logo=postgresql&logoColor=white)
 
 * **Supabase (PostgreSQL)** — Banco de dados relacional.
 * **Supabase Storage (Buckets)** — Armazenamento seletivo de planilhas de atendimento (`.csv`/`.xlsx`) e imagens de perfil.
 
 ### Interface (Frontend)
 
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)
-![Chart.js](https://img.shields.io/badge/Chart.js-FF6384?logo=chartdotjs&logoColor=white)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?logo=tailwindcss&logoColor=white)
-![Lucide](https://img.shields.io/badge/Lucide-F56565?logo=lucide&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-2563EB?style=for-the-badge&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-2563EB?style=for-the-badge&logo=css3&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-2563EB?style=for-the-badge&logo=javascript&logoColor=white)
+![Chart.js](https://img.shields.io/badge/Chart.js-2563EB?style=for-the-badge&logo=chartdotjs&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-2563EB?style=for-the-badge&logo=tailwindcss&logoColor=white)
+![Lucide](https://img.shields.io/badge/Lucide-2563EB?style=for-the-badge&logo=lucide&logoColor=white)
 
 * **HTML5, CSS3 & JavaScript** — Estrutura, estilização responsiva e interatividade.
 * **Chart.js / Gráficos Interativos** — Renderização de gráficos modernos no navegador a partir de dados JSON fornecidos pelo backend.
 
 ### Ferramentas de Desenvolvimento
 
-![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)
-![Pytest](https://img.shields.io/badge/Pytest-0A9EDC?logo=pytest&logoColor=white)
+![Git](https://img.shields.io/badge/Git-2563EB?style=for-the-badge&logo=git&logoColor=white)
+![GitHub](https://img.shields.io/badge/GitHub-2563EB?style=for-the-badge&logo=github&logoColor=white)
+![Pytest](https://img.shields.io/badge/Pytest-2563EB?style=for-the-badge&logo=pytest&logoColor=white)
 
 * **Git & GitHub** — Controle de versão e colaboração em equipe.
 * **Pytest** — Automação de testes.
