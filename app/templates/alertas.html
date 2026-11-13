@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR"> 
 
 <head>
     <meta charset="UTF-8">
@@ -54,38 +54,17 @@
                 </div>
             </header>
             <section class="painel-card p-5">
-                <h2 class="font-bold text-base mb-4">Lista de Avisos Recentes</h2>
-                <ul class="space-y-3">
-                    <li class="alerta-linha"><span class="alerta-icone alerta-red"><i data-lucide="alert-triangle"
-                                class="w-5 h-5"></i></span>
-                        <div class="min-w-0 flex-1">
-                            <h3 class="text-sm font-semibold">Estouro de capacidade previsto para Junho/2026</h3>
-                            <p class="text-xs text-slate-500 mt-1">A lavagem total estimada de 4.500 kg supera o limite
-                                das máquinas em 12%.</p>
-                        </div><span class="alerta-etiqueta etiqueta-red">Crítico</span>
-                    </li>
-                    <li class="alerta-linha"><span class="alerta-icone alerta-orange"><i data-lucide="alert-circle"
-                                class="w-5 h-5"></i></span>
-                        <div class="min-w-0 flex-1">
-                            <h3 class="text-sm font-semibold">Contrato Hotel Bella Vista vencendo em 45 dias</h3>
-                            <p class="text-xs text-slate-500 mt-1">Renovação comercial pendente. Garanta o faturamento
-                                contínuo da unidade.</p>
-                        </div><span class="alerta-etiqueta etiqueta-orange">Atenção</span>
-                    </li>
-                    <li class="alerta-linha"><span class="alerta-icone alerta-blue"><i data-lucide="info"
-                                class="w-5 h-5"></i></span>
-                        <div class="min-w-0 flex-1">
-                            <h3 class="text-sm font-semibold">Queda sazonal de demanda prevista para Dezembro</h3>
-                            <p class="text-xs text-slate-500 mt-1">A locação comercial costuma cair 20% no fim de ano.
-                                Busque contratos temporários.</p>
-                        </div><span class="alerta-etiqueta etiqueta-blue">Informativo</span>
-                    </li>
-                </ul>
-            </section>
+    <h2 class="font-bold text-base mb-4">Lista de Avisos Recentes</h2>
+    <ul id="lista-alertas" class="space-y-3">
+        <li class="text-center py-6 text-gray-400">Carregando alertas...</li>
+    </ul>
+</section>
+
             <p class="text-xs text-slate-400 mt-6"></p>
         </main>
     </div>
 
+    <script type="module" src="{{ url_for('static', filename='js/alertas.js') }}"></script>
     <script type="module" src="{{ url_for('static', filename='js/menu.js') }}"></script>
     <script src="{{ url_for('static', filename='js/notificacoes.js') }}"></script>
 </body>

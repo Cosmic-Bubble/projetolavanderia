@@ -11,6 +11,7 @@ from app.routes.perfil import perfil_bp
 from app.routes.solicitacoes import solicitacoes_bp
 from app.routes.previsao import previsao_bp
 from app.services.comercial_service import listar_contratos_ativos
+from app.routes.alertas import alertas_bp
 
 def create_app():
     app = Flask(
@@ -33,5 +34,6 @@ def create_app():
     app.register_blueprint(perfil_bp)
     app.register_blueprint(solicitacoes_bp)
     app.register_blueprint(previsao_bp)
+    app.register_blueprint(alertas_bp)
 
     return app
