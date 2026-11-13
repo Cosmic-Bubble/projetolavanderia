@@ -288,7 +288,7 @@
 
         <!-- Alertas e Avisos -->
         {% if session.get('permissoes', {}).get('alertas') in ['leitura', 'gerenciar'] %}
-        <a href="{{ url_for('admin.alertas') }}">
+        <a href="{{ url_for('alertas.pagina_alertas') }}">
             <i data-lucide="bell"></i>
             <span>Alertas e Avisos</span>
         </a>

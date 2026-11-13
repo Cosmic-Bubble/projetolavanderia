@@ -47,14 +47,13 @@ if (menu) {
     }
 
     function definirMenu(aberto) {
-        menu.classList.toggle('-translate-x-full', !aberto);
-        overlay.classList.toggle('hidden', !aberto);
+        // Usa a classe 'menu-aberto' que está definida no CSS do _menu.html
+        menu.classList.toggle('menu-aberto', aberto);
+        overlay.classList.toggle('menu-aberto', aberto);
+        
+        // O resto continua igual
         abrir.setAttribute('aria-expanded', String(aberto));
-
-        document.body.classList.toggle(
-            'overflow-hidden',
-            aberto && window.innerWidth < 1024
-        );
+        document.body.classList.toggle('overflow-hidden', aberto && window.innerWidth < 1024);
     }
 
     abrir.addEventListener('click', () => definirMenu(true));
