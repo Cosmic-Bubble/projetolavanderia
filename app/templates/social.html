@@ -51,58 +51,54 @@
                 </div>
             </header>
             <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-5" aria-label="Indicadores sociais">
-                <article class="painel-card p-5">
-                    <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Visitas de acolhimento
-                    </p>
-                    <p class="text-3xl font-extrabold mt-3 text-slate-900">320</p>
-                    <p class="text-xs text-slate-500 mt-2">Estável · +5% vs. mês anterior</p>
-                </article>
-                <article class="painel-card p-5">
-                    <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Banhos realizados</p>
-                    <p class="text-3xl font-extrabold mt-3 text-slate-900">480</p>
-                    <p class="text-xs text-slate-500 mt-2">Alta variação · +12% vs. mês anterior</p>
-                </article>
-                <article class="painel-card p-5">
-                    <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Kits de higiene
-                        entregues</p>
-                    <p class="text-3xl font-extrabold mt-3 text-slate-900">310</p>
-                    <p class="text-xs text-slate-500 mt-2">Estável · 0% vs. mês anterior</p>
-                </article>
-                <article class="painel-card p-5">
-                    <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Lavagens avulsas
-                        (comunidade)</p>
-                    <p class="text-3xl font-extrabold mt-3 text-slate-900">850 kg</p>
-                    <p class="text-xs text-slate-500 mt-2">Alta variação · +8% vs. mês anterior</p>
-                </article>
-            </section>
+    <article class="painel-card p-5">
+        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Visitas de acolhimento</p>
+        <p id="kpi-visitas" class="text-3xl font-extrabold mt-3 text-slate-900">—</p>
+        <div class="mt-3 flex flex-col gap-1.5">
+            <span id="badge-visitas" class="text-[11px] font-bold px-2 py-0.5 rounded-md self-start bg-purple-100 text-purple-700">Estável</span>
+            <p id="kpi-visitas-sub" class="text-xs text-slate-500">Carregando previsão...</p>
+        </div>
+    </article>
+
+    <article class="painel-card p-5">
+        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Banhos realizados</p>
+        <p id="kpi-banhos" class="text-3xl font-extrabold mt-3 text-slate-900">—</p>
+        <div class="mt-3 flex flex-col gap-1.5">
+            <span id="badge-banhos" class="text-[11px] font-bold px-2 py-0.5 rounded-md self-start bg-purple-100 text-purple-700">Estável</span>
+            <p id="kpi-banhos-sub" class="text-xs text-slate-500">Carregando previsão...</p>
+        </div>
+    </article>
+
+    <article class="painel-card p-5">
+        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Kits de higiene entregues</p>
+        <p id="kpi-kits" class="text-3xl font-extrabold mt-3 text-slate-900">—</p>
+        <div class="mt-3 flex flex-col gap-1.5">
+            <span id="badge-kits" class="text-[11px] font-bold px-2 py-0.5 rounded-md self-start bg-purple-100 text-purple-700">Estável</span>
+            <p id="kpi-kits-sub" class="text-xs text-slate-500">Carregando previsão...</p>
+        </div>
+    </article>
+
+    <article class="painel-card p-5">
+        <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Lavagens avulsas (comunidade)</p>
+        <p id="kpi-lavagens" class="text-3xl font-extrabold mt-3 text-slate-900">—</p>
+        <div class="mt-3 flex flex-col gap-1.5">
+            <span id="badge-lavagens" class="text-[11px] font-bold px-2 py-0.5 rounded-md self-start bg-purple-100 text-purple-700">Estável</span>
+            <p id="kpi-lavagens-sub" class="text-xs text-slate-500">Carregando previsão...</p>
+        </div>
+    </article>
+</section>
             <section class="painel-card p-5">
-                <h2 class="font-bold text-base mb-4">Comparativo: Previsto vs. Realizado no Mês Anterior</h2>
-                <div class="space-y-3">
-                    <div class="comparativo-linha">
-                        <h3 class="text-sm font-semibold text-slate-800">Lavagens Comunitárias (Avulsas)</h3>
-                        <div><small>PREVISTO</small><strong>800 kg</strong></div>
-                        <div><small>REALIZADO</small><strong>850 kg</strong></div>
-                        <div><small>DESVIO</small><strong class="text-green-600">+6,2%</strong></div>
-                    </div>
-                    <div class="comparativo-linha">
-                        <h3 class="text-sm font-semibold text-slate-800">Banhos e Higiene</h3>
-                        <div><small>PREVISTO</small><strong>500 banhos</strong></div>
-                        <div><small>REALIZADO</small><strong>480 banhos</strong></div>
-                        <div><small>DESVIO</small><strong class="text-red-600">-4,0%</strong></div>
-                    </div>
-                    <div class="comparativo-linha">
-                        <h3 class="text-sm font-semibold text-slate-800">Entrega de Cobertores Sociais</h3>
-                        <div><small>PREVISTO</small><strong>200 un</strong></div>
-                        <div><small>REALIZADO</small><strong>220 un</strong></div>
-                        <div><small>DESVIO</small><strong class="text-green-600">+10,0%</strong></div>
-                    </div>
-                </div>
-            </section>
+    <h2 class="font-bold text-base mb-4">Comparativo: Previsto vs. Realizado no Mês Anterior</h2>
+    <div class="space-y-3" id="lista-comparativo">
+        <p class="text-sm text-gray-400 text-center py-6">Carregando comparativo...</p>
+    </div>
+</section>
             <p class="text-xs text-slate-400 mt-6"></p>
         </main>
     </div>
     <script type="module" src="{{ url_for('static', filename='js/menu.js') }}"></script>
     <script src="{{ url_for('static', filename='js/notificacoes.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/modulo_social.js') }}"></script>
 </body>
 
 </html>
