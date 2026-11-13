@@ -26,6 +26,27 @@
     #menu-lateral *::after {
         box-sizing: border-box;
     }
+        /* Item selecionado no menu */
+    #menu-lateral .menu-links a.ativo,
+    #menu-lateral .menu-links a[aria-current="page"] {
+        background-color: #06b6d4 !important;
+        color: #ffffff !important;
+    }
+
+    /* Ícones acompanham a cor do texto */
+    #menu-lateral .menu-links a.ativo i,
+    #menu-lateral .menu-links a.ativo svg,
+    #menu-lateral .menu-links a[aria-current="page"] i,
+    #menu-lateral .menu-links a[aria-current="page"] svg {
+        color: #ffffff !important;
+        stroke: #ffffff !important;
+    }
+
+    /* Efeito ao passar o mouse */
+    #menu-lateral .menu-links a:hover {
+        background-color: #06b6d4;
+        color: #ffffff;
+    }
 
     /* LOGO / MARCA */
     #menu-lateral .menu-logo {
