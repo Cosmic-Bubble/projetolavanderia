@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, redirect, url_for, session
+from flask import Flask, redirect, url_for, session, render_template
 from config import Config
 
 # Importa os Blueprints (todos com o prefixo app.routes)
@@ -45,5 +45,19 @@ def create_app():
         if session.get("user"):
             return redirect(url_for("admin.dashboard"))
         return redirect(url_for("auth.login"))
+
+    # Acessibilidade: coloca VLibras + filtro de daltonismo em toda página HTML
+    @app.after_request
+    def injetar_acessibilidade(resp):
+        if (
+            resp.mimetype == "text/html"
+            and resp.status_code == 200
+            and not resp.direct_passthrough
+        ):
+            html = resp.get_data(as_text=True)
+            if "</body>" in html and "a11y-botao" not in html:
+                bloco = render_template("_acessibilidade.html")
+                resp.set_data(html.replace("</body>", bloco + "</body>", 1))
+        return resp
 
     return app
