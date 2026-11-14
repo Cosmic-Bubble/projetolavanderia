@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, redirect, url_for, session
 from config import Config
 
 # Importa os Blueprints (todos com o prefixo app.routes)
@@ -10,8 +10,10 @@ from app.routes.importacao import importacao_bp
 from app.routes.perfil import perfil_bp
 from app.routes.solicitacoes import solicitacoes_bp
 from app.routes.previsao import previsao_bp
-from app.services.comercial_service import listar_contratos_ativos
 from app.routes.alertas import alertas_bp
+from app.routes.dashboard_api import dashboard_api_bp
+from app.services.comercial_service import listar_contratos_ativos
+
 
 def create_app():
     app = Flask(
@@ -35,5 +37,13 @@ def create_app():
     app.register_blueprint(solicitacoes_bp)
     app.register_blueprint(previsao_bp)
     app.register_blueprint(alertas_bp)
+    app.register_blueprint(dashboard_api_bp)
+
+    # Rota raiz: logada vai para o dashboard, senão para o login
+    @app.route("/")
+    def index():
+        if session.get("user"):
+            return redirect(url_for("admin.dashboard"))
+        return redirect(url_for("auth.login"))
 
     return app
