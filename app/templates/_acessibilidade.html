@@ -1,0 +1,166 @@
+<!-- Acessibilidade: VLibras + filtro de daltonismo.
+     Injetado automaticamente em todas as páginas pelo __init__.py (after_request). -->
+
+<style>
+  /* Filtros de cor aplicados */
+  html[data-daltonismo="protanopia"]   { filter: url(#filtro-protanopia); }
+  html[data-daltonismo="deuteranopia"] { filter: url(#filtro-deuteranopia); }
+  html[data-daltonismo="tritanopia"]   { filter: url(#filtro-tritanopia); }
+
+  #a11y-botao {
+    position: fixed; left: 16px; bottom: 16px; z-index: 9998;
+    width: 48px; height: 48px; border-radius: 9999px;
+    background: #1685e5; color: #fff; border: 2px solid #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; cursor: pointer;
+  }
+  #a11y-botao:focus-visible, #a11y-painel input:focus-visible { outline: 3px solid #f59e0b; outline-offset: 2px; }
+
+  #a11y-painel {
+    position: fixed; left: 16px; bottom: 72px; z-index: 9998;
+    width: 260px; max-width: calc(100vw - 32px);
+    background: #fff; color: #1e293b; border: 1px solid #e2e8f0; border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,.18); padding: 14px 16px; font-size: 14px;
+  }
+  #a11y-painel[hidden] { display: none; }
+  #a11y-painel h2 { font-size: 14px; font-weight: 700; margin: 0 0 4px; }
+  #a11y-painel p  { font-size: 12px; color: #64748b; margin: 0 0 10px; }
+  #a11y-painel label { display: flex; align-items: center; gap: 8px; padding: 5px 0; cursor: pointer; }
+
+  #a11y-botao.no-cabecalho {
+    position: static; flex-shrink: 0;
+    width: 44px; height: 44px;
+    background: #fff; color: #1e293b;
+    border: 1px solid #e5e7eb; box-shadow: none;
+  }
+  #a11y-painel.no-cabecalho { left: auto; right: 24px; top: 84px; bottom: auto; }
+</style>
+
+<!-- Definição dos filtros (invisível) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <filter id="filtro-protanopia" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="1.000 0.000 0.000 0 0
+                                           -0.255 1.255 0.000 0 0
+                                           0.303 -0.545 1.242 0 0
+                                           0 0 0 1 0"/>
+    </filter>
+    <filter id="filtro-deuteranopia" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="1.000 0.000 0.000 0 0
+                                           -0.438 1.438 0.000 0 0
+                                           0.262 -0.562 1.300 0 0
+                                           0 0 0 1 0"/>
+    </filter>
+    <filter id="filtro-tritanopia" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="1.050 -0.382 0.332 0 0
+                                           0.000 1.234 -0.234 0 0
+                                           0.000 0.000 1.000 0 0
+                                           0 0 0 1 0"/>
+    </filter>
+  </defs>
+</svg>
+
+<!-- Botão e painel de daltonismo -->
+<button id="a11y-botao" type="button" aria-label="Opções de acessibilidade"
+        aria-expanded="false" aria-controls="a11y-painel" title="Acessibilidade">&#9728;</button>
+
+<div id="a11y-painel" role="group" aria-labelledby="a11y-titulo" hidden>
+  <h2 id="a11y-titulo">Filtro de daltonismo</h2>
+  <p>Ajusta as cores da página para facilitar a diferenciação.</p>
+  <label><input type="radio" name="daltonismo" value="nenhum" checked> Nenhum</label>
+  <label><input type="radio" name="daltonismo" value="protanopia"> Protanopia (vermelho)</label>
+  <label><input type="radio" name="daltonismo" value="deuteranopia"> Deuteranopia (verde)</label>
+  <label><input type="radio" name="daltonismo" value="tritanopia"> Tritanopia (azul)</label>
+</div>
+
+<!-- VLibras -->
+<div vw class="enabled">
+  <div vw-access-button class="active"></div>
+  <div vw-plugin-wrapper>
+    <div class="vw-plugin-top-wrapper"></div>
+  </div>
+</div>
+<script src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+<script>new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+
+<!-- Controle do painel de daltonismo (lembra a escolha no navegador) -->
+<script>
+  (function () {
+    var CHAVE = "daltonismo";
+    var botao = document.getElementById("a11y-botao");
+    var painel = document.getElementById("a11y-painel");
+    if (!botao || !painel) return;
+
+    var radios = painel.querySelectorAll('input[name="daltonismo"]');
+
+    // Telas do painel (têm o menu lateral): o botão vai para o cabeçalho.
+    // Login, cadastro e esqueci a senha mantêm o botão no canto da tela.
+    function encaixarNoCabecalho() {
+      var ehPainel = document.getElementById("menu-lateral") || document.querySelector(".pagina-painel");
+      if (!ehPainel) return;
+
+      var sino = document.getElementById("abrir-notificacoes");
+      var cab = document.querySelector("main header");
+
+      if (sino && sino.parentElement) {
+    
+        sino.parentElement.insertBefore(botao, sino);
+      } else if (cab && cab.children.length > 1 &&
+                 getComputedStyle(cab.lastElementChild).display === "flex") {
+      
+        cab.lastElementChild.insertBefore(botao, cab.lastElementChild.firstChild);
+      } else if (cab) {
+       
+        var bloco = document.createElement("div");
+        while (cab.firstChild) bloco.appendChild(cab.firstChild);
+        cab.appendChild(bloco);
+        cab.style.display = "flex";
+        cab.style.alignItems = "flex-start";
+        cab.style.justifyContent = "space-between";
+        cab.style.gap = "16px";
+        cab.appendChild(botao);
+      } else {
+        return;
+      }
+      botao.classList.add("no-cabecalho");
+      painel.classList.add("no-cabecalho");
+    }
+    encaixarNoCabecalho();
+
+    function ler() {
+      try { return localStorage.getItem(CHAVE) || "nenhum"; } catch (e) { return "nenhum"; }
+    }
+    function salvar(v) {
+      try { localStorage.setItem(CHAVE, v); } catch (e) { /* sem armazenamento: ignora */ }
+    }
+    function aplicar(modo) {
+      var html = document.documentElement;
+      if (modo === "nenhum") html.removeAttribute("data-daltonismo");
+      else html.setAttribute("data-daltonismo", modo);
+      radios.forEach(function (r) { r.checked = r.value === modo; });
+    }
+    function alternarPainel(abrir) {
+      painel.hidden = !abrir;
+      botao.setAttribute("aria-expanded", String(abrir));
+    }
+
+    aplicar(ler());
+
+    radios.forEach(function (r) {
+      r.addEventListener("change", function () {
+        aplicar(r.value);
+        salvar(r.value);
+      });
+    });
+
+    botao.addEventListener("click", function () { alternarPainel(painel.hidden); });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && !painel.hidden) { alternarPainel(false); botao.focus(); }
+    });
+    document.addEventListener("click", function (e) {
+      if (!painel.hidden && !painel.contains(e.target) && e.target !== botao) alternarPainel(false);
+    });
+  })();
+</script>
