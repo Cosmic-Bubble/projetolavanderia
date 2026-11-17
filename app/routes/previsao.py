@@ -134,9 +134,11 @@ def get_capacidade():
             
             capacidade_mensal_kg += kg_mes
 
-        limite_total_kg = round(capacidade_mensal_kg, 0)
-        if limite_total_kg <= 0:
-            limite_total_kg = 4000.0 
+        limite_total_kg = (
+            round(capacidade_mensal_kg, 0)
+            if capacidade_mensal_kg > 0
+            else None
+        )
 
         # 3. Busca as previsões (usando a função que já criamos)
         previsoes_data = gerar_previsoes(periodos=6)
@@ -146,17 +148,27 @@ def get_capacidade():
         social_prev = previsoes_data.get("social_peso_kg", {}).get("previsoes", [])
         social = social_hist[-3:] + social_prev[:3]
 
-        # Comercial: puxa a franquia dos contratos ativos
+        # Comercial: utiliza a franquia mensal dos contratos ativos.
+        # Não representa peso efetivamente processado.
+
         contratos = listar_contratos_ativos()
-        franquia_comercial = sum(float(c.get("franquia_kg_mes", 0)) for c in contratos)
-        if franquia_comercial == 0:
-            franquia_comercial = 2000.0 
 
-        # Simula o crescimento/estabilidade comercial
-        comercial_hist_peso = [franquia_comercial * 0.8, franquia_comercial * 0.85, franquia_comercial * 0.9]
-        comercial_prev_peso = [franquia_comercial, franquia_comercial * 1.1, franquia_comercial] 
+        franquia_comercial = sum(
+            float(c.get("franquia_kg_mes") or 0)
+            for c in contratos
+        )
+
+        # Não há histórico de peso comercial realizado.
+        # None será convertido em null na resposta JSON.
+        comercial_hist_peso = [None] * len(social_hist[-3:])
+
+        # Referência contratual para os próximos meses.
+        # Não é uma previsão estatística.
+        comercial_prev_peso = [
+            franquia_comercial
+        ] * len(social_prev[:3])
+
         comercial = comercial_hist_peso + comercial_prev_peso
-
         # 5. Nomes dos meses
         meses_hist = previsoes_data.get("social_peso_kg", {}).get("meses_historico", [])
         meses_prev = previsoes_data.get("social_peso_kg", {}).get("meses_futuros", [])
@@ -172,12 +184,39 @@ def get_capacidade():
                 if is_prev: nome += " (Prev)"
                 meses_formatados.append(nome)
 
-        # Consumo estimado
-        peso_total_mes_atual = (social[-1] if social else 0) + (comercial[-1] if comercial else 0)
-        agua_litros = peso_total_mes_atual * 15 
-        energia_kwh = peso_total_mes_atual * 2.5
-        insumo_kg = peso_total_mes_atual * 0.1
+        # Consumo estimado para o primeiro mês futuro.
+        # Coeficientes operacionais assumidos, não medições reais.
 
+        indice_primeiro_futuro = len(social_hist[-3:])
+
+        peso_social_previsto = (
+            social[indice_primeiro_futuro]
+            if indice_primeiro_futuro < len(social)
+            else None
+        )
+
+        franquia_comercial_prevista = (
+            comercial[indice_primeiro_futuro]
+            if indice_primeiro_futuro < len(comercial)
+            else None
+        )
+
+        if (
+            peso_social_previsto is not None
+            and franquia_comercial_prevista is not None
+        ):
+            peso_total_estimado = (
+                peso_social_previsto + franquia_comercial_prevista
+            )
+
+            agua_litros = round(peso_total_estimado * 15)
+            energia_kwh = round(peso_total_estimado * 2.5)
+            insumo_kg = round(peso_total_estimado * 0.1)
+        else:
+            agua_litros = None
+            energia_kwh = None
+            insumo_kg = None
+            
         return jsonify({
             "limite_kg": limite_total_kg,
             "meses": meses_formatados,

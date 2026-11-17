@@ -40,8 +40,9 @@
             </header>
 
             <section class="painel-card p-5 mb-5 relative overflow-hidden">
-            <h2 class="font-bold text-base mb-6">Demanda Total Prevista (Comercial + Social) vs. Limite de Máquinas</h2>
-            
+            <h2 class="font-bold text-base mb-6">
+                Volume Social e Franquia Comercial Contratada vs. Capacidade Operacional
+            </h2>            
             <!-- Área do gráfico -->
             <div class="relative h-64 w-full mt-4">
                 <!-- Linha limite (Posicionada via JS) -->
@@ -59,14 +60,22 @@
             
             <!-- Legenda -->
             <div class="flex justify-center gap-8 text-xs text-slate-500 mt-2">
-                <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm bg-[#22d3ee]"></span> Comercial</span>
-                <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-sm bg-[#a3e635]"></span> Social</span>
+                <span class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-sm bg-[#22d3ee]"></span>
+                    Franquia comercial contratada
+                </span>
+                <span class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-sm bg-[#a3e635]"></span>
+                    Volume social
+                </span>
             </div>
         </section>
 
             <section class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <article class="painel-card p-5">
-                    <h2 class="font-bold text-base mb-4">Consumo Estimado de Recursos (Mês Atual)</h2>
+                    <h2 class="font-bold text-base mb-4">
+                        Consumo Estimado de Recursos (Próximo Mês Previsto)
+                    </h2>
                     <dl class="space-y-4 text-sm">
                         <div class="flex justify-between gap-3">
                             <dt><span class="text-sky-500">♢</span> Água Estimada</dt>

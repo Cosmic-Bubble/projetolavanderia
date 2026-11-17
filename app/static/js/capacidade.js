@@ -9,16 +9,53 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         const limite = dados.limite_kg;
-        const totais = dados.social.map((v, i) => v + dados.comercial[i]);
-        const maiorDemanda = Math.max(...totais);
+        const capacidadeDisponivel =
+            typeof limite === "number" &&
+            Number.isFinite(limite) &&
+            limite > 0;
 
-        // O teto do gráfico será o maior valor entre a demanda e o limite + 15% de margem
-        const tetoGrafico = Math.max(maiorDemanda, limite) * 1.15;
-        
-        // Posiciona a linha de limite baseada no teto
-        const porcentagemLimite = (limite / tetoGrafico) * 100;
-        document.getElementById("linha-limite").style.top = `${100 - porcentagemLimite}%`;
-        document.getElementById("valor-limite").textContent = limite.toLocaleString("pt-BR");
+        const totais = dados.social.map((valorSocial, i) => {
+    const valorComercial = dados.comercial[i];
+
+    // Não calcula demanda total quando uma parcela é desconhecida.
+    if (
+        !Number.isFinite(valorSocial) ||
+        !Number.isFinite(valorComercial)
+    ) {
+        return null;
+    }
+
+    return valorSocial + valorComercial;
+        });
+
+        const totaisValidos = totais.filter(
+            valor => Number.isFinite(valor)
+        );
+
+        const maiorDemanda = Math.max(0, ...totaisValidos);
+
+        // Define uma escala válida, mesmo quando não há demanda ou capacidade
+        const tetoGrafico = Math.max(
+            maiorDemanda,
+            capacidadeDisponivel ? limite : 0,
+            1
+        ) * 1.15;
+
+        // Exibe a linha de capacidade apenas quando existe um limite válido
+        const linhaLimite = document.getElementById("linha-limite");
+        const valorLimite = document.getElementById("valor-limite");
+
+        if (capacidadeDisponivel) {
+            const porcentagemLimite = (limite / tetoGrafico) * 100;
+
+            linhaLimite.style.display = "";
+            linhaLimite.style.top = `${100 - porcentagemLimite}%`;
+
+            valorLimite.textContent = limite.toLocaleString("pt-BR");
+        } else {
+            linhaLimite.style.display = "none";
+            valorLimite.textContent = "Indisponível";
+        }
 
         // Desenha as barras
         const container = document.getElementById("container-barras");
@@ -26,12 +63,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         dados.meses.forEach((mes, i) => {
             const total = totais[i];
-            const alturaTotal = (total / tetoGrafico) * 100;
-            
-            const percComercial = (dados.comercial[i] / total) * 100;
-            const percSocial = (dados.social[i] / total) * 100;
+            const dadosCompletos = Number.isFinite(total);
 
-            const isEstouro = total > limite;
+            const alturaTotal = dadosCompletos
+                ? (total / tetoGrafico) * 100
+                : 0;
+
+            const percComercial = dadosCompletos && total > 0
+                ? (dados.comercial[i] / total) * 100
+                : 0;
+
+            const percSocial = dadosCompletos && total > 0
+                ? (dados.social[i] / total) * 100
+                : 0;
+
+            const isEstouro =
+                dadosCompletos &&
+                capacidadeDisponivel &&
+                total > limite;
             const corTexto = isEstouro ? "text-orange-500 font-bold" : "text-slate-500";
 
             container.innerHTML += `
@@ -42,33 +91,96 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <div class="w-full bg-[#a3e635] rounded-b-sm" style="height: ${percSocial}%;"></div>
                     </div>
                     <!-- Texto do mês (Fica abaixo da barra no chão) -->
-                    <span class="text-[11px] mt-3 ${corTexto} whitespace-nowrap">${mes}${isEstouro ? ' (Estouro)' : ''}</span>
+                    <span class="text-[11px] mt-3 ${corTexto} whitespace-nowrap">
+                        ${mes}
+                        ${!dadosCompletos ? ' (Sem dados)' : isEstouro ? ' (Estouro)' : ''}
+                    </span>
                 </div>
             `;
         });
 
         // Cards de consumo
-        document.getElementById("consumo-agua").textContent = `${dados.consumo.agua_litros.toLocaleString("pt-BR")} Litros`;
-        document.getElementById("consumo-energia").textContent = `${dados.consumo.energia_kwh.toLocaleString("pt-BR")} kWh`;
-        document.getElementById("consumo-insumo").textContent = `${dados.consumo.insumo_kg.toLocaleString("pt-BR")} kg`;
+        // Exibe "Indisponível" quando não há dados suficientes.
+
+        const formatarConsumo = (valor, unidade) => {
+            if (typeof valor !== "number" || !Number.isFinite(valor)) {
+                return "Indisponível";
+            }
+
+            return `${valor.toLocaleString("pt-BR")} ${unidade}`;
+        };
+
+        document.getElementById("consumo-agua").textContent =
+            formatarConsumo(dados.consumo.agua_litros, "Litros");
+
+        document.getElementById("consumo-energia").textContent =
+            formatarConsumo(dados.consumo.energia_kwh, "kWh");
+
+        document.getElementById("consumo-insumo").textContent =
+            formatarConsumo(dados.consumo.insumo_kg, "kg");
 
         // Texto de alerta
-        const mesesComEstouro = dados.meses.filter((m, i) => totais[i] > limite);
+        const mesesComEstouro = capacidadeDisponivel
+            ? dados.meses.filter(
+                (m, i) =>
+                    Number.isFinite(totais[i]) &&
+                    totais[i] > limite
+            )
+            : [];
+
+        const mesesSemDados = dados.meses.filter(
+            (m, i) => !Number.isFinite(totais[i])
+        );       
         const textoAlerta = document.getElementById("texto-alerta");
         const tituloAlerta = textoAlerta.previousElementSibling;
 
-        if (mesesComEstouro.length > 0) {
-            textoAlerta.innerHTML = `
-                Durante os meses de <strong>${mesesComEstouro.join(', ')}</strong> a demanda prevista 
-                (Comercial + Social) ultrapassou a capacidade máxima das máquinas (${limite.toLocaleString("pt-BR")} kg). 
-                É importante ter isso em mente para as próximas decisões.
+        if (!capacidadeDisponivel) {
+            textoAlerta.textContent =
+                "Não foi possível determinar a capacidade operacional. " +
+                "Verifique o cadastro e os dados das máquinas antes de avaliar possíveis estouros.";
+
+            tituloAlerta.innerHTML = `
+                <i data-lucide="info" class="w-5 h-5 text-amber-500"></i>
+                Capacidade não disponível
             `;
-            tituloAlerta.innerHTML = `<i data-lucide="alert-triangle" class="w-5 h-5 text-red-500"></i> Perceba o estouro de capacidade`;
+        } else if (mesesComEstouro.length > 0) {
+        textoAlerta.innerHTML = `
+            Nos meses de <strong>${mesesComEstouro.join(", ")}</strong>,
+            a soma do volume social previsto com a franquia comercial
+            contratada ultrapassa a capacidade operacional estimada
+            de <strong>${limite.toLocaleString("pt-BR")} kg</strong>.
+
+            ${mesesSemDados.length > 0
+                ? `<br><br>Não foi possível avaliar a demanda total
+                nos seguintes meses por ausência de dados comerciais:
+                <strong>${mesesSemDados.join(", ")}</strong>.`
+                : ""}
+        `;
+
+        tituloAlerta.innerHTML = `
+            <i data-lucide="alert-triangle"
+            class="w-5 h-5 text-red-500"></i>
+            Possível estouro de capacidade
+        `;} else if (mesesSemDados.length > 0) {
+            textoAlerta.textContent =
+                "Não foi possível avaliar todos os meses porque existem " +
+                "dados de demanda incompletos. " +
+                "Meses afetados: " + mesesSemDados.join(", ") + ".";
+
+            tituloAlerta.innerHTML = `
+                <i data-lucide="info" class="w-5 h-5 text-amber-500"></i>
+                Avaliação de capacidade incompleta
+            `;
         } else {
-            textoAlerta.innerHTML = `
-                Nenhum estouro de capacidade previsto para os próximos meses. A demanda total está dentro do limite de ${limite.toLocaleString("pt-BR")} kg.
+            textoAlerta.textContent =
+                "Nenhum estouro identificado nos meses avaliados. " +
+                "A demanda estimada permanece dentro do limite de " +
+                limite.toLocaleString("pt-BR") + " kg.";
+
+            tituloAlerta.innerHTML = `
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-green-500"></i>
+                Capacidade dentro do limite
             `;
-            tituloAlerta.innerHTML = `<i data-lucide="check-circle-2" class="w-5 h-5 text-green-500"></i> Capacidade Saudável`;
         }
 
         lucide.createIcons();
