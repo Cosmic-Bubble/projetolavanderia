@@ -60,13 +60,40 @@ MAPA_STATUS_BANCO = {
     "Encerrado": "FINALIZADO",
 }
 
+def _preencher_numeros(
+    df: pd.DataFrame,
+    tipo: str
+) -> tuple[pd.DataFrame, list[str]]:
+    erros = []
 
-def _preencher_numeros(df: pd.DataFrame, tipo: str) -> pd.DataFrame:
     for coluna in COLUNAS_NUMERICAS.get(tipo, []):
-        if coluna in df.columns:
-            df[coluna] = pd.to_numeric(df[coluna], errors="coerce").fillna(0)
-    return df
+        if coluna not in df.columns:
+            continue
 
+        valores_originais = df[coluna]
+
+        vazios = (
+            valores_originais.isna()
+            | valores_originais.astype(str).str.strip().eq("")
+        )
+
+        convertidos = pd.to_numeric(
+            valores_originais,
+            errors="coerce"
+        )
+
+        invalidos = ~vazios & convertidos.isna()
+
+        if invalidos.any():
+            linhas = df.index[invalidos].tolist()
+            erros.append(
+                f"Coluna '{coluna}' contém valores "
+                f"numéricos inválidos nas linhas: {linhas}."
+            )
+
+        df[coluna] = convertidos
+
+    return df, erros
 
 def _parse_datas(df: pd.DataFrame, coluna: str) -> tuple[pd.Series, list[int]]:
     """
@@ -153,7 +180,9 @@ def validar_planilha(df: pd.DataFrame, tipo: str) -> tuple[pd.DataFrame, list[st
             )
         df["data_fim"] = datas_fim  # NaT vira NULL no Supabase via where(pd.notna)
 
+    
     # Numéricos
-    df = _preencher_numeros(df, tipo)
+    df, erros_numericos = _preencher_numeros(df, tipo)
+    erros.extend(erros_numericos)
 
     return df, erros

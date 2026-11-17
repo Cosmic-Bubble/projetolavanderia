@@ -79,6 +79,62 @@ def _transformar_insumos(df: pd.DataFrame) -> pd.DataFrame:
             })
     return pd.DataFrame(linhas)
 
+def _preparar_registros(df: pd.DataFrame) -> list[dict]:
+    """Prepara registros com valores compatíveis com JSON."""
+
+    df = df.copy()
+
+    # Converte datas para o formato aceito pelo Supabase
+    for coluna in df.columns:
+        if pd.api.types.is_datetime64_any_dtype(df[coluna]):
+            df[coluna] = df[coluna].dt.strftime("%Y-%m-%d")
+
+    # Preserva zeros e converte valores ausentes para None
+    df = df.astype(object).where(pd.notna(df), None)
+
+    return df.to_dict(orient="records")
+
+
+def _mesclar_registros(
+    novos: list[dict],
+    existentes: list[dict],
+    chaves: list[str]
+) -> list[dict]:
+    """Preserva valores existentes quando os novos são None."""
+
+    indice = {
+        tuple(registro[chave] for chave in chaves): registro
+        for registro in existentes
+    }
+
+    resultado = []
+
+    for novo in novos:
+        identificador = tuple(
+            novo[chave] for chave in chaves
+        )
+
+        anterior = indice.get(identificador)
+
+        if anterior is None:
+            resultado.append(novo.copy())
+            continue
+
+        
+        combinado = {
+            campo: valor
+            for campo, valor in anterior.items()
+            if campo not in ("id", "criado_em")
+        }
+
+        for campo, valor in novo.items():
+            if valor is not None:
+                combinado[campo] = valor
+
+        resultado.append(combinado)
+
+    return resultado
+
 # Upsert principal (unificado)
 def upsert_dados(tipo: str, df: pd.DataFrame) -> int:
     """Faz upsert no Supabase e retorna quantidade de registros processados."""
@@ -92,11 +148,11 @@ def upsert_dados(tipo: str, df: pd.DataFrame) -> int:
         df_transformado = _transformar_insumos(df)
         if df_transformado.empty:
             return 0
-        registros = df_transformado.where(pd.notna(df_transformado), None).to_dict("records")
+        registros = _preparar_registros(df_transformado)
     else:
         df = df.rename(columns=RENOMEAR_POR_TIPO.get(tipo, {}))
         df = df.drop(columns=DESCARTAR_POR_TIPO.get(tipo, []), errors="ignore")
-        registros = df.where(pd.notna(df), None).to_dict("records")
+        registros = _preparar_registros(df)
 
     tabela = TABELA_POR_TIPO[tipo]
 
@@ -108,6 +164,13 @@ def upsert_dados(tipo: str, df: pd.DataFrame) -> int:
             ).execute()
         
         elif tipo == "Relatorio_Operacional":
+            supabase.table(tabela).upsert(
+                registros,
+                on_conflict="mes_referencia"
+            ).execute()
+
+        
+        elif tipo == "Custos_Operacionais":
             supabase.table(tabela).upsert(
                 registros,
                 on_conflict="mes_referencia"
