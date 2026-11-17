@@ -88,14 +88,20 @@ def prever_naive(
         return []
 
     if not serie:
-        return [0.0] * periodos
+        raise ValueError(
+            "Não há dados suficientes para calcular a previsão naive."
+        )
 
-    ultimo_valor = max(0.0, float(serie[-1]))
+    valores = np.asarray(serie, dtype=float)
 
-    return [
-        round(ultimo_valor, 2)
-        for _ in range(periodos)
-    ]
+    if not np.all(np.isfinite(valores)):
+        raise ValueError(
+            "A série contém valores ausentes ou inválidos."
+        )
+
+    ultimo_valor = max(0.0, float(valores[-1]))
+
+    return [round(ultimo_valor, 2) for _ in range(periodos)]
 
 def prever_regressao(
     serie: list[float],
@@ -106,9 +112,18 @@ def prever_regressao(
 
     if periodos <= 0:
         return []
-
     if not serie:
-        return [0.0] * periodos
+        raise ValueError(
+            "Não há dados suficientes para calcular a regressão."
+        )
+
+    valores = np.asarray(serie, dtype=float)
+
+    if not np.all(np.isfinite(valores)):
+        raise ValueError(
+            "A série contém valores ausentes ou inválidos."
+        )
+
 
     if meses is not None and len(meses) != len(serie):
         raise ValueError(
@@ -145,13 +160,38 @@ def prever_regressao(
 
     return previsoes
 
-def prever_sma(serie: list[float], periodos: int = 1, janela: int = 3) -> list[float]:
-    if not serie:
-        return [0] * periodos
-    janela = min(janela, len(serie))
-    media = sum(serie[-janela:]) / janela
-    return [round(media, 2)] * periodos
+def prever_sma(
+    serie: list[float],
+    periodos: int = 1,
+    janela: int = 3
+) -> list[float]:
+    """Calcula a média móvel simples das últimas observações."""
 
+    if janela <= 0:
+        raise ValueError(
+            "A janela da média móvel deve ser positiva."
+        )
+
+    if periodos <= 0:
+        return []
+
+    if not serie:
+        raise ValueError(
+            "Não há dados suficientes para calcular a média móvel."
+        )
+
+    valores = np.asarray(serie, dtype=float)
+
+    if not np.all(np.isfinite(valores)):
+        raise ValueError(
+            "A série contém valores ausentes ou inválidos."
+        )
+
+    janela = min(janela, len(valores))
+
+    media = float(np.mean(valores[-janela:]))
+
+    return [round(media, 2)] * periodos
 
 
 def prever_kpi(
@@ -160,16 +200,24 @@ def prever_kpi(
     periodos: int = 3,
     meses: list[str] | None = None
 ) -> list[float]:
+    """Seleciona o método de previsão solicitado."""
 
     if metodo == "sma":
         return prever_sma(serie, periodos)
 
-    return prever_regressao(
-        serie,
-        periodos,
-        meses=meses
-    )
+    if metodo == "regressao":
+        return prever_regressao(
+            serie,
+            periodos,
+            meses=meses
+        )
 
+    if metodo == "naive":
+        return prever_naive(serie, periodos)
+
+    raise ValueError(
+        f"Método de previsão desconhecido: {metodo}"
+    )
 
 
 # ============================================================
@@ -210,13 +258,38 @@ def _meses_futuros(ultimo_mes: pd.Timestamp, periodos: int) -> list[str]:
     ).strftime("%Y-%m").tolist()
 
 
+def selecionar_ultimos_meses(
+    df: pd.DataFrame,
+    quantidade: int = 12
+) -> pd.DataFrame:
+    """Seleciona uma janela de meses de calendário."""
+
+    if df.empty:
+        return df.copy()
+
+    if quantidade <= 0:
+        raise ValueError(
+            "A quantidade de meses deve ser positiva."
+        )
+
+    ultimo_mes = df["mes_referencia"].max()
+
+    inicio = (
+        ultimo_mes.to_period("M")
+        - (quantidade - 1)
+    ).to_timestamp()
+
+    return df.loc[
+        df["mes_referencia"] >= inicio
+    ].copy()
+
 def gerar_previsoes(periodos: int = 3) -> dict:
     resultado = {}
     for tabela, kpis in KPI_POR_TABELA.items():
         for coluna in kpis:
             try:
                 df = _buscar_serie(tabela, coluna, meses=24) 
-                
+                df = selecionar_ultimos_meses(df, quantidade=12)
                 if df.empty:
                     resultado[coluna] = { "historico": [], "meses_historico": [], "previsoes": [], "meses_futuros": [], "metodo": METODO_POR_KPI.get(coluna, "regressao"), "erro": "sem dados" }
                     continue
@@ -244,13 +317,18 @@ def gerar_previsoes(periodos: int = 3) -> dict:
 
                 metodo = METODO_POR_KPI.get(coluna, "regressao")
                 
+                metodo_utilizado = metodo
+
+                if metodo == "regressao" and len(serie) < 3:
+                    metodo_utilizado = "naive"
+
                 if len(serie) > 12:
                     serie = serie[-12:]
                     meses = meses[-12:]
 
                 previsoes = prever_kpi(
                     serie,
-                    metodo,
+                    metodo_utilizado,
                     periodos,
                     meses=meses
                 )
@@ -263,7 +341,7 @@ def gerar_previsoes(periodos: int = 3) -> dict:
                     "meses_historico": meses,
                     "previsoes": previsoes,
                     "meses_futuros": futuros,
-                    "metodo": metodo,
+                    "metodo": metodo_utilizado,
                     "ultimo_valor": serie[-1],
                     "previsao_proximo": previsoes[0] if previsoes else 0,
                 }

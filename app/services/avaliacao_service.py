@@ -88,15 +88,7 @@ def avaliar_modelos(
             )[0],
         }
 
-
-        # A SMA exige três meses consecutivos de treinamento.
-        janela_sma_valida = (
-            i >= 3
-            and np.all(
-                np.diff(datas[i - 3:i])
-                == np.timedelta64(1, "M")
-            )
-        )
+        janela_sma_valida = i >= 3
         
         # Compara os modelos somente nos mesmos períodos.
         if not janela_sma_valida:
