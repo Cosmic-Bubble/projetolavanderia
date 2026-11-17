@@ -90,6 +90,11 @@
       <section class="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 mb-5" aria-labelledby="titulo-grafico">
         <h2 id="titulo-grafico" class="text-base sm:text-lg font-bold text-[#202927] mb-4">Histórico e Previsão de
           Faturamento (R$)</h2>
+        <div class="flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-700 mb-3" aria-label="Legenda do gráfico de faturamento">
+          <span class="inline-flex items-center gap-2"><span class="inline-block w-7 border-t-[3px] border-[#7d3c98]"></span>Faturamento histórico</span>
+          <span class="inline-flex items-center gap-2"><span class="inline-block w-7 border-t-[3px] border-dashed border-[#a855f7]"></span>Faturamento previsto</span>
+          <span class="inline-flex items-center gap-2"><span class="inline-block w-4 h-3 rounded-sm border border-[#b7d58b] bg-[#d8edbd]"></span>Período projetado</span>
+        </div>
         <p id="descricao-grafico" class="sr-only">Gráfico de faturamento histórico e projeção calculados a partir dos registros disponíveis.</p>
         <div class="grafico-scroll relative" role="img" aria-labelledby="titulo-grafico descricao-grafico">
           <svg id="grafico-faturamento" viewBox="0 0 760 210" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
@@ -101,7 +106,8 @@
             <g id="rotulos-meses" class="rotulos-meses"></g>
           </svg>
         </div>
-        <p class="text-xs text-slate-500 mt-3"></p>
+        <p class="text-xs text-slate-500 mt-3">Valores em reais (R$). Passe o mouse ou toque nos pontos para consultar cada valor. Role horizontalmente para visualizar todos os meses.</p>
+      </section>
 
       <!-- Seção de Contratos Ativos -->
       <section class="painel-card p-5 mt-5">

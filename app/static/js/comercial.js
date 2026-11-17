@@ -1,6 +1,6 @@
 lucide.createIcons();
 
-// GRÁFICO DE FATURAMENTO (SVG)
+// 1. GRÁFICO DE FATURAMENTO (SVG)
 const ns = 'http://www.w3.org/2000/svg';
 const linha = document.getElementById('linha-faturamento');
 const pontos = document.getElementById('pontos-faturamento');
@@ -145,6 +145,7 @@ function desenharGrafico(periodo) {
     const caminhoHistorico = criarCaminho(0, histExibido.length);
     linha.setAttribute('d', caminhoHistorico);
     linha.setAttribute('stroke-dasharray', 'none');
+    linha.setAttribute('stroke', '#7d3c98');
     const anterior = document.getElementById('linha-faturamento-previsao');
     if (anterior) anterior.remove();
     if (prevExibida.length) {
@@ -167,6 +168,9 @@ function desenharGrafico(periodo) {
         circulo.setAttribute('cy', String(posicoesY[i]));
         circulo.setAttribute('r', '4');
         circulo.setAttribute('fill', isPrevisao ? '#a855f7' : '#7d3c98');
+        const tituloPonto = document.createElementNS(ns, 'title');
+        tituloPonto.textContent = `${mesesExibidos[i]} — ${isPrevisao ? 'Faturamento previsto' : 'Faturamento histórico'}: ${Number(valor).toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})}`;
+        circulo.appendChild(tituloPonto);
         
         // Adiciona as interações do mouse no círculo
         circulo.addEventListener('mouseenter', (e) => {
@@ -235,7 +239,7 @@ document.querySelectorAll('[data-periodo]').forEach((botao) => {
     });
 });
 
-// TABELA DE CONTRATOS E MODAL
+// 2. TABELA DE CONTRATOS E MODAL
 const tbody = document.getElementById("tabela-contratos");
 const modal = document.getElementById("modal-contrato");
 const form = document.getElementById("form-contrato");
@@ -329,7 +333,7 @@ async function carregarContratosAtivos() {
     }
 }
 
-// AÇÕES GLOBAIS (Editar / Deletar / Salvar)
+// 3. AÇÕES GLOBAIS (Editar / Deletar / Salvar)
 window.editarContrato = function(contratoString) {
     const contrato = JSON.parse(decodeURIComponent(contratoString));
     abrirModal(contrato);
@@ -378,7 +382,7 @@ form?.addEventListener("submit", async (e) => {
     }
 });
 
-// INICIALIZAÇÃO
+// 4. INICIALIZAÇÃO
 document.addEventListener("DOMContentLoaded", () => {
     carregarDadosComerciais();
     carregarContratosAtivos();

@@ -79,10 +79,15 @@
       <section class="grid grid-cols-1 xl:grid-cols-[1.6fr_1fr] gap-4">
         <article class="painel-card p-5">
           <h2 class="font-bold text-base mb-3">Demanda social histórica e demanda total prevista vs. capacidade</h2>
-          <div class="grafico-scroll"><svg id="grafico-demanda" viewBox="0 0 680 240" role="img"
-              aria-label="Volume social histórico e demanda total prevista, separados por período"
-              class="grafico-painel"></svg></div>
-          <p class="text-xs text-slate-500 mt-2">Azul: peso social realizado. Roxo tracejado: peso social previsto + franquia comercial vigente. Laranja: capacidade estimada. Não há histórico de peso comercial realizado.</p>
+          <div class="flex flex-wrap gap-x-5 gap-y-2 text-xs text-slate-700 mb-3" aria-label="Legenda do gráfico de demanda">
+            <span class="inline-flex items-center gap-2"><span class="inline-block w-7 border-t-[3px] border-[#1685e5]"></span>Social realizado</span>
+            <span class="inline-flex items-center gap-2"><span class="inline-block w-7 border-t-[3px] border-dashed border-[#7d3c98]"></span>Demanda total prevista</span>
+            <span class="inline-flex items-center gap-2"><span class="inline-block w-7 border-t-2 border-dashed border-[#f59e0b]"></span>Capacidade estimada</span>
+          </div>
+          <div class="grafico-scroll"><svg id="grafico-demanda" viewBox="0 0 680 270" role="img"
+              aria-label="Demanda em quilogramas por mês: histórico social realizado, demanda total prevista e capacidade estimada"
+              aria-describedby="nota-grafico-demanda" class="grafico-painel"></svg></div>
+          <p id="nota-grafico-demanda" class="text-xs text-slate-500 mt-2">Valores em kg. Os números indicam o volume em cada mês; passe o mouse ou toque nos pontos para consultar o valor completo. A previsão inclui a franquia comercial vigente, não a produção comercial realizada.</p>
         </article>
         <article class="painel-card p-5 text-center">
           <h2 class="font-bold text-base text-left">Utilização prevista (próximo mês)</h2>
