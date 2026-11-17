@@ -25,7 +25,7 @@ RENOMEAR_POR_TIPO = {
 }
 
 DESCARTAR_POR_TIPO = {
-    "Custos_Operacionais": ["consumo_agua_m3", "consumo_energia_kwh"],
+    "Custos_Operacionais": [],
     "Contratos_Comerciais": ["numero_contrato"],
 }
 
@@ -101,14 +101,31 @@ def upsert_dados(tipo: str, df: pd.DataFrame) -> int:
     tabela = TABELA_POR_TIPO[tipo]
 
     try:
-        supabase.table(tabela).upsert(registros).execute()
+        if tipo == "Insumos_Mensais":
+            supabase.table(tabela).upsert(
+                registros,
+                on_conflict="insumo_id,mes_referencia"
+            ).execute()
+        
+        elif tipo == "Relatorio_Operacional":
+            supabase.table(tabela).upsert(
+                registros,
+                on_conflict="mes_referencia"
+            ).execute()
+
+        else:
+            supabase.table(tabela).upsert(
+                registros
+            ).execute()
+
     except Exception as exc:
         mensagem = str(exc).lower()
         if any(t in mensagem for t in ["does not exist", "relation", "not found"]):
-            print(f"[importacao] AVISO: tabela '{tabela}' não existe. Nada gravado.")
-            return len(registros)
+            raise RuntimeError(
+                f"Falha na importação: a tabela '{tabela}' "
+                "não foi encontrada no Supabase."
+            ) from exc
         raise RuntimeError(f"Falha ao importar em '{tabela}': {exc}") from exc
-
     return len(registros)
 
 
