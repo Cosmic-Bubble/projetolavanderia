@@ -7,7 +7,9 @@ from app.services.previsao_service import (
     comparar_previsto_realizado,
     gerar_previsoes,
 )
+from app.services.capacidade_service import calcular_capacidade_mensal_kg
 from app.services.comercial_service import (
+    franquia_kg_no_mes,
     listar_contratos_ativos,
     salvar_contrato,
     deletar_contrato,
@@ -107,38 +109,8 @@ def delete_contrato(id):
 @previsao_bp.route("/api/capacidade", methods=["GET"])
 def get_capacidade():
     try:
-        # 1. Busca todas as máquinas operacionais
-        maquinas = []
-        if supabase:
-            resp = supabase.table("maquinas_capacidade").select("*").eq("status_operacional", "OPERACIONAL").execute()
-            maquinas = resp.data or []
-
-        # 2. Calcula a capacidade MENSAL máxima de lavagem
-        capacidade_mensal_kg = 0.0
-        
-        for m in maquinas:
-            # Só conta máquinas que lavam (LAVADORA)
-            if m.get("tipo_maquina") != "LAVADORA":
-                continue
-                
-            cap_nominal = float(m.get("capacidade_nominal_kg", 0))
-            tempo_ciclo = float(m.get("tempo_medio_ciclo_min", 1)) 
-            horas_dia = float(m.get("horas_disponiveis_dia", 8))
-            dias_semana = float(m.get("dias_operacao_semana", 5))
-            eficiencia = float(m.get("eficiencia_esperada_pct", 100)) / 100.0
-            
-            # Matemática da capacidade mensal
-            ciclos_dia = (horas_dia * 60) / tempo_ciclo
-            kg_dia = ciclos_dia * cap_nominal * eficiencia
-            kg_mes = kg_dia * dias_semana * 4.33  # 4.33 semanas/mês
-            
-            capacidade_mensal_kg += kg_mes
-
-        limite_total_kg = (
-            round(capacidade_mensal_kg, 0)
-            if capacidade_mensal_kg > 0
-            else None
-        )
+        # Uma só regra para todas as telas.
+        limite_total_kg = calcular_capacidade_mensal_kg()
 
         # 3. Busca as previsões (usando a função que já criamos)
         previsoes_data = gerar_previsoes(periodos=6)
@@ -146,48 +118,40 @@ def get_capacidade():
         # 4. Prepara os dados dos últimos 3 meses históricos + 3 futuros
         social_hist = previsoes_data.get("social_peso_kg", {}).get("historico", [])
         social_prev = previsoes_data.get("social_peso_kg", {}).get("previsoes", [])
-        social = social_hist[-3:] + social_prev[:3]
-
-        # Comercial: utiliza a franquia mensal dos contratos ativos.
-        # Não representa peso efetivamente processado.
-
-        contratos = listar_contratos_ativos()
-
-        franquia_comercial = sum(
-            float(c.get("franquia_kg_mes") or 0)
-            for c in contratos
-        )
-
-        # Não há histórico de peso comercial realizado.
-        # None será convertido em null na resposta JSON.
-        comercial_hist_peso = [None] * len(social_hist[-3:])
-
-        # Referência contratual para os próximos meses.
-        # Não é uma previsão estatística.
-        comercial_prev_peso = [
-            franquia_comercial
-        ] * len(social_prev[:3])
-
-        comercial = comercial_hist_peso + comercial_prev_peso
-        # 5. Nomes dos meses
+        # Histórico social conhecido, sem converter meses faltantes em zero.
         meses_hist = previsoes_data.get("social_peso_kg", {}).get("meses_historico", [])
         meses_prev = previsoes_data.get("social_peso_kg", {}).get("meses_futuros", [])
-        meses_array = meses_hist[-3:] + meses_prev[:3]
+        if meses_prev:
+            from datetime import date as _date
+            from calendar import monthrange
+            ano, mes = map(int, meses_prev[0].split("-"))
+            referencia = _date(ano, mes, 1)
+            historicos = []
+            for deslocamento in (3, 2, 1):
+                ano_m = referencia.year + (referencia.month - 1 - deslocamento) // 12
+                mes_m = (referencia.month - 1 - deslocamento) % 12 + 1
+                historicos.append(f"{ano_m:04d}-{mes_m:02d}")
+        else:
+            historicos = meses_hist[-3:]
+        valores_sociais = dict(zip(meses_hist, social_hist))
+        social = [valores_sociais.get(m) for m in historicos] + social_prev[:3]
 
-        meses_formatados = []
+        contratos = listar_contratos_ativos()
+        comercial = [None] * len(historicos) + [
+            franquia_kg_no_mes(contratos, mes) for mes in meses_prev[:3]
+        ]
+        meses_array = historicos + meses_prev[:3]
         nomes_meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
-        for m in meses_array:
-            if m:
-                [ano, mes] = m.split('-')
-                is_prev = meses_array.index(m) >= len(meses_hist[-3:])
-                nome = f"{nomes_meses[int(mes)-1]}"
-                if is_prev: nome += " (Prev)"
-                meses_formatados.append(nome)
+        meses_formatados = [
+            f"{nomes_meses[int(m[5:7]) - 1]}/{m[2:4]}"
+            + (" (Prev)" if i >= len(historicos) else "")
+            for i, m in enumerate(meses_array)
+        ]
 
         # Consumo estimado para o primeiro mês futuro.
         # Coeficientes operacionais assumidos, não medições reais.
 
-        indice_primeiro_futuro = len(social_hist[-3:])
+        indice_primeiro_futuro = len(historicos)
 
         peso_social_previsto = (
             social[indice_primeiro_futuro]
@@ -223,9 +187,9 @@ def get_capacidade():
             "social": social,
             "comercial": comercial,
             "consumo": {
-                "agua_litros": round(agua_litros),
-                "energia_kwh": round(energia_kwh),
-                "insumo_kg": round(insumo_kg)
+                "agua_litros": agua_litros,
+                "energia_kwh": energia_kwh,
+                "insumo_kg": insumo_kg
             }
         })
     except Exception as exc:

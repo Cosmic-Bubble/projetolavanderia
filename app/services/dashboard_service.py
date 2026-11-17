@@ -1,161 +1,76 @@
-"""
-Serviço da tela "Visão Geral" (dashboard).
-Módulo PURO (sem Flask). Reaproveita as funções de previsão já existentes.
-"""
-
+"""Indicadores do dashboard; não confunde franquia com produção realizada."""
 import pandas as pd
+from app.services.previsao_service import gerar_previsoes
+from app.services.capacidade_service import calcular_capacidade_mensal_kg
+from app.services.comercial_service import listar_contratos_ativos, franquia_kg_no_mes
 
-from app.services.supabase_client import supabase
-from app.services.previsao_service import prever_kpi, METODO_POR_KPI
-from app.services.comercial_service import listar_contratos_ativos
-
-MESES_ABREV = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun",
-               "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
-MESES_LONGO = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-               "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
-
-COLUNAS = ["social_atendimentos_qtd", "social_peso_kg", "comercial_receita"]
-HIST = 3        # meses de histórico no gráfico
-FUTURO = 3      # meses de previsão no gráfico
+MESES = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"]
+MESES_LONGOS = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"]
 
 
-# ------------------------------------------------------------
-# Auxiliares
-# ------------------------------------------------------------
-
-def _buscar_relatorios(meses: int = 12) -> pd.DataFrame:
-    """Últimos N meses (ordem cronológica) de relatorios_operacionais_mensais."""
-    if supabase is None:
-        return pd.DataFrame()
-    resp = (
-        supabase.table("relatorios_operacionais_mensais")
-        .select("mes_referencia, " + ", ".join(COLUNAS))
-        .order("mes_referencia", desc=True)   # pega os MAIS RECENTES
-        .limit(meses)
-        .execute()
-    )
-    df = pd.DataFrame(resp.data or [])
-    if df.empty:
-        return df
-    df["mes_referencia"] = pd.to_datetime(df["mes_referencia"])
-    return df.sort_values("mes_referencia").reset_index(drop=True)
-
-
-def _serie(df: pd.DataFrame, coluna: str) -> list[float]:
-    return df[coluna].fillna(0).astype(float).tolist()
-
-
-def _variacao_pct(atual: float, anterior: float):
-    if not anterior:
+def _variacao(atual, anterior):
+    if atual is None or anterior is None or anterior == 0:
         return None
     return round((atual - anterior) / anterior * 100, 1)
 
 
-def calcular_capacidade_mensal_kg() -> float:
-    """Capacidade mensal máxima de lavagem (mesma conta de /api/capacidade)."""
-    if supabase is None:
-        return 0.0
-    resp = (
-        supabase.table("maquinas_capacidade")
-        .select("*")
-        .eq("status_operacional", "OPERACIONAL")
-        .execute()
-    )
-    total = 0.0
-    for m in resp.data or []:
-        if m.get("tipo_maquina") != "LAVADORA":
-            continue
-        cap_nominal = float(m.get("capacidade_nominal_kg") or 0)
-        tempo_ciclo = float(m.get("tempo_medio_ciclo_min") or 1)
-        horas_dia = float(m.get("horas_disponiveis_dia") or 8)
-        dias_semana = float(m.get("dias_operacao_semana") or 5)
-        eficiencia = float(m.get("eficiencia_esperada_pct") or 100) / 100.0
-
-        ciclos_dia = (horas_dia * 60) / tempo_ciclo
-        kg_dia = ciclos_dia * cap_nominal * eficiencia
-        total += kg_dia * dias_semana * 4.33
-    return round(total, 0)
+def _ultimo_e_anterior(dados):
+    serie = dados.get("historico", [])
+    return (serie[-1] if serie else None, serie[-2] if len(serie) > 1 else None)
 
 
-def _franquia_comercial_kg() -> float:
-    return sum(float(c.get("franquia_kg_mes") or 0) for c in listar_contratos_ativos())
-
-
-# ------------------------------------------------------------
-# Principal
-# ------------------------------------------------------------
-
-def obter_dashboard() -> dict:
-    df = _buscar_relatorios(12)
-    if df.empty:
+def obter_dashboard():
+    previsoes = gerar_previsoes(periodos=3)
+    social = previsoes.get("social_peso_kg", {})
+    atendimento = previsoes.get("social_atendimentos_qtd", {})
+    receita = previsoes.get("comercial_receita", {})
+    if not any(d.get("historico") for d in (social, atendimento, receita)):
         return {"sem_dados": True}
 
-    ultimo_mes = df["mes_referencia"].max()
-
-    # ---- séries e previsões ----
-    atend = _serie(df, "social_atendimentos_qtd")
-    peso_social = _serie(df, "social_peso_kg")
-    receita_com = _serie(df, "comercial_receita")
-
-    prev_peso = prever_kpi(peso_social, METODO_POR_KPI["social_peso_kg"], FUTURO)
-    prev_receita = prever_kpi(receita_com, METODO_POR_KPI["comercial_receita"], 1)
-
-    # ---- cards ----
-    atend_atual = atend[-1]
-    atend_ant = atend[-2] if len(atend) > 1 else 0
-
-    fat_previsto = prev_receita[0]
-    fat_ultimo = receita_com[-1]
-
     capacidade = calcular_capacidade_mensal_kg()
-    franquia = _franquia_comercial_kg()
+    contratos = listar_contratos_ativos()
+    meses_futuros = social.get("meses_futuros", [])[:3]
+    social_prev = social.get("previsoes", [])[:3]
+    comercial_prev = [franquia_kg_no_mes(contratos, mes) for mes in meses_futuros]
+    total_prev = [round(s + c, 2) for s, c in zip(social_prev, comercial_prev)]
 
-    # ---- gráfico: demanda total = social + franquia comercial ----
-    hist_social = peso_social[-HIST:]
-    hist_total = [round(v + franquia, 1) for v in hist_social]
-    prev_total = [round(v + franquia, 1) for v in prev_peso]
+    # Histórico exibe APENAS peso social realizado.
+    historico_social = dict(zip(social.get("meses_historico", []), social.get("historico", [])))
+    if meses_futuros:
+        primeiro = pd.Period(meses_futuros[0], freq="M")
+        meses_hist = [str(primeiro - i) for i in (3, 2, 1)]
+    else:
+        meses_hist = social.get("meses_historico", [])[-3:]
+    hist_valores = [historico_social.get(m) for m in meses_hist]
 
-    meses_hist = df["mes_referencia"].iloc[-HIST:].tolist()
-    meses_fut = pd.date_range(
-        ultimo_mes + pd.offsets.MonthBegin(1), periods=FUTURO, freq="MS"
-    ).tolist()
-    todos_meses = meses_hist + meses_fut
+    atend_atual, atend_ant = _ultimo_e_anterior(atendimento)
+    fat_atual, _ = _ultimo_e_anterior(receita)
+    fat_prev = (receita.get("previsoes") or [None])[0]
+    uso_prev = round(total_prev[0] / capacidade * 100) if total_prev and capacidade else None
 
-    # ---- uso da capacidade (último mês realizado) ----
-    demanda_atual = hist_total[-1]
-    uso_pct = round(demanda_atual / capacidade * 100) if capacidade > 0 else None
-
-    # ---- alerta: primeiro mês previsto acima da capacidade ----
     alerta = None
-    if capacidade > 0:
-        for mes, valor in zip(meses_fut, prev_total):
-            if valor > capacidade:
-                excesso = valor - capacidade
-                alerta = {
-                    "mes": MESES_LONGO[mes.month - 1],
-                    "excesso_kg": round(excesso),
-                    "pct_acima": round(excesso / capacidade * 100),
-                }
+    if capacidade:
+        for mes, total in zip(meses_futuros, total_prev):
+            if total > capacidade:
+                excesso = total - capacidade
+                data = pd.Period(mes, freq="M")
+                alerta = {"mes": f"{MESES_LONGOS[data.month - 1]}/{data.year}",
+                          "excesso_kg": round(excesso), "pct_acima": round(excesso / capacidade * 100)}
                 break
 
+    meses = meses_hist + meses_futuros
     return {
-        "sem_dados": False,
-        "alerta": alerta,
+        "sem_dados": False, "alerta": alerta,
         "cards": {
-            "atendimentos": {
-                "valor": int(atend_atual),
-                "variacao_pct": _variacao_pct(atend_atual, atend_ant),
-            },
-            "faturamento": {
-                "valor": round(fat_previsto, 2),
-                "variacao_pct": _variacao_pct(fat_previsto, fat_ultimo),
-            },
-            "capacidade": {"uso_pct": uso_pct},
+            "atendimentos": {"valor": atend_atual, "variacao_pct": _variacao(atend_atual, atend_ant)},
+            "faturamento": {"valor": fat_prev, "variacao_pct": _variacao(fat_prev, fat_atual)},
+            "capacidade": {"uso_pct": uso_prev},
         },
         "grafico": {
             "limite_kg": capacidade,
-            "meses": [MESES_ABREV[m.month - 1] for m in todos_meses],
-            "valores": hist_total + prev_total,
-            "qtd_historico": len(hist_total),   # a partir daí é previsão
+            "meses": [f"{MESES[int(m[5:7])-1]}/{m[2:4]}" for m in meses],
+            "historico_social": hist_valores + [None] * len(meses_futuros),
+            "previsao_total": [None] * len(meses_hist) + total_prev,
+            "qtd_historico": len(meses_hist),
         },
     }

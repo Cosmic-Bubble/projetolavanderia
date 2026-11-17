@@ -83,35 +83,22 @@
         </div>
         <p
           class="inline-flex items-center gap-2 self-start sm:self-auto bg-[#783c91] text-white rounded-lg px-3 py-2 text-xs font-semibold">
-          <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i>Alta sazonalidade prevista no inverno (+30% de
-          demanda em hotéis)
+          <i data-lucide="trending-up" class="w-4 h-4 shrink-0"></i>Projeção baseada no histórico disponível; sujeita a variações.
         </p>
       </section>
 
       <section class="bg-white border border-gray-200 rounded-2xl p-4 sm:p-6 mb-5" aria-labelledby="titulo-grafico">
         <h2 id="titulo-grafico" class="text-base sm:text-lg font-bold text-[#202927] mb-4">Histórico e Previsão de
-          Faturamento (R$) com Intervalo de Confiança</h2>
-        <p id="descricao-grafico" class="sr-only">Gráfico ilustrativo, com histórico de março a maio e previsão de junho
-          a agosto. Valores demonstrativos.</p>
+          Faturamento (R$)</h2>
+        <p id="descricao-grafico" class="sr-only">Gráfico de faturamento histórico e projeção calculados a partir dos registros disponíveis.</p>
         <div class="grafico-scroll relative" role="img" aria-labelledby="titulo-grafico descricao-grafico">
           <svg id="grafico-faturamento" viewBox="0 0 760 210" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
             <rect class="faixa-confianca" x="375" y="28" width="345" height="112" rx="5"></rect>
-            <text class="rotulo-confianca" x="389" y="47">INTERVALO DE SEGURANÇA (89%)</text>
+            <text class="rotulo-confianca" x="389" y="47">PERÍODO PROJETADO</text>
             <path id="linha-faturamento" class="linha-faturamento"
-              d="M 20 153 L 164 146 L 308 143 L 452 130 L 596 109 L 720 91"></path>
-            <g id="pontos-faturamento" class="pontos-faturamento">
-              <circle cx="20" cy="153" r="4"></circle>
-              <circle cx="164" cy="146" r="4"></circle>
-              <circle cx="308" cy="143" r="4"></circle>
-              <circle cx="452" cy="130" r="4"></circle>
-              <circle cx="596" cy="109" r="4"></circle>
-              <circle cx="720" cy="91" r="4"></circle>
-            </g>
-            <g id="rotulos-meses" class="rotulos-meses"><text x="20" y="196" text-anchor="middle">Mar</text><text
-                x="164" y="196" text-anchor="middle">Abr</text><text x="308" y="196"
-                text-anchor="middle">Mai</text><text x="452" y="196" text-anchor="middle">Jun (Prev)</text><text x="596"
-                y="196" text-anchor="middle">Jul (Prev)</text><text x="720" y="196" text-anchor="middle">Ago
-                (Prev)</text></g>
+              d=""></path>
+            <g id="pontos-faturamento" class="pontos-faturamento"></g>
+            <g id="rotulos-meses" class="rotulos-meses"></g>
           </svg>
         </div>
         <p class="text-xs text-slate-500 mt-3"></p>

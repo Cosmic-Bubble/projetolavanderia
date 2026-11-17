@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             valor => Number.isFinite(valor)
         );
 
-        const maiorDemanda = Math.max(0, ...totaisValidos);
+        const maiorDemanda = Math.max(0, ...totaisValidos, ...dados.social.filter(v => Number.isFinite(v)));
 
         // Define uma escala válida, mesmo quando não há demanda ou capacidade
         const tetoGrafico = Math.max(
@@ -65,9 +65,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             const total = totais[i];
             const dadosCompletos = Number.isFinite(total);
 
+            const somenteSocial = !dadosCompletos && Number.isFinite(dados.social[i]);
             const alturaTotal = dadosCompletos
                 ? (total / tetoGrafico) * 100
-                : 0;
+                : somenteSocial ? (dados.social[i] / tetoGrafico) * 100 : 0;
 
             const percComercial = dadosCompletos && total > 0
                 ? (dados.comercial[i] / total) * 100
@@ -75,7 +76,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const percSocial = dadosCompletos && total > 0
                 ? (dados.social[i] / total) * 100
-                : 0;
+                : somenteSocial ? 100 : 0;
 
             const isEstouro =
                 dadosCompletos &&
@@ -93,7 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     <!-- Texto do mês (Fica abaixo da barra no chão) -->
                     <span class="text-[11px] mt-3 ${corTexto} whitespace-nowrap">
                         ${mes}
-                        ${!dadosCompletos ? ' (Sem dados)' : isEstouro ? ' (Estouro)' : ''}
+                        ${somenteSocial ? ' (Só social)' : !dadosCompletos ? ' (Sem dados)' : isEstouro ? ' (Estouro)' : ''}
                     </span>
                 </div>
             `;
@@ -123,13 +124,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         const mesesComEstouro = capacidadeDisponivel
             ? dados.meses.filter(
                 (m, i) =>
-                    Number.isFinite(totais[i]) &&
+                    m.includes("(Prev)") && Number.isFinite(totais[i]) &&
                     totais[i] > limite
             )
             : [];
 
         const mesesSemDados = dados.meses.filter(
-            (m, i) => !Number.isFinite(totais[i])
+            (m, i) => m.includes("(Prev)") && !Number.isFinite(totais[i])
         );       
         const textoAlerta = document.getElementById("texto-alerta");
         const tituloAlerta = textoAlerta.previousElementSibling;
@@ -173,7 +174,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             `;
         } else {
             textoAlerta.textContent =
-                "Nenhum estouro identificado nos meses avaliados. " +
+                "Nenhum estouro identificado nos meses projetados. " +
                 "A demanda estimada permanece dentro do limite de " +
                 limite.toLocaleString("pt-BR") + " kg.";
 

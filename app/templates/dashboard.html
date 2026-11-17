@@ -71,26 +71,26 @@
           <p id="card-faturamento-var" class="text-xs text-slate-500 mt-2">&nbsp;</p>
         </article>
         <article class="painel-card p-5">
-          <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Uso da capacidade</p>
+          <p class="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Uso da capacidade (próximo mês)</p>
           <p id="card-capacidade" class="text-3xl font-extrabold mt-3 text-slate-900">—</p>
           <p id="card-capacidade-texto" class="text-xs text-slate-500 mt-2">&nbsp;</p>
         </article>
       </section>
       <section class="grid grid-cols-1 xl:grid-cols-[1.6fr_1fr] gap-4">
         <article class="painel-card p-5">
-          <h2 class="font-bold text-base mb-3">Previsão de Demanda Total vs. Capacidade das Máquinas</h2>
+          <h2 class="font-bold text-base mb-3">Demanda social histórica e demanda total prevista vs. capacidade</h2>
           <div class="grafico-scroll"><svg id="grafico-demanda" viewBox="0 0 680 240" role="img"
-              aria-label="Demanda total em azul e limite de capacidade em laranja"
+              aria-label="Volume social histórico e demanda total prevista, separados por período"
               class="grafico-painel"></svg></div>
+          <p class="text-xs text-slate-500 mt-2">Azul: peso social realizado. Roxo tracejado: peso social previsto + franquia comercial vigente. Laranja: capacidade estimada. Não há histórico de peso comercial realizado.</p>
         </article>
         <article class="painel-card p-5 text-center">
-          <h2 class="font-bold text-base text-left">Uso da Capacidade Atual</h2>
+          <h2 class="font-bold text-base text-left">Utilização prevista (próximo mês)</h2>
           <div id="medidor-wrapper" class="medidor" role="img" aria-label="Uso da capacidade">
             <div class="medidor-arco"></div>
             <div id="medidor-numero" class="medidor-numero">—<span>&nbsp;</span></div>
           </div>
-          <p class="text-xs text-slate-500 max-w-xs mx-auto">Recomenda-se remanejar parte das entregas não urgentes do
-            módulo comercial para evitar gargalos.</p>
+          <p class="text-xs text-slate-500 max-w-xs mx-auto">Estimativa baseada na demanda social projetada e nas franquias vigentes; não representa produção medida.</p>
         </article>
       </section>
       <p class="text-xs text-slate-400 mt-6"></p>

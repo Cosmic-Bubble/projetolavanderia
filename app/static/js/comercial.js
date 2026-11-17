@@ -1,6 +1,6 @@
 lucide.createIcons();
 
-// 1. GRÁFICO DE FATURAMENTO (SVG)
+// GRÁFICO DE FATURAMENTO (SVG)
 const ns = 'http://www.w3.org/2000/svg';
 const linha = document.getElementById('linha-faturamento');
 const pontos = document.getElementById('pontos-faturamento');
@@ -32,6 +32,7 @@ async function carregarDadosComerciais() {
 
 function desenharGraficoVazio() {
     if (linha) linha.setAttribute('d', '');
+    document.getElementById('linha-faturamento-previsao')?.remove();
     if (pontos) pontos.replaceChildren();
     if (rotulos) rotulos.replaceChildren();
 }
@@ -64,6 +65,10 @@ function desenharGrafico(periodo) {
         return;
     }
 
+    if (valoresExibidos.some(v => typeof v !== 'number' || !Number.isFinite(v))) {
+        desenharGraficoVazio();
+        return;
+    }
     let maiorValor = Math.max(...valoresExibidos);
     let menorValor = Math.min(...valoresExibidos);
     
@@ -76,14 +81,47 @@ function desenharGrafico(periodo) {
     let topo = maiorValor + margem;
     let base = Math.max(0, menorValor - margem);
 
-    const qtdPontos = valoresExibidos.length;
-    const passoX = qtdPontos > 1 ? LARGURA_SVG / (qtdPontos - 1) : LARGURA_SVG; 
+    // O eixo X usa a distância real entre meses, inclusive nas lacunas.
+    const indicesMeses = mesesExibidos.map(m => {
+        const [ano, mes] = m.split('-').map(Number);
+        return ano * 12 + mes;
+    });
+    const inicio = Math.min(...indicesMeses);
+    const intervalo = Math.max(1, Math.max(...indicesMeses) - inicio);
+
+    // Mantém a distância entre meses e permite rolagem horizontal nos dois períodos.
+    // O semestre também recebe largura mínima, sem reduzir a legibilidade dos rótulos.
+    const graficoSvg = linha.closest('svg');
+    const modoAnual = periodo === 'ano';
+    const margemHorizontal = 55;
+    const larguraGrafico = modoAnual
+        ? Math.max(760, intervalo * 95 + margemHorizontal * 2)
+        : Math.max(900, intervalo * 115 + margemHorizontal * 2);
+    const larguraUtil = larguraGrafico - 2 * margemHorizontal;
+    graficoSvg.setAttribute('viewBox', `0 0 ${larguraGrafico} 210`);
+    graficoSvg.style.width = `${larguraGrafico}px`;
+    graficoSvg.style.minWidth = `${larguraGrafico}px`;
+    const posicaoMes = indice => margemHorizontal + (indice - inicio) / intervalo * larguraUtil;
 
     const posicoesX = [];
     const posicoesY = [];
+    // A faixa sombreada marca o período projetado, não um intervalo estatístico.
+    const faixa = document.querySelector('#grafico-faturamento .faixa-confianca');
+    const rotuloFaixa = document.querySelector('#grafico-faturamento .rotulo-confianca');
+    if (faixa) {
+        const inicioPrev = histExibido.length < indicesMeses.length
+            ? posicaoMes(indicesMeses[histExibido.length]) : larguraGrafico;
+        faixa.setAttribute('x', String(inicioPrev));
+        faixa.setAttribute('width', String(Math.max(0, larguraGrafico - inicioPrev)));
+        faixa.style.display = prevExibida.length ? '' : 'none';
+        if (rotuloFaixa) {
+            rotuloFaixa.setAttribute('x', String(Math.min(larguraGrafico - 110, inicioPrev + 8)));
+            rotuloFaixa.style.display = prevExibida.length ? '' : 'none';
+        }
+    }
 
     valoresExibidos.forEach((valor, i) => {
-        posicoesX.push(i * passoX);
+        posicoesX.push(posicaoMes(indicesMeses[i]));
         let proporcao = (valor - base) / (topo - base);
         let y = (ALTURA_MAX - (proporcao * ALTURA_MAX)) + OFFSET_Y;
         posicoesY.push(y);
@@ -101,9 +139,24 @@ function desenharGrafico(periodo) {
         linha.closest('svg').parentElement.appendChild(tooltip);
     }
 
-    // Desenha a linha
-    const d = posicoesY.map((y, i) => `${i === 0 ? 'M' : 'L'} ${posicoesX[i]} ${y}`).join(' ');
-    linha.setAttribute('d', d);
+    // Histórico e previsão são séries distintas: a prevista é tracejada.
+    const criarCaminho = (inicio, fim) => posicoesY
+        .slice(inicio, fim).map((y, j) => `${j === 0 ? 'M' : 'L'} ${posicoesX[inicio + j]} ${y}`).join(' ');
+    const caminhoHistorico = criarCaminho(0, histExibido.length);
+    linha.setAttribute('d', caminhoHistorico);
+    linha.setAttribute('stroke-dasharray', 'none');
+    const anterior = document.getElementById('linha-faturamento-previsao');
+    if (anterior) anterior.remove();
+    if (prevExibida.length) {
+        const caminhoPrev = document.createElementNS(ns, 'path');
+        caminhoPrev.id = 'linha-faturamento-previsao';
+        caminhoPrev.setAttribute('d', criarCaminho(Math.max(0, histExibido.length - 1), valoresExibidos.length));
+        caminhoPrev.setAttribute('fill', 'none');
+        caminhoPrev.setAttribute('stroke', '#a855f7');
+        caminhoPrev.setAttribute('stroke-width', '3');
+        caminhoPrev.setAttribute('stroke-dasharray', '6 5');
+        linha.after(caminhoPrev);
+    }
 
     valoresExibidos.forEach((valor, i) => {
         const isPrevisao = i >= histExibido.length;
@@ -124,7 +177,7 @@ function desenharGrafico(periodo) {
             const containerRect = e.target.closest('.grafico-scroll').getBoundingClientRect();
             
             // Posiciona o tooltip em cima do ponto
-            tooltip.style.left = (rect.left - containerRect.left + rect.width / 2) + 'px';
+            tooltip.style.left = (rect.left - containerRect.left + rect.width / 2 + e.target.closest('.grafico-scroll').scrollLeft) + 'px';
             tooltip.style.top = (rect.top - containerRect.top) + 'px';
             
             tooltip.classList.add('visible');
@@ -182,7 +235,7 @@ document.querySelectorAll('[data-periodo]').forEach((botao) => {
     });
 });
 
-// 2. TABELA DE CONTRATOS E MODAL
+// TABELA DE CONTRATOS E MODAL
 const tbody = document.getElementById("tabela-contratos");
 const modal = document.getElementById("modal-contrato");
 const form = document.getElementById("form-contrato");
@@ -276,7 +329,7 @@ async function carregarContratosAtivos() {
     }
 }
 
-// 3. AÇÕES GLOBAIS (Editar / Deletar / Salvar)
+// AÇÕES GLOBAIS (Editar / Deletar / Salvar)
 window.editarContrato = function(contratoString) {
     const contrato = JSON.parse(decodeURIComponent(contratoString));
     abrirModal(contrato);
@@ -325,7 +378,7 @@ form?.addEventListener("submit", async (e) => {
     }
 });
 
-// 4. INICIALIZAÇÃO
+// INICIALIZAÇÃO
 document.addEventListener("DOMContentLoaded", () => {
     carregarDadosComerciais();
     carregarContratosAtivos();

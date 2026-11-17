@@ -1,43 +1,58 @@
-// static/js/dashboard.js
 (function () {
   const $ = (id) => document.getElementById(id);
-  const fmtInt = (v) => Number(v).toLocaleString("pt-BR");
-  const fmtBRL = (v) =>
-    Number(v).toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
-  const fmtVar = (v, sufixo) =>
-    v == null ? sufixo : `${v > 0 ? "+" : ""}${String(v).replace(".", ",")}% ${sufixo}`;
+  const fmtInt = v => v == null || !Number.isFinite(Number(v)) ? "—" : Number(v).toLocaleString("pt-BR");
+  const fmtBRL = v => v == null || !Number.isFinite(Number(v)) ? "—" : Number(v).toLocaleString("pt-BR", {style:"currency", currency:"BRL", maximumFractionDigits:0});
+  const fmtVar = (v, sufixo) => v == null ? "Sem comparação disponível" : `${v > 0 ? "+" : ""}${String(v).replace(".", ",")}% ${sufixo}`;
 
   function desenharGrafico(g) {
     const svg = $("grafico-demanda");
-    if (!svg || !g.valores.length) return;
-
-    const X0 = 35, X1 = 635, YTOP = 40, YBASE = 190;
-    const maxV = Math.max(g.limite_kg || 0, ...g.valores) * 1.1 || 1;
-    const x = (i) => X0 + (i * (X1 - X0)) / Math.max(g.valores.length - 1, 1);
-    const y = (v) => YBASE - (v / maxV) * (YBASE - YTOP);
-
-    const pts = g.valores.map((v, i) => `${x(i)},${y(v).toFixed(1)}`);
-    const iPrev = Math.max(g.qtd_historico - 1, 0);   // liga o último real à previsão
-    const yLim = y(g.limite_kg || 0).toFixed(1);
-
-    let html = "";
-    if (g.limite_kg > 0) {
-      html += `<line x1="35" y1="${yLim}" x2="650" y2="${yLim}" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5 5"/>`;
-      html += `<text x="38" y="${yLim - 10}" fill="#f59e0b" font-size="10">CAPACIDADE MÁXIMA: ${fmtInt(g.limite_kg)} KG</text>`;
+    if (!svg || !g) return;
+    const meses = g.meses || [];
+    const hist = g.historico_social || [];
+    const prev = g.previsao_total || [];
+    const validos = [...hist, ...prev].filter(v => typeof v === "number" && Number.isFinite(v));
+    const limite = typeof g.limite_kg === "number" && Number.isFinite(g.limite_kg) && g.limite_kg > 0 ? g.limite_kg : null;
+    svg.replaceChildren();
+    if (!meses.length || (!validos.length && limite == null)) return;
+    const maxV = Math.max(1, limite || 0, ...validos) * 1.1;
+    const x = i => 35 + i * 600 / Math.max(meses.length - 1, 1);
+    const y = v => 190 - v / maxV * 150;
+    const ns = "http://www.w3.org/2000/svg";
+    function el(tag, attrs, texto, parent = svg) {
+      const e = document.createElementNS(ns, tag);
+      for (const [k,v] of Object.entries(attrs)) e.setAttribute(k, String(v));
+      if (texto !== undefined) e.textContent = texto;
+      parent.appendChild(e);
+      return e;
     }
-    html += `<polyline points="${pts.join(" ")}" fill="none" stroke="#1685e5" stroke-width="3"/>`;
-    html += `<polyline points="${pts.slice(iPrev).join(" ")}" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="5 4"/>`;
-    html += `<g fill="#1685e5">${g.valores
-      .map((v, i) => `<circle cx="${x(i)}" cy="${y(v).toFixed(1)}" r="4"/>`)
-      .join("")}</g>`;
-    html += `<g fill="#64748b" font-size="12" text-anchor="middle">${g.meses
-      .map((m, i) => `<text x="${x(i)}" y="215">${m}</text>`)
-      .join("")}</g>`;
-    svg.innerHTML = html;
-    svg.setAttribute(
-      "aria-label",
-      "Demanda total em azul e limite de capacidade em laranja, de " + g.meses[0] + " a " + g.meses[g.meses.length - 1]
-    );
+    if (limite != null) {
+      el("line", {x1:35, y1:y(limite), x2:635, y2:y(limite), stroke:"#f59e0b", "stroke-width":2, "stroke-dasharray":"5 5"});
+      el("text", {x:38, y:Math.max(12,y(limite)-9), fill:"#b45309", "font-size":10}, `CAPACIDADE: ${fmtInt(limite)} kg`);
+    }
+    function serie(valores, cor, tracejado) {
+      let trecho = [];
+      function fechar() {
+        if (trecho.length > 1) el("polyline", {points:trecho.join(" "), fill:"none", stroke:cor, "stroke-width":3, ...(tracejado ? {"stroke-dasharray":"6 4"} : {})});
+        trecho = [];
+      }
+      meses.forEach((mes,i) => {
+        const v = valores[i];
+        if (typeof v !== "number" || !Number.isFinite(v)) { fechar(); return; }
+        trecho.push(`${x(i)},${y(v).toFixed(1)}`);
+      });
+      fechar();
+      meses.forEach((mes,i) => {
+        const v = valores[i];
+        if (typeof v === "number" && Number.isFinite(v)) {
+          const ponto = el("circle", {cx:x(i), cy:y(v).toFixed(1), r:4, fill:cor});
+          el("title", {}, `${mes}: ${fmtInt(v)} kg`, ponto);
+        }
+      });
+    }
+    serie(hist, "#1685e5", false);
+    serie(prev, "#7d3c98", true);
+    meses.forEach((m,i) => el("text", {x:x(i), y:215, fill:"#64748b", "font-size":11, "text-anchor":"middle"}, m));
+    svg.setAttribute("aria-label", "Azul: peso social realizado. Roxo tracejado: demanda total prevista. Laranja: capacidade. Histórico comercial indisponível.");
   }
 
   function preencher(d) {
@@ -65,10 +80,10 @@
     const usoTxt = uso == null ? "—" : `${uso}%`;
     $("card-capacidade").textContent = usoTxt;
     $("card-capacidade-texto").textContent =
-      uso == null ? "Capacidade não cadastrada"
+      uso == null ? "Projeção ou capacidade indisponível"
         : uso >= 100 ? "Capacidade excedida"
-        : uso >= 85 ? "Algumas máquinas quase cheias"
-        : "Dentro da capacidade";
+        : uso >= 85 ? "Projeção próxima ao limite"
+        : "Projeção dentro da capacidade";
 
     // Medidor
     const medidor = $("medidor-numero");

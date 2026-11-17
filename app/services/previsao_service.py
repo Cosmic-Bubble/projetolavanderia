@@ -326,15 +326,17 @@ def gerar_previsoes(periodos: int = 3) -> dict:
                     serie = serie[-12:]
                     meses = meses[-12:]
 
-                previsoes = prever_kpi(
-                    serie,
-                    metodo_utilizado,
-                    periodos,
-                    meses=meses
-                )
+                # Projeta a partir do último mês registrado, mesmo que o KPI
+                # esteja nulo nas competências mais recentes.
                 ultimo_mes_valido = df_validos["mes_referencia"].max()
-
-                futuros = _meses_futuros(ultimo_mes_valido, periodos)
+                mes_referencia = df["mes_referencia"].max()
+                lacuna = ((mes_referencia.year - ultimo_mes_valido.year) * 12
+                          + mes_referencia.month - ultimo_mes_valido.month)
+                previsoes_estendidas = prever_kpi(
+                    serie, metodo_utilizado, periodos + lacuna, meses=meses
+                )
+                previsoes = previsoes_estendidas[lacuna:]
+                futuros = _meses_futuros(mes_referencia, periodos)
 
                 resultado[coluna] = {
                     "historico": serie,
